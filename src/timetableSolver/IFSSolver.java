@@ -290,7 +290,7 @@ public class IFSSolver {
             	// this is known as parallel dependency
             	int nrOfDependencies = selClass.get_assignedStudentGroups().size();
             	// Check to see if the class is a lecture
-            	if(selClass.get_meeting().get_type() == Offering.LECTURE)
+            	if(selClass.get_meeting().get_type() == Offering.OfferingType.LECTURE)
             	{
             		// Each lecture has to be before all the laboratories of the groups 
             		// that should assist take place

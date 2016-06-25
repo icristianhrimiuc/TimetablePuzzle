@@ -1,10 +1,32 @@
 package timetablepuzzle.eclipselink.entities.administration;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="buildings")
 public class Building {
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int _externalId;
+	
+	@Column(name="name")
 	private String _name;
+	
+	@Column(name="abreviation")
 	private String _abreviation;
+
+	@OneToOne(optional=false)
+	@JoinColumn(name="location", unique=true, nullable=false, updatable=false)
 	private Location _location;
+	
+	/**
+	 * Default constructor
+	 */
+	public Building()
+	{
+		this(0,"NoName","NoAbbreviation",new Location());
+	}
 	
 	/**
 	 * Create and initialize a building with given parameters
@@ -25,7 +47,7 @@ public class Building {
 			set_location(new Location());
 		}
 	}
-
+	/****************Getters ans setters***************/
 	public int get_externalId() {
 		return _externalId;
 	}

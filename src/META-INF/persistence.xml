@@ -2,10 +2,20 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 	<persistence-unit name="TimetablePuzzle" transaction-type="RESOURCE_LOCAL">
 	
-	<class>timetablepuzzle.eclipselink.entities.administration.RoomFeature</class>
-	<class>timetablepuzzle.eclipselink.entities.administration.RoomType</class>
-	<class>timetablepuzzle.eclipselink.entities.administration.Location</class>
-	
+		<class>timetablepuzzle.eclipselink.entities.administration.RoomFeature</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.InstructorMeetings</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.RoomType</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.Location</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.DatePattern</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.TimePreferences</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.Building</class>
+		<class>timetablepuzzle.eclipselink.entities.inputdata.Instructor</class>
+		<class>timetablepuzzle.eclipselink.entities.inputdata.Room</class>
+		<class>timetablepuzzle.eclipselink.entities.inputdata.StudentGroup</class>
+		<class>timetablepuzzle.eclipselink.entities.inputdata.Offering</class>
+		<class>timetablepuzzle.eclipselink.entities.inputdata.CourseOffering</class>
+		<class>timetablepuzzle.eclipselink.entities.inputdata.Class</class>	
+		
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/timetable_puzzle??useSSL=false;requireSSL=false"/>
 			<property name="javax.persistence.jdbc.user" value="root"/>

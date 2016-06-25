@@ -1,13 +1,41 @@
 package timetablepuzzle.eclipselink.entities.inputdata;
 
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
 
+@Entity
+@Table(name="student_groups")
 public class StudentGroup {
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int _externalId;
+	
+	@Column(name="code")
 	private String _code;
+	
+	@Column(name="name")
 	private String _name;
+	
+	@OneToMany(targetEntity=StudentGroup.class)
+	@JoinTable(name="stGroup_stGroup",
+    joinColumns=
+         @JoinColumn(name="parent_stGroup_external_id"),
+    inverseJoinColumns=
+         @JoinColumn(name="child_stGroup_external_id"))
 	private List<StudentGroup> _composingGroups;
+	
+	@Column(name="nrofstudents")
 	private int _nrOfStudents;
+	
+	/**
+	 * Default constructor
+	 */
+	public StudentGroup()
+	{
+		this(0,"NoCode","NoName",new ArrayList<StudentGroup>());
+	}
 	
 	/**
 	 * Create and initialize a new student group with the given parameters
@@ -20,9 +48,10 @@ public class StudentGroup {
 		_externalId = externalId;
 		set_code(code);
 		set_name(name);
-		set_composingGroups(composingGroups);
+		_composingGroups = composingGroups;
 	}
 
+	/*****************Getters and setters**************/
 	public int get_externalId() {
 		return _externalId;
 	}
@@ -47,15 +76,11 @@ public class StudentGroup {
 		return _composingGroups;
 	}
 
-	public void set_composingGroups(List<StudentGroup> _composingGroups) {
-		this._composingGroups = _composingGroups;
-	}
-
 	public int get_nrOfStudents() {
 		return _nrOfStudents;
 	}
 
 	public void set_nrOfStudents(int _nrOfStudents) {
 		this._nrOfStudents = _nrOfStudents;
-	}	
+	}
 }

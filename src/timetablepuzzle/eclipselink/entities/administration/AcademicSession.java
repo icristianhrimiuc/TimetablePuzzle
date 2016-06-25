@@ -6,8 +6,7 @@ import timetablepuzzle.eclipselink.entities.inputdata.Solution;
 
 public class AcademicSession {
 
-	private int _externalId;
-	
+	private int _externalId;	
 
 	private String _name;
 	

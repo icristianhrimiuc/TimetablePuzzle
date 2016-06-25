@@ -2,18 +2,48 @@ package timetablepuzzle.eclipselink.entities.inputdata;
 
 import timetablepuzzle.eclipselink.entities.administration.*;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.*;
+import javax.persistence.*;
 
+@Entity
+@Table(name="rooms")
 public class Room {
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int _externalId;
+	
+	@Column(name="code")
 	private String _code;
+	
+	@Column(name="name")
 	private String _name;
+	
+	@ManyToOne(targetEntity=RoomType.class,optional=false)
+	@JoinColumn(name="room_type", nullable=false, updatable=false)
 	private RoomType _type;
+	
+	@Column(name="capacity")
 	private int _capacity;
+	
+	@OneToOne(optional=false)
+    @JoinColumn(name="time_preferences", unique=true, nullable=false, updatable=false)
 	private TimePreferences _preferences;
+	
+	@ManyToOne(optional=false)
+	@JoinColumn(name="building",nullable=false,updatable=false)
 	private Building _building;
 	
 	/**
-	 * Constructor for creating an existing room with info from the database
+	 * DefaultConstructor
+	 */
+	public Room()
+	{
+		this(0,"NoCode","NoName",new RoomType(),0,new TimePreferences(),new Building());
+	}
+	
+	/**
+	 * Parameterized constructor for creating an existing room 
+	 * with info from the database
 	 * @param externalId
 	 * @param code
 	 * @param name

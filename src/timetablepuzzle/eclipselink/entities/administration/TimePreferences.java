@@ -1,49 +1,80 @@
 package timetablepuzzle.eclipselink.entities.administration;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="time_preferences")
 public class TimePreferences {
 	/***********Static fields*************/
 	/**Days of the week**/
-	public enum Day{MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY};
-	/**public static final int MONDAY = 1;
-	public static final int TUESDAY = 2;
-	public static final int WEDNESDAY = 3;
-	public static final int THURSDAY = 4;
-	public static final int FRIDAY = 5;*/
-	/**Time preferences**/
-	public enum TimePref{PROHIBITED,STRONGLY_DISCOURAGED,DISCOURAGED,
+	public static enum Day{MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY};	
+	public static enum TimePref{PROHIBITED,STRONGLY_DISCOURAGED,DISCOURAGED,
 		NEUTRAL,PREFFERED,STRONGLY_PREFFERED,REQUIRED};
-	/*public static final int PROHIBITED = -3;
-	public static final int STRONGLY_DISCOURAGED = -2;
-	public static final int DISCOURAGED = -1;
-	public static final int NEUTRAL = 0;
-	public static final int PREFFERED = 1;
-	public static final int STRONGLY_PREFFERED = 2;
-	public static final int REQUIRED = 3;*/
-	/***********Dynamic properties*********/
+	/***********Regular properties*************/
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)	
 	private int _externalId;
-	private TimePref[] _monday;
-	private TimePref[] _tuesday;
-	private TimePref[] _wednesday;
-	private TimePref[] _thursday;
-	private TimePref[] _friday;
+	
+	@Column(name="monday")
+	private String _monPref;
+	
+	@Column(name="tuesday")
+	private String _tuePref;
+	
+	@Column(name="wednesday")
+	private String _wedPref;
+	
+	@Column(name="thursday")
+	private String _thuPref;
+	
+	@Column(name="friday")
+	private String _friPref;
+	
+	@Column(name="nrOfTimeSlotsPerDay")
 	private int _nrOfTimeSlotsPerDay;
 	
+	@Transient
+	private TimePref[] _monday;
+	
+	@Transient
+	private TimePref[] _tuesday;
+	
+	@Transient
+	private TimePref[] _wednesday;
+	
+	@Transient
+	private TimePref[] _thursday;
+	
+	@Transient
+	private TimePref[] _friday;
+	
 	/**
-	 * Creating a brand new time preference
+	 * Default constructor
+	 */
+	public TimePreferences()
+	{
+		this(0, "3,3,3,3,3,3,3,3,3,3,3,3", "3,3,3,3,3,3,3,3,3,3,3,3",
+				"3,3,3,3,3,3,3,3,3,3,3,3", "3,3,3,3,3,3,3,3,3,3,3,3", 
+				"3,3,3,3,3,3,3,3,3,3,3,3", 12);
+	}
+	
+	/**
+	 * Parameterized constructor.Creating a brand new time preference
 	 * @param monday
 	 * @param tuesday
 	 * @param wednesday
 	 * @param thursday
 	 * @param friday
 	 */
-	public TimePreferences(TimePref[] monday, TimePref[] tuesday,
-			TimePref[] wednesday, TimePref[] thursday, TimePref[] friday)
+	public TimePreferences(String monPref, String tuePref,
+			String wedPref, String thuPref, String friPref, int nrOfTimeSlotsPerDay)
 	{
-		this(0, monday, tuesday, wednesday, thursday, friday);
+		this(0, monPref, tuePref, wedPref, thuPref, friPref, nrOfTimeSlotsPerDay);
 	}
 	
 	/**
-	 * Create a existing time preference from the database
+	 * Parameterized constructor.Create a existing time preference from the database
 	 * @param externalId
 	 * @param monday
 	 * @param tuesday
@@ -51,23 +82,92 @@ public class TimePreferences {
 	 * @param thursday
 	 * @param friday
 	 */
-	public TimePreferences(int externalId, TimePref[] monday, TimePref[] tuesday,
-			TimePref[] wednesday, TimePref[] thursday, TimePref[] friday)
+	public TimePreferences(int externalId,String monPref, String tuePref,
+			String wedPref, String thuPref, String friPref, int nrOfTimeSlotsPerDay)
 	{
 		_externalId = externalId;
-		SetPreferencesByDay(Day.MONDAY,monday);
-		SetPreferencesByDay(Day.TUESDAY,tuesday);
-		SetPreferencesByDay(Day.WEDNESDAY,wednesday);
-		SetPreferencesByDay(Day.THURSDAY,thursday);
-		SetPreferencesByDay(Day.FRIDAY,friday);
-		set_nrOfTimeSlotsPerDay(12);
+		set_nrOfTimeSlotsPerDay(nrOfTimeSlotsPerDay);
+		set_monPref(monPref);
+		set_tuePref(tuePref);
+		set_wedPref(wedPref);
+		set_thuPref(thuPref);
+		set_friPref(friPref);
 	}
 	
 	/*********Getters and setters*********/
 	public int get_externalId() {
 		return _externalId;
-	}	
+	}
+
+	public String get_monPref()
+	{
+		return this._monPref;
+	}
 	
+	public void set_monPref(String monPref)
+	{
+		this._monPref = monPref;
+		SetPreferencesByDay(Day.MONDAY,monPref);
+	}
+
+	public String get_tuePref()
+	{
+		return this._tuePref;
+	}
+	
+	public void set_tuePref(String tuePref)
+	{
+		this._tuePref = tuePref;
+		SetPreferencesByDay(Day.TUESDAY,tuePref);
+	}
+
+	public String get_wedPref()
+	{
+		return this._wedPref;
+	}
+	
+	public void set_wedPref(String wedPref)
+	{
+		this._wedPref = wedPref;
+		SetPreferencesByDay(Day.WEDNESDAY,wedPref);
+	}
+
+	public String get_thuPref()
+	{
+		return this._thuPref;
+	}
+	
+	public void set_thuPref(String thuPref)
+	{
+		this._thuPref = thuPref;
+		SetPreferencesByDay(Day.THURSDAY,thuPref);
+	}
+
+	public String get_friPref()
+	{
+		return this._friPref;
+	}
+	
+	public void set_friPref(String friPref)
+	{
+		this._friPref = friPref;
+		SetPreferencesByDay(Day.FRIDAY,friPref);
+	}
+	
+	public int get_nrOfTimeSlotsPerDay() {
+		return _nrOfTimeSlotsPerDay;
+	}
+
+	public void set_nrOfTimeSlotsPerDay(int nrOfTimeSlotsPerDay) {
+		this._nrOfTimeSlotsPerDay = nrOfTimeSlotsPerDay;
+	}
+
+	/**********Functions that model the class behavior*****************/
+	/**
+	 * Gets an array that contains time preferences
+	 * @param dayOfTheWeek
+	 * @return
+	 */
 	public TimePref[] GetPreferencesByDay(Day dayOfTheWeek) {
 		TimePref[] day;
 		switch(dayOfTheWeek)
@@ -95,7 +195,33 @@ public class TimePreferences {
 		return day;
 	}
 
-	public void SetPreferencesByDay(Day dayOfTheWeek, TimePref[] timePreferences) {
+	/**
+	 * Sets time preferences from a string of values
+	 * @param dayOfTheWeek
+	 * @param dayPrefs
+	 */
+	public void SetPreferencesByDay(Day dayOfTheWeek, String dayPrefs) {
+		TimePref[] timePreferences = new TimePref[this._nrOfTimeSlotsPerDay];
+		// Split dayPrefs by separator
+		String[] prefs = dayPrefs.split(",");
+		// Create a TimePref array
+		for(int i=0; i<prefs.length; i++)
+		{
+			timePreferences[i] = TimePref.values()[Integer.parseInt(prefs[i])];
+		}
+		// Assign the time preferences
+		SetPreferencesByDay(dayOfTheWeek, timePreferences);
+		
+	}
+	
+	/**
+	 * Sets time preferences with an array
+	 * @param dayOfTheWeek
+	 * @param timePreferences
+	 */
+	public void SetPreferencesByDay(Day dayOfTheWeek, TimePref[] timePreferences)
+	{
+		// Assign it to the day given
 		if(timePreferences.length == this._nrOfTimeSlotsPerDay)
 		{
 			switch(dayOfTheWeek)
@@ -121,23 +247,26 @@ public class TimePreferences {
 		}
 	}
 	
+	/**
+	 * Gets a preference by day and time of day
+	 * @param dayOfTheWeek
+	 * @param slotNr
+	 * @return
+	 */
 	public TimePref GetPreferencesByTime(Day dayOfTheWeek,int slotNr)
 	{
 		return GetPreferencesByDay(dayOfTheWeek)[slotNr];
 	}
 	
+	/**
+	 * Sets a preference by day and time of day
+	 * @param dayOfTheWeek
+	 * @param timePref
+	 * @param slotNr
+	 */
 	public void SetPreferencesByTime(Day dayOfTheWeek, TimePref timePref, int slotNr)
 	{
 		TimePref[] timePrefs = GetPreferencesByDay(dayOfTheWeek);
 		timePrefs[slotNr] = timePref;
 	}
-
-	public int get_nrOfTimeSlotsPerDay() {
-		return _nrOfTimeSlotsPerDay;
-	}
-
-	public void set_nrOfTimeSlotsPerDay(int _nrOfTimeSlotsPerDay) {
-		this._nrOfTimeSlotsPerDay = _nrOfTimeSlotsPerDay;
-	}
-	/**********Functions that model the class behavior*****************/
 }

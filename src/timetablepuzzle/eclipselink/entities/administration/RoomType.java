@@ -4,7 +4,7 @@ import java.util.List;
 import javax.persistence.*;
 
 @Entity
-@Table(name="room_type")
+@Table(name="room_types")
 public class RoomType {
 	@Id
 	@Column(name="external_id")
@@ -21,6 +21,11 @@ public class RoomType {
 	private int _maxCapacity;
 	
 	@OneToMany(targetEntity=RoomFeature.class)
+	@JoinTable(name="roomType_roomFeatures",
+    joinColumns=
+         @JoinColumn(name="roomType_external_id"),
+    inverseJoinColumns=
+         @JoinColumn(name="roomFeature_external_id"))
 	private List<RoomFeature> _roomFeatures;
 	
 	public RoomType()

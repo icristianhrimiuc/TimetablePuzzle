@@ -3,7 +3,7 @@ package timetablepuzzle.eclipselink.entities.administration;
 import javax.persistence.*;
 
 @Entity
-@Table(name="location")
+@Table(name="locations")
 public class Location {
 	@Id
 	@Column(name="external_id")

@@ -1,42 +1,80 @@
 package timetablepuzzle.eclipselink.entities.inputdata;
 
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
 
 import timetablepuzzle.eclipselink.entities.administration.DatePattern;
+import timetablepuzzle.eclipselink.entities.administration.InstructorMeetings;
 
+@Entity
+@Table(name="offerings")
 public class Offering {
 	/*********Static fields***********/
-	public static final int LECTURE= 1;
-	public static final int SEMINARY = 2;
-	public static final int LABORATORY = 3;
-	public static final int GYM = 4;
-	/************Dynamic Properties**********/
+	public static enum OfferingType{LECTURE,SEMINARY,LABORATORY,GYM,UNASSIGNED};
+	/************Regular Properties**********/
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)	
 	private int _externalId;
+	
+	@Column(name="name")
 	private String _name;
-	private int _type;
+	
+	@Column(name="type")
+	private OfferingType _type;
+	
+	@OneToMany(targetEntity=Room.class)
 	private List<Room> _rooms;
-	private List<Instructor> _instructors;
-	private List<Integer> _nrOfMeetingsPerInstructor;
+	
+	@OneToMany(mappedBy="_offering")
+	private List<InstructorMeetings> _nrOfMeetingsPerInstructor;
+	
+	@ManyToOne(targetEntity=DatePattern.class,optional=false)
+	@JoinColumn(name="date_pattern", nullable=false, updatable=false)
 	private DatePattern _datePattern;
+	
+	@Column(name="nroftimeslots")
 	private int _nrOfTimeSlots;
+	
+	@Column(name="nrofgroupslots")
 	private int _nrOfGroupSlots;
 	
-	public Offering(int externalId, String name,int type,
-			List<Room> rooms, List<Instructor> instructors,
-			List<Integer> nrOfMeetingsPerInstructor, DatePattern datePattern, 
-			int nrOfTimeSlots, int nrOfGroupSlots)
+	/**
+	 * DefaultConstructor
+	 */
+	public Offering()
+	{
+		this(0,"NoName",OfferingType.UNASSIGNED,new ArrayList<Room>(),
+				new ArrayList<InstructorMeetings>(),new DatePattern(),0,0);
+	}
+	
+	/**
+	 * Parameterized constructor. Creates a class with data from the database
+	 * @param externalId
+	 * @param name
+	 * @param type
+	 * @param rooms
+	 * @param instructors
+	 * @param nrOfMeetingsPerInstructor
+	 * @param datePattern
+	 * @param nrOfTimeSlots
+	 * @param nrOfGroupSlots
+	 */
+	public Offering(int externalId, String name, OfferingType type,
+			List<Room> rooms, List<InstructorMeetings> nrOfMeetingsPerInstructor,
+			DatePattern datePattern, int nrOfTimeSlots, int nrOfGroupSlots)
 	{
 		_externalId = externalId;
 		set_name(name);
 		set_type(type);
-		set_rooms(rooms);
-		set_instructors(instructors);
-		set_nrOfMeetingsPerInstructor(nrOfMeetingsPerInstructor);
+		_rooms = rooms;
+		_nrOfMeetingsPerInstructor = nrOfMeetingsPerInstructor;
 		set_datePattern(datePattern);
 		set_nrOfTimeSlots(nrOfTimeSlots);
 		set_nrOfGroupSlots(nrOfGroupSlots);
 	}
-
+	/******************Getters and Setters****************/
 	public int get_externalId() {
 		return _externalId;
 	}
@@ -49,12 +87,12 @@ public class Offering {
 		this._name = _name;
 	}
 	
-	public int get_type()
+	public OfferingType get_type()
 	{
 		return this._type;
 	}
 	
-	public void set_type(int type)
+	public void set_type(OfferingType type)
 	{
 		this._type = type;
 	}
@@ -63,24 +101,8 @@ public class Offering {
 		return _rooms;
 	}
 
-	public void set_rooms(List<Room> _rooms) {
-		this._rooms = _rooms;
-	}
-
-	public List<Instructor> get_instructors() {
-		return _instructors;
-	}
-
-	public void set_instructors(List<Instructor> _instructors) {
-		this._instructors = _instructors;
-	}
-
-	public List<Integer> get_nrOfMeetingsPerInstructor() {
+	public List<InstructorMeetings> get_nrOfMeetingsPerInstructor() {
 		return _nrOfMeetingsPerInstructor;
-	}
-
-	public void set_nrOfMeetingsPerInstructor(List<Integer> _nrOfMeetingsPerInstructor) {
-		this._nrOfMeetingsPerInstructor = _nrOfMeetingsPerInstructor;
 	}
 
 	public DatePattern get_datePattern() {
@@ -105,5 +127,20 @@ public class Offering {
 
 	public void set_nrOfGroupSlots(int _nrOfGroupSlots) {
 		this._nrOfGroupSlots = _nrOfGroupSlots;
+	}
+	/***************Methods that model the class behavior***************/
+	/**
+	 * Return a list of all the possible instructors
+	 * @return
+	 */
+	public List<Instructor> GetInstructors()
+	{
+		List<Instructor> instructors = new ArrayList<Instructor>();
+		for(InstructorMeetings instrMeeting : this._nrOfMeetingsPerInstructor)
+		{
+			instructors.add(instrMeeting.get_instructor());
+		}
+		
+		return instructors;
 	}
 }

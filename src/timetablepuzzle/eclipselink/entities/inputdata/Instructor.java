@@ -1,28 +1,53 @@
 package timetablepuzzle.eclipselink.entities.inputdata;
 
-import java.util.LinkedList;
-import java.util.List;
+import javax.persistence.*;
 
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.Day;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.TimePref;
 
+@Entity
+@Table(name="instructors")
 public class Instructor {
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int _externalId;
-	private String _name;
-	private String _position;
-	private TimePreferences _preferences;
-	private List<Class> _classAssignments;
 	
-	public Instructor(int externalId, String name, String position, TimePreferences preferences)
+	@Column(name="name")
+	private String _name;
+	
+	@Column(name="position")
+	private String _position;
+	
+	@OneToOne(optional=false)
+	@JoinColumn(name="time_preferences", unique=true, nullable=false, updatable=false)
+	private TimePreferences _timePreferences;
+	
+	/**
+	 * Default Constructor
+	 */
+	public Instructor()
+	{
+		this(0,"NoName","NoPosition",new TimePreferences());
+	}
+	
+	/**
+	 * Parameterized constructor
+	 * @param externalId
+	 * @param name
+	 * @param position
+	 * @param preferences
+	 */
+	public Instructor(int externalId, String name, String position,
+			TimePreferences timePreferences)
 	{
 		_externalId = externalId;
 		set_name(name);
 		set_position(position);
-		_preferences = preferences;
-		set_classAssignments(new LinkedList<Class>());
+		set_timePreferences(timePreferences);
 	}
-
+	/**********Getters and setters**************/
 	public int get_externalId() {
 		return _externalId;
 	}
@@ -42,28 +67,33 @@ public class Instructor {
 	public void set_position(String _position) {
 		this._position = _position;
 	}
-
-	public TimePref[] get_preferencesByDay(Day dayOfTheWeek) {
-		return _preferences.GetPreferencesByDay(dayOfTheWeek);
-	}
-
-	public void set_preferencesByDay(Day dayOfTheWeek, TimePref[] _preferences) {
-		this._preferences.SetPreferencesByDay(dayOfTheWeek, _preferences);
+	
+	public TimePreferences get_timePreferences()
+	{
+		return this._timePreferences;
 	}
 	
-	public TimePref get_preferencesByTime(Day dayOfTheWeek, int slotNr) {
-		return _preferences.GetPreferencesByTime(dayOfTheWeek, slotNr);
+	public void set_timePreferences(TimePreferences timePreferences)
+	{
+		this._timePreferences = timePreferences;
+	}
+	
+	public TimePref[] get_timePreferencesByDay(Day dayOfTheWeek) {
+		return _timePreferences.GetPreferencesByDay(dayOfTheWeek);
 	}
 
-	public void set_preferencesByTime(Day dayOfTheWeek, TimePref _preferences, int slotNr) {
-		this._preferences.SetPreferencesByTime(dayOfTheWeek, _preferences, slotNr);
+	public void set_preferencesByDay(Day dayOfTheWeek, TimePref[] timePreferences) {
+		this._timePreferences.SetPreferencesByDay(dayOfTheWeek, timePreferences);
+	}
+	
+	public TimePref get_timePreferencesByTime(Day dayOfTheWeek, int slotNr) {
+		return _timePreferences.GetPreferencesByTime(dayOfTheWeek, slotNr);
 	}
 
-	public List<Class> get_classAssignments() {
-		return _classAssignments;
+	public void set_timePreferencesByTime(Day dayOfTheWeek, TimePref _timePref,
+			int slotNr) 
+	{
+		this._timePreferences.SetPreferencesByTime(dayOfTheWeek, _timePref, slotNr);
 	}
-
-	public void set_classAssignments(List<Class> _classAssignments) {
-		this._classAssignments = _classAssignments;
-	}
+	/**************Methods that model the class behavior******************/
 }

@@ -319,7 +319,7 @@ public class Solution {
 		{
 			// Get room and instructor preferences for the day
 			TimePref[] rmTimePref = uClass.get_assignedRoom().get_preferencesByDay(Day.values()[i]);
-			TimePref[] instrTimePref = uClass.getAssignedInstructor().get_preferencesByDay(Day.values()[i]);
+			TimePref[] instrTimePref = uClass.get_assignedInstructor().get_timePreferencesByDay(Day.values()[i]);
 			
 			// For each time of the day
 			for(int j=0; j< this._nrOfTimeSlotsPerDay; j++)
