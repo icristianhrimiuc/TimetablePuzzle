@@ -3,29 +3,93 @@ package timetablepuzzle.eclipselink.entities.inputdata;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.persistence.*;
+
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.*;
 
-public class Solution {
-	/* Constant variables*/
-	public enum Message{VARIABLE_NOT_FOUND,UNASSIGNED,ASIGGN_SUCCESSFULL,ROOM_IS_UNAVAILABLE,
+@Entity
+@Table(name="solutions")
+public class Solution{
+	/**************Static variables*****************/
+	public static enum Message{VARIABLE_NOT_FOUND,UNASSIGNED,ASIGGN_SUCCESSFULL,ROOM_IS_UNAVAILABLE,
 		INSTRUCTOR_IS_UNAVAILABLE,STUDENTGROUP_IS_UNAVAILABLE};
-/*	public static final int VARIABLE_NOT_FOUND = -2;
-	public static final int UNASSIGNED = -1;
-	public static final int ASIGGN_SUCCESSFULL = 0;
-	public static final int ROOM_IS_UNAVAILABLE = 1;
-	public static final int INSTRUCTOR_IS_UNAVAILABLE = 2;
-	public static final int STUDENTGROUP_IS_UNAVAILABLE = 3;*/
-	/* Private properties */
+	/**************Private properties******************/
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int _externalId;
-	private HashMap<Integer,Class[]> _roomsTimetable;
-	private HashMap<Integer,Class[]> _instructorsTimetable;
-	private HashMap<Integer, Class[]> _studentsTimetable;
+	
+	@ElementCollection
+    @MapKeyColumn(name="room")
+	@Column(name="classassignments")
+	@CollectionTable(
+	      name="solution_roomassignments",
+	      joinColumns=@JoinColumn(name="solution")
+	)
+	private Map<Integer,String> _roomsAssignments;
+	
+	@ElementCollection
+    @MapKeyColumn(name="instructor")
+	@Column(name="classassignments")
+	@CollectionTable(
+	      name="solution_instructorassignments",
+	      joinColumns=@JoinColumn(name="solution")
+	)
+	private Map<Integer,String> _instructorsAssignments;
+	
+	@ElementCollection
+    @MapKeyColumn(name="students")
+	@Column(name="classassignments")
+	@CollectionTable(
+	      name="solution_studentsassignments",
+	      joinColumns=@JoinColumn(name="solution")
+	)
+	private Map<Integer,String> _studentsAssignments;
+	
+	@OneToMany
+	@JoinTable
+	(
+	    name="unassigned_classes",
+	    joinColumns={ @JoinColumn(name="solution", referencedColumnName="external_id") },
+	    inverseJoinColumns={ @JoinColumn(name="unassigned_class", referencedColumnName="external_id", unique=true) }
+	)
 	private List<Class> _unassignedClasses;
-	private HashMap<Class,Integer> _assignedClasses;
+
+	// TO DO: This column should appear in the database, but int[]
+	// can not be mapped
+	@Transient
 	private HashMap<Integer,int[]> _nrOfRemovals;
+	
+	@Column(name="nrofclasses")
 	private int _nrOfClasses;
+	
+	@Column(name="nroftimeslotsperday")
 	private int _nrOfTimeSlotsPerDay;
+	
+	@Column(name="nrOfdays")
 	private int _nrOfDays;
+	
+	@Transient
+	private HashMap<Integer,Class[]> _roomsTimetable;
+	
+	@Transient
+	private HashMap<Integer,Class[]> _instructorsTimetable;
+	
+	@Transient
+	private HashMap<Integer,Class[]> _studentsTimetable;
+	
+	@Transient
+	private HashMap<Class,Integer> _assignedClasses;
+	
+	/**
+	 * DefaultConstructor
+	 */
+	public Solution()
+	{
+		this(0, new ArrayList<Class>());
+	}
 	
 	/**
 	 * Constructor for creating a brand new solution
@@ -183,6 +247,8 @@ public class Solution {
 	 */
 	private void FindAssignedClasses()
 	{
+		this._assignedClasses = new HashMap<Class,Integer>();
+		
 		for(Class[] roomClasses : this._roomsTimetable.values())
 		{
 			// For each room
@@ -381,5 +447,29 @@ public class Solution {
 		}
 		
 		return domainSize;
+	}
+
+	public Map<Integer,String> get_roomsAssignments() {
+		return _roomsAssignments;
+	}
+
+	public void set_roomsAssignments(Map<Integer,String> _roomsAssignments) {
+		this._roomsAssignments = _roomsAssignments;
+	}
+
+	public Map<Integer,String> get_instructorsAssignments() {
+		return _instructorsAssignments;
+	}
+
+	public void set_instructorsAssignments(Map<Integer,String> _instructorsAssignments) {
+		this._instructorsAssignments = _instructorsAssignments;
+	}
+
+	public Map<Integer,String> get_studentsAssignments() {
+		return _studentsAssignments;
+	}
+
+	public void set_studentsAssignments(Map<Integer,String> _studentsAssignments) {
+		this._studentsAssignments = _studentsAssignments;
 	}
 }

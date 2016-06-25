@@ -3,7 +3,6 @@
 	<persistence-unit name="TimetablePuzzle" transaction-type="RESOURCE_LOCAL">
 	
 		<class>timetablepuzzle.eclipselink.entities.administration.RoomFeature</class>
-		<class>timetablepuzzle.eclipselink.entities.administration.InstructorMeetings</class>
 		<class>timetablepuzzle.eclipselink.entities.administration.RoomType</class>
 		<class>timetablepuzzle.eclipselink.entities.administration.Location</class>
 		<class>timetablepuzzle.eclipselink.entities.administration.DatePattern</class>
@@ -14,7 +13,16 @@
 		<class>timetablepuzzle.eclipselink.entities.inputdata.StudentGroup</class>
 		<class>timetablepuzzle.eclipselink.entities.inputdata.Offering</class>
 		<class>timetablepuzzle.eclipselink.entities.inputdata.CourseOffering</class>
-		<class>timetablepuzzle.eclipselink.entities.inputdata.Class</class>	
+		<class>timetablepuzzle.eclipselink.entities.inputdata.Class</class>
+		<class>timetablepuzzle.eclipselink.entities.inputdata.Solution</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.InstructorMeetings</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.Curricula</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.SubjectArea</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.YearOfStudy</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.Department</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.AcademicSession</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.AcademicYear</class>
+		<class>timetablepuzzle.eclipselink.entities.administration.Faculty</class>
 		
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/timetable_puzzle??useSSL=false;requireSSL=false"/>

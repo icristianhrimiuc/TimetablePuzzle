@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 import timetablepuzzle.eclipselink.entities.administration.DatePattern;
 import timetablepuzzle.eclipselink.entities.administration.InstructorMeetings;
-
 @Entity
 @Table(name="offerings")
 public class Offering {
@@ -25,6 +24,11 @@ public class Offering {
 	private OfferingType _type;
 	
 	@OneToMany(targetEntity=Room.class)
+	@JoinTable(name="offering_rooms",
+    joinColumns=
+         @JoinColumn(name="offering_external_id"),
+    inverseJoinColumns=
+         @JoinColumn(name="room_external_id"))
 	private List<Room> _rooms;
 	
 	@OneToMany(mappedBy="_offering")

@@ -5,11 +5,8 @@ import java.util.List;
 import javax.persistence.*;
 
 @Entity
-@Table(name="subject_areas")
-public class SubjectArea {
-	/***********Static fields*************/
-	public static enum Term{FIRST,SECOND,THIRD,FOURTH,UNASSIGNED};
-	/***********Regular fields*************/
+@Table(name="faculties")
+public class Faculty {
 	@Id
 	@Column(name="external_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,30 +15,33 @@ public class SubjectArea {
 	@Column(name="name")
 	private String _name;
 	
-	@OneToMany(targetEntity=Curricula.class)
-	@JoinTable(name="subjectArea_curriculas",
+	@OneToMany(targetEntity=Department.class)
+	@JoinTable(name="faculty_departments",
     joinColumns=
-         @JoinColumn(name="subjectArea_external_id"),
+         @JoinColumn(name="faculty_external_id"),
     inverseJoinColumns=
-         @JoinColumn(name="curricula_external_id"))
-	private List<Curricula> _studyTerms;
+         @JoinColumn(name="department_external_id"))
+	private List<Department> _departments;
 	
-	public SubjectArea()
+	/**
+	 * Default constructor
+	 */
+	public Faculty()
 	{
-		this(0,"NoName",new ArrayList<Curricula>());
+		this(0,"NoName", new ArrayList<Department>());
 	}
 	
 	/**
 	 * Parameterized constructor
 	 * @param externalId
 	 * @param name
-	 * @param studyTerms
+	 * @param department
 	 */
-	public SubjectArea(int externalId, String name, List<Curricula> studyTerms)
+	public Faculty(int externalId, String name, List<Department> departments)
 	{
 		_externalId = externalId;
 		set_name(name);
-		_studyTerms = studyTerms;
+		_departments = departments;
 	}
 	/********************Getters and setters****************/
 	public int get_externalId() {
@@ -56,12 +56,8 @@ public class SubjectArea {
 		this._name = _name;
 	}
 
-	public List<Curricula> get_studyTerms() {
-		return _studyTerms;
-	}
-
-	public void set_studyTerms(List<Curricula> _studyTerms) {
-		this._studyTerms = _studyTerms;
+	public List<Department> get_departments() {
+		return _departments;
 	}
 	/*******************Methods that model the class behavior*******************/
 }

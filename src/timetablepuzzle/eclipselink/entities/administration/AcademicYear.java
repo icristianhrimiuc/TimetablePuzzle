@@ -1,47 +1,66 @@
 package timetablepuzzle.eclipselink.entities.administration;
 
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
 
+@Entity
+@Table(name="academic_years")
 public class AcademicYear {
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int _externalId;
-	private String _schoolYear;
-	private List<AcademicSession> _academicSessions;
-	private List<YearOfStudy> _yearsOfStudy;
 	
-	public AcademicYear(int externalId,String schoolYear,
-			List<AcademicSession> academicSessions, List<YearOfStudy> yearsOfStudy)
+	@Column(name="year_period")
+	private String _yearPeriod;
+	
+	@OneToMany(targetEntity=AcademicSession.class)
+	@JoinTable(name="academicyear_academicsessions",
+    joinColumns=
+         @JoinColumn(name="academicyear_external_id"),
+    inverseJoinColumns=
+         @JoinColumn(name="academicsession_external_id"))
+	private List<AcademicSession> _academicSessions;
+	
+	/**
+	 * Default constructor
+	 */
+	public AcademicYear()
+	{
+		this(0, "NoYearPeriod", new ArrayList<AcademicSession>());
+	}
+	
+	/**
+	 * Parameterized constructor
+	 * @param externalId
+	 * @param yearPeriod
+	 * @param academicSessions
+	 */
+	public AcademicYear(int externalId,String yearPeriod,
+			List<AcademicSession> academicSessions)
 	{
 		_externalId = externalId;
-		set_schoolYear(schoolYear);
-		set_academicSessions(academicSessions);
-		set_yearsOfStudy(yearsOfStudy);
+		set_yearPeriod(yearPeriod);
+		_academicSessions = academicSessions;
 	}
-
+	
+	/********************Getters and setters****************/
 	public int get_externalId() {
 		return _externalId;
 	}
 
-	public String get_schoolYear() {
-		return _schoolYear;
+	public String get_yearPeriod() {
+		return _yearPeriod;
 	}
 
-	public void set_schoolYear(String _schoolYear) {
-		this._schoolYear = _schoolYear;
+	public void set_yearPeriod(String _yearPeriod) {
+		this._yearPeriod = _yearPeriod;
 	}
 
 	public List<AcademicSession> get_academicSessions() {
 		return _academicSessions;
 	}
-
-	public void set_academicSessions(List<AcademicSession> _academicSessions) {
-		this._academicSessions = _academicSessions;
-	}
-
-	public List<YearOfStudy> get_yearsOfStudy() {
-		return _yearsOfStudy;
-	}
-
-	public void set_yearsOfStudy(List<YearOfStudy> _yearsOfStudy) {
-		this._yearsOfStudy = _yearsOfStudy;
-	}	
+	
+	/*******************Methods that model the class behavior*******************/
 }
