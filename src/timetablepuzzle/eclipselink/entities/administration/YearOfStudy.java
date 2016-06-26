@@ -5,24 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.inputdata.CourseOffering;
 import timetablepuzzle.eclipselink.entities.inputdata.StudentGroup;
 
 @Entity
 @Table(name="years_of_study")
-public class YearOfStudy {
+public class YearOfStudy extends E{
 	/***********Static fields*************/
 	public static enum Year{FIRST,SECOND,THIRD,FOURTH,FIFTH,SIXTH,UNASSIGNED};
-	/***********Regular fields*************/
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+	/***********Regular fields*************/	
 	@Column(name="year")
 	private Year _year;
 	
-	@OneToMany(targetEntity=SubjectArea.class)
+	@OneToMany(cascade=CascadeType.ALL,targetEntity=SubjectArea.class)
 	@JoinTable(name="yearofstudy_subjectAreas",
     joinColumns=
          @JoinColumn(name="yearofstudy_external_id"),
@@ -30,7 +26,7 @@ public class YearOfStudy {
          @JoinColumn(name="subjectrea_external_id"))
 	private List<SubjectArea> _areas;
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="student_group")
 	private StudentGroup _students;
 	
@@ -62,10 +58,6 @@ public class YearOfStudy {
 	}
 	
 	/********************Getters and setters****************/
-	public int get_externalId() {
-		return _externalId;
-	}
-
 	public Year get_year() {
 		return _year;
 	}

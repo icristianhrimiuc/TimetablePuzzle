@@ -4,21 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
+
 @Entity
 @Table(name="subject_areas")
-public class SubjectArea {
+public class SubjectArea extends E{
 	/***********Static fields*************/
 	public static enum Term{FIRST,SECOND,THIRD,FOURTH,UNASSIGNED};
-	/***********Regular fields*************/
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+	/***********Regular fields*************/	
 	@Column(name="name")
 	private String _name;
 	
-	@OneToMany(targetEntity=Curricula.class)
+	@OneToMany(cascade=CascadeType.ALL,targetEntity=Curricula.class)
 	@JoinTable(name="subjectArea_curriculas",
     joinColumns=
          @JoinColumn(name="subjectArea_external_id"),
@@ -43,11 +40,8 @@ public class SubjectArea {
 		set_name(name);
 		_studyTerms = studyTerms;
 	}
+	
 	/********************Getters and setters****************/
-	public int get_externalId() {
-		return _externalId;
-	}
-
 	public String get_name() {
 		return _name;
 	}

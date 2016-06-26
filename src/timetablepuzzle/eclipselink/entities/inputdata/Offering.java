@@ -4,26 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.DatePattern;
 import timetablepuzzle.eclipselink.entities.administration.InstructorMeetings;
 @Entity
 @Table(name="offerings")
-public class Offering {
+public class Offering extends E{
 	/*********Static fields***********/
 	public static enum OfferingType{LECTURE,SEMINARY,LABORATORY,GYM,UNASSIGNED};
-	/************Regular Properties**********/
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)	
-	private int _externalId;
-	
+	/************Regular Properties**********/	
 	@Column(name="name")
 	private String _name;
 	
 	@Column(name="type")
 	private OfferingType _type;
 	
-	@OneToMany(targetEntity=Room.class)
+	@OneToMany(cascade=CascadeType.ALL,targetEntity=Room.class)
 	@JoinTable(name="offering_rooms",
     joinColumns=
          @JoinColumn(name="offering_external_id"),
@@ -31,10 +27,15 @@ public class Offering {
          @JoinColumn(name="room_external_id"))
 	private List<Room> _rooms;
 	
-	@OneToMany(mappedBy="_offering")
+	@OneToMany(cascade=CascadeType.ALL,targetEntity=InstructorMeetings.class)
+	@JoinTable(name="offering_instructormeetings",
+    joinColumns=
+         @JoinColumn(name="offering_external_id"),
+    inverseJoinColumns=
+         @JoinColumn(name="instructormeetings_external_id"))
 	private List<InstructorMeetings> _nrOfMeetingsPerInstructor;
 	
-	@ManyToOne(targetEntity=DatePattern.class,optional=false)
+	@ManyToOne(cascade=CascadeType.ALL,targetEntity=DatePattern.class,optional=false)
 	@JoinColumn(name="date_pattern", nullable=false, updatable=false)
 	private DatePattern _datePattern;
 	
@@ -79,10 +80,6 @@ public class Offering {
 		set_nrOfGroupSlots(nrOfGroupSlots);
 	}
 	/******************Getters and Setters****************/
-	public int get_externalId() {
-		return _externalId;
-	}
-
 	public String get_name() {
 		return _name;
 	}

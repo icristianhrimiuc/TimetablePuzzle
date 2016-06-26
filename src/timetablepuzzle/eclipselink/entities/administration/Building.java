@@ -2,21 +2,18 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
+
 @Entity
 @Table(name="buildings")
-public class Building {
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+public class Building extends E{
 	@Column(name="name")
 	private String _name;
 	
 	@Column(name="abreviation")
 	private String _abreviation;
 
-	@OneToOne(optional=false)
+	@OneToOne(cascade=CascadeType.ALL,optional=false)
 	@JoinColumn(name="location", unique=true, nullable=false, updatable=false)
 	private Location _location;
 	
@@ -47,11 +44,7 @@ public class Building {
 			set_location(new Location());
 		}
 	}
-	/****************Getters ans setters***************/
-	public int get_externalId() {
-		return _externalId;
-	}
-
+	/****************Getters and setters***************/
 	public String get_name() {
 		return _name;
 	}

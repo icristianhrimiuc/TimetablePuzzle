@@ -3,15 +3,12 @@ package timetablepuzzle.eclipselink.entities.administration;
 import java.util.Date;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.inputdata.Solution;
 
 @Entity
 @Table(name="academic_sessions")
-public class AcademicSession {
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;	
+public class AcademicSession extends E {
 
 	@Column(name="name")
 	private String _name;
@@ -32,7 +29,7 @@ public class AcademicSession {
 	@Column(name="session_ends")
 	private Date _sessionEnds;
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="solution", unique=true)
 	private Solution _solution;
 	
@@ -71,9 +68,6 @@ public class AcademicSession {
 	}
 	
 	/***********************Getters and setters*******************/
-	public int get_externalId() {
-		return _externalId;
-	}
 
 	public String get_name() {
 		return _name;

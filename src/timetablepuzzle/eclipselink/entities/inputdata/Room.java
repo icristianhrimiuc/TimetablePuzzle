@@ -1,35 +1,31 @@
 package timetablepuzzle.eclipselink.entities.inputdata;
 
+import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.*;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.*;
 import javax.persistence.*;
 
 @Entity
 @Table(name="rooms")
-public class Room {
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+public class Room extends E{	
 	@Column(name="code")
 	private String _code;
 	
 	@Column(name="name")
 	private String _name;
 	
-	@ManyToOne(targetEntity=RoomType.class,optional=false)
+	@ManyToOne(cascade=CascadeType.ALL,targetEntity=RoomType.class,optional=false)
 	@JoinColumn(name="room_type", nullable=false, updatable=false)
 	private RoomType _type;
 	
 	@Column(name="capacity")
 	private int _capacity;
 	
-	@OneToOne(optional=false)
+	@OneToOne(cascade=CascadeType.ALL,optional=false)
     @JoinColumn(name="time_preferences", unique=true, nullable=false, updatable=false)
 	private TimePreferences _preferences;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne(cascade=CascadeType.ALL,optional=false)
 	@JoinColumn(name="building",nullable=false,updatable=false)
 	private Building _building;
 	
@@ -65,10 +61,6 @@ public class Room {
 	}
 
 	/***********Getters and setters for almost all the fields**************/
-	public int get_externalId() {
-		return _externalId;
-	}
-
 	public String get_code() {
 		return _code;
 	}

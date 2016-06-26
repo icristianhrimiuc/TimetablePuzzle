@@ -2,14 +2,11 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
+
 @Entity
 @Table(name="room_features")
-public class RoomFeature {
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+public class RoomFeature extends E{	
 	@Column(name="feature")
 	private String _feature;
 	
@@ -31,11 +28,8 @@ public class RoomFeature {
 		set_externalId(externalId);
 		set_feature(feature);
 	}
-
-	public int get_externalId() {
-		return _externalId;
-	}
-
+	
+	/******************Getters and setters****************/
 	public void set_externalId(int _externalId) {
 		this._externalId = _externalId;
 	}

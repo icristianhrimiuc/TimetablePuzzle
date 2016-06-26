@@ -2,14 +2,11 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
+
 @Entity
 @Table(name="date_patterns")
-public class DatePattern {
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+public class DatePattern extends E{
 	@Column(name="name")
 	private String _name;
 	
@@ -35,11 +32,8 @@ public class DatePattern {
 		set_name(name);
 		_usedDates = usedDates;
 	}
+	
 	/**************Getters and setters******************/
-	public int get_externalId() {
-		return _externalId;
-	}
-
 	public String get_name() {
 		return _name;
 	}

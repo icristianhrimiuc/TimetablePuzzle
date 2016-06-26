@@ -4,33 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
+
 @Entity
 @Table(name="classes")
-public class Class {
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+public class Class extends E{	
 	@Column(name="course_title")
 	private String _courseTitle;
 	
 	@Column(name="courseAbbreviation")
 	private String _courseAbbreviation;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne(cascade=CascadeType.ALL,optional=false)
     @JoinColumn(name="meeting", nullable=false, updatable=false)
 	private Offering _meeting;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne(cascade=CascadeType.ALL,optional=false)
     @JoinColumn(name="room", nullable=false, updatable=false)
 	private Room _assignedRoom;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne(cascade=CascadeType.ALL,optional=false)
     @JoinColumn(name="instructor", nullable=false, updatable=false)
 	private Instructor _assignedInstructor;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne(cascade=CascadeType.ALL,optional=false)
     @JoinColumn(name="student_group", nullable=false, updatable=false)
 	private StudentGroup _assignedParentStGroup;
 	
@@ -87,10 +84,7 @@ public class Class {
 		set_assignedParentStGroup(assignedParentStGroup);
 	}
 
-	public int get_externalId() {
-		return _externalId;
-	}
-
+	/********************Getters and setters********************/
 	public String get_courseTitle() {
 		return _courseTitle;
 	}

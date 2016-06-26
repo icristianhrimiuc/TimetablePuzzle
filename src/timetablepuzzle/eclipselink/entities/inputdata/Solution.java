@@ -7,20 +7,17 @@ import java.util.Map;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.*;
 
 @Entity
 @Table(name="solutions")
-public class Solution{
+public class Solution extends E{
 	/**************Static variables*****************/
 	public static enum Message{VARIABLE_NOT_FOUND,UNASSIGNED,ASIGGN_SUCCESSFULL,ROOM_IS_UNAVAILABLE,
 		INSTRUCTOR_IS_UNAVAILABLE,STUDENTGROUP_IS_UNAVAILABLE};
 	/**************Private properties******************/
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+	// Operations on ElementCollections are always cascaded.
 	@ElementCollection
     @MapKeyColumn(name="room")
 	@Column(name="classassignments")
@@ -30,6 +27,7 @@ public class Solution{
 	)
 	private Map<Integer,String> _roomsAssignments;
 	
+	// Operations on ElementCollections are always cascaded.
 	@ElementCollection
     @MapKeyColumn(name="instructor")
 	@Column(name="classassignments")
@@ -39,6 +37,7 @@ public class Solution{
 	)
 	private Map<Integer,String> _instructorsAssignments;
 	
+	// Operations on ElementCollections are always cascaded.
 	@ElementCollection
     @MapKeyColumn(name="students")
 	@Column(name="classassignments")
@@ -48,7 +47,7 @@ public class Solution{
 	)
 	private Map<Integer,String> _studentsAssignments;
 	
-	@OneToMany
+	@OneToMany(cascade=CascadeType.ALL)
 	@JoinTable
 	(
 	    name="unassigned_classes",
@@ -59,8 +58,15 @@ public class Solution{
 
 	// TO DO: This column should appear in the database, but int[]
 	// can not be mapped
-	@Transient
-	private HashMap<Integer,int[]> _nrOfRemovals;
+	// Operations on ElementCollections are always cascaded.
+	@ElementCollection
+    @MapKeyColumn(name="class")
+	@Column(name="nrofremovals")
+	@CollectionTable(
+	      name="solution_nrofremovals",
+	      joinColumns=@JoinColumn(name="solution")
+	)
+	private Map<Integer,Integer> _nrOfRemovals;
 	
 	@Column(name="nrofclasses")
 	private int _nrOfClasses;
@@ -123,18 +129,18 @@ public class Solution{
 		_studentsTimetable = studentsTimetable;
 		_unassignedClasses = unassignedClasses;
 		FindAssignedClasses();
-		_nrOfRemovals = new HashMap<Integer,int[]>();
+		_nrOfRemovals = new HashMap<Integer,Integer>();
 		// Set the nrOfRemovals for the unassigned classes to 0
 		for(Class uClass : _unassignedClasses)
 		{
 			// This is safe, because java sets it by default to zero
-			_nrOfRemovals.put(uClass.get_externalId(), new int[1]);
+			_nrOfRemovals.put(uClass.get_externalId(), 0);
 		}
 		// Set the number of removals for the assigned classes to 0
 		for(Class aClass : _assignedClasses.keySet())
 		{
 			// This is safe, because java sets it by default to zero
-			_nrOfRemovals.put(aClass.get_externalId(), new int[1]);
+			_nrOfRemovals.put(aClass.get_externalId(), 0);
 		}
 		// Since the union of the unassignedClasses set and the assignedClasses set
 		// must be the empty set, the total number of classes is equal to the size of
@@ -145,10 +151,6 @@ public class Solution{
 	}
 
 	/* Getter and Setter methods for almost all the fields of the class*/
-	public int get_externalId() {
-		return _externalId;
-	}
-
 	@SuppressWarnings("unchecked")
 	public HashMap<Integer,Class[]> get_roomsTimetable() {
 		return (HashMap<Integer,Class[]>)_roomsTimetable.clone();
@@ -182,7 +184,7 @@ public class Solution{
 	
 	public int get_nrOfRemovals(int classId)
 	{
-		return this._nrOfRemovals.get(classId)[0];
+		return this._nrOfRemovals.get(classId);
 	}
 
 	public int get_nrOfClasses() {
@@ -356,9 +358,11 @@ public class Solution{
 				}
 				this._unassignedClasses.add(oneClass);
 				// This line increments the number of removals for this one class
-				this._nrOfRemovals.get(oneClass.get_externalId())[0]++;
+				int nrOfRemovals = this._nrOfRemovals.get(oneClass.get_externalId());
+				nrOfRemovals++;
+				this._nrOfRemovals.replace(oneClass.get_externalId(), nrOfRemovals);
 				nrOfUnassignedClasses++;
-			}			
+			}	
 		}
 		
 		return nrOfUnassignedClasses;

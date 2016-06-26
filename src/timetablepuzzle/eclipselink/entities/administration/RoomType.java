@@ -3,14 +3,11 @@ package timetablepuzzle.eclipselink.entities.administration;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
+
 @Entity
 @Table(name="room_types")
-public class RoomType {
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+public class RoomType extends E{	
 	@Column(name="name")
 	private String _name;
 	
@@ -20,7 +17,7 @@ public class RoomType {
 	@Column(name="max_capacity")
 	private int _maxCapacity;
 	
-	@OneToMany(targetEntity=RoomFeature.class)
+	@OneToMany(cascade=CascadeType.ALL,targetEntity=RoomFeature.class)
 	@JoinTable(name="roomType_roomFeatures",
     joinColumns=
          @JoinColumn(name="roomType_external_id"),
@@ -51,10 +48,7 @@ public class RoomType {
 		set_roomFeatures(roomFeatures);
 	}
 
-	public int get_externalId() {
-		return _externalId;
-	}
-
+	/**************Getters and setters*****************/
 	public String get_name() {
 		return _name;
 	}

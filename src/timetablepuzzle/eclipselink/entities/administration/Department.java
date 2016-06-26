@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
+
 @Entity
 @Table(name="departments")
-public class Department {
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+public class Department extends E{	
 	@Column(name="name")
 	private String _name;
 	
-	@OneToMany(targetEntity=YearOfStudy.class)
+	@OneToMany(cascade=CascadeType.ALL,targetEntity=YearOfStudy.class)
 	@JoinTable(name="department_yearsofstudy",
     joinColumns=
          @JoinColumn(name="department_external_id"),
@@ -45,10 +42,6 @@ public class Department {
 	}
 	
 	/********************Getters and setters****************/
-	public int get_externalId() {
-		return _externalId;
-	}
-
 	public String get_name() {
 		return _name;
 	}

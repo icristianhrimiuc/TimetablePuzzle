@@ -2,25 +2,22 @@ package timetablepuzzle.eclipselink.entities.inputdata;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
+
 @Entity
 @Table(name="course_offerings")
-public class CourseOffering {
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+public class CourseOffering extends E{	
 	@Column(name="abbreviation")
 	private String _abbreviation;
 	
 	@Column(name="title")
 	private String _title;
 	
-	@OneToOne(optional=false)
+	@OneToOne(cascade=CascadeType.ALL,optional=false)
     @JoinColumn(name="lecture_offering", unique=true, nullable=false, updatable=false)
 	private Offering _lecture;
 	
-	@OneToOne(optional=false)
+	@OneToOne(cascade=CascadeType.ALL,optional=false)
     @JoinColumn(name="individualMeetings_offering", unique=true, nullable=false, updatable=false)
 	private Offering _individualMeetings;
 	
@@ -49,11 +46,8 @@ public class CourseOffering {
 		set_lecture(lecture);
 		set_individualMeetings(individualMeetings);
 	}
+	
 	/******************Getters and Setters****************/
-	public int get_externalId() {
-		return _externalId;
-	}
-
 	public String get_abbreviation() {
 		return _abbreviation;
 	}

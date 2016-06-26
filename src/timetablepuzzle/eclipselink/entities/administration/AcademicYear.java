@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
+
 @Entity
 @Table(name="academic_years")
-public class AcademicYear {
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+public class AcademicYear extends E{ 	
 	@Column(name="year_period")
 	private String _yearPeriod;
 	
-	@OneToMany(targetEntity=AcademicSession.class)
+	@OneToMany(cascade=CascadeType.ALL,targetEntity=AcademicSession.class)
 	@JoinTable(name="academicyear_academicsessions",
     joinColumns=
          @JoinColumn(name="academicyear_external_id"),
@@ -46,10 +43,6 @@ public class AcademicYear {
 	}
 	
 	/********************Getters and setters****************/
-	public int get_externalId() {
-		return _externalId;
-	}
-
 	public String get_yearPeriod() {
 		return _yearPeriod;
 	}

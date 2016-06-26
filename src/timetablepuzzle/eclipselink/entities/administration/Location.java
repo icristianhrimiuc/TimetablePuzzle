@@ -2,14 +2,11 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.E;
+
 @Entity
 @Table(name="locations")
-public class Location {
-	@Id
-	@Column(name="external_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int _externalId;
-	
+public class Location extends E{	
 	@Column(name="longitude")
     private double _longitude;
 	
@@ -31,11 +28,8 @@ public class Location {
         this.set_latitude(latitude);
         this.set_longitude(longitude);
     }
+    
     /***********Getters and setters*****************/
-	public int get_externalId() {
-		return _externalId;
-	}
-
 	public double get_longitude() {
 		return _longitude;
 	}
