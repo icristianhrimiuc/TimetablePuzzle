@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.AcademicYearDAO;
+import timetablepuzzle.eclipselink.DAO.services.administration.AcademicYearJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 
 @Entity
 @Table(name="academic_years")
-public class AcademicYear extends E{ 	
+public class AcademicYear extends E{
+	/***********Static fields*************/
+	public static AcademicYearDAO academicYearDAO = new AcademicYearJPADAOService();
+	/***********Regular properties*************/
 	@Column(name="year_period")
 	private String _yearPeriod;
 	

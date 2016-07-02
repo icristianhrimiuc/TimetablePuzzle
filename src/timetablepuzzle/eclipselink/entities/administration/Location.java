@@ -2,11 +2,16 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.LocationDAO;
+import timetablepuzzle.eclipselink.DAO.services.administration.LocationJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 
 @Entity
 @Table(name="locations")
-public class Location extends E{	
+public class Location extends E{
+	/***********Static fields*************/
+	public static LocationDAO locationDAO = new LocationJPADAOService();
+	/***********Regular properties*************/
 	@Column(name="longitude")
     private double _longitude;
 	

@@ -3,11 +3,16 @@ package timetablepuzzle.eclipselink.entities.administration;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.RoomTypeDAO;
+import timetablepuzzle.eclipselink.DAO.services.administration.RoomTypeJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 
 @Entity
 @Table(name="room_types")
-public class RoomType extends E{	
+public class RoomType extends E{
+	/***********Static fields*************/
+	public static RoomTypeDAO roomTypeDAO = new RoomTypeJPADAOService();
+	/***********Regular properties*************/	
 	@Column(name="name")
 	private String _name;
 	

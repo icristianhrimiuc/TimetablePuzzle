@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.SolutionDAO;
+import timetablepuzzle.eclipselink.DAO.services.inputdata.SolutionJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.*;
 
@@ -16,6 +18,7 @@ public class Solution extends E{
 	/**************Static variables*****************/
 	public static enum Message{VARIABLE_NOT_FOUND,UNASSIGNED,ASIGGN_SUCCESSFULL,ROOM_IS_UNAVAILABLE,
 		INSTRUCTOR_IS_UNAVAILABLE,STUDENTGROUP_IS_UNAVAILABLE};
+	public static SolutionDAO solutionDAO = new SolutionJPADAOService();
 	/**************Private properties******************/
 	// Operations on ElementCollections are always cascaded.
 	@ElementCollection

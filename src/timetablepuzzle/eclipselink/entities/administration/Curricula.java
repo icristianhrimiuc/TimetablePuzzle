@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.CurriculaDAO;
+import timetablepuzzle.eclipselink.DAO.services.administration.CurriculaJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.SubjectArea.Term;
 import timetablepuzzle.eclipselink.entities.administration.YearOfStudy.Year;
@@ -11,7 +13,10 @@ import timetablepuzzle.eclipselink.entities.inputdata.CourseOffering;
 
 @Entity
 @Table(name="curriculas")
-public class Curricula extends E{	
+public class Curricula extends E{
+	/***********Static fields*************/
+	public static CurriculaDAO curriculaDAO = new CurriculaJPADAOService();
+	/***********Regular properties*************/
 	@Column(name="name")
 	private String _name;
 	

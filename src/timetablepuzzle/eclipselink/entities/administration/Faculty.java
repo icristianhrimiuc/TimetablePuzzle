@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.FacultyDAO;
+import timetablepuzzle.eclipselink.DAO.services.administration.FacultyJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 
 @Entity
 @Table(name="faculties")
-public class Faculty extends E{	
+public class Faculty extends E{
+	/***********Static fields*************/
+	public static FacultyDAO facultyDAO = new FacultyJPADAOService();
+	/***********Regular properties*************/
 	@Column(name="name")
 	private String _name;
 	

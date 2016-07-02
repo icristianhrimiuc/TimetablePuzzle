@@ -2,11 +2,16 @@ package timetablepuzzle.eclipselink.entities.inputdata;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.CourseOfferingDAO;
+import timetablepuzzle.eclipselink.DAO.services.inputdata.CourseOfferingJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 
 @Entity
 @Table(name="course_offerings")
-public class CourseOffering extends E{	
+public class CourseOffering extends E{
+	/***********Static fields*************/
+	public static CourseOfferingDAO courseOfferingDAO = new CourseOfferingJPADAOService();
+	/***********Regular properties*************/	
 	@Column(name="abbreviation")
 	private String _abbreviation;
 	

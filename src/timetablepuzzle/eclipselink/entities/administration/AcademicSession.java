@@ -3,13 +3,17 @@ package timetablepuzzle.eclipselink.entities.administration;
 import java.util.Date;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.AcademicSessionDAO;
+import timetablepuzzle.eclipselink.DAO.services.administration.AcademicSessionJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.inputdata.Solution;
 
 @Entity
 @Table(name="academic_sessions")
 public class AcademicSession extends E {
-
+	/***********Static fields*************/
+	public static AcademicSessionDAO academicSessionDAO = new AcademicSessionJPADAOService();
+	/***********Regular properties*************/	
 	@Column(name="name")
 	private String _name;
 

@@ -2,6 +2,8 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.TimePreferencesDAO;
+import timetablepuzzle.eclipselink.DAO.services.administration.TimePreferencesJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 
 @Entity
@@ -12,6 +14,7 @@ public class TimePreferences extends E{
 	public static enum Day{MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY};	
 	public static enum TimePref{PROHIBITED,STRONGLY_DISCOURAGED,DISCOURAGED,
 		NEUTRAL,PREFFERED,STRONGLY_PREFFERED,REQUIRED};
+	public static TimePreferencesDAO timePreferencesDAO = new TimePreferencesJPADAOService();
 	/***********Regular properties*************/	
 	@Column(name="monday")
 	private String _monPref;

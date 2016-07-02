@@ -2,11 +2,16 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.DatePatternDAO;
+import timetablepuzzle.eclipselink.DAO.services.administration.DatePatternJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 
 @Entity
 @Table(name="date_patterns")
 public class DatePattern extends E{
+	/***********Static fields*************/
+	public static DatePatternDAO datePatternDAO = new DatePatternJPADAOService();
+	/***********Regular properties*************/
 	@Column(name="name")
 	private String _name;
 	

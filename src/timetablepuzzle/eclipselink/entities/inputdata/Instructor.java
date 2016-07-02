@@ -2,6 +2,8 @@ package timetablepuzzle.eclipselink.entities.inputdata;
 
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.InstructorDAO;
+import timetablepuzzle.eclipselink.DAO.services.inputdata.InstructorJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.Day;
@@ -10,6 +12,9 @@ import timetablepuzzle.eclipselink.entities.administration.TimePreferences.TimeP
 @Entity
 @Table(name="instructors")
 public class Instructor extends E{
+	/***********Static fields*************/
+	public static InstructorDAO instructorDAO = new InstructorJPADAOService();
+	/***********Regular properties*************/
 	@Column(name="name")
 	private String _name;
 	

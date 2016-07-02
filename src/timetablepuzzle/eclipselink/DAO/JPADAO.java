@@ -1,6 +1,6 @@
 package timetablepuzzle.eclipselink.DAO;
 
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import javax.persistence.*;
 
 import timetablepuzzle.eclipselink.DAO.interfaces.DAO;
@@ -8,20 +8,23 @@ import timetablepuzzle.eclipselink.entities.E;
 
 public abstract class JPADAO implements DAO {
 	@SuppressWarnings("rawtypes")
-	protected Class entityClass;
-
-	// @PersistenceContext annotation causes the 
-	// eclipse link container to inject the entity manager
-	@PersistenceContext
+	protected Class entityClass;	
+	protected String persistenceUnitName;
+	protected EntityManagerFactory emFactory;
 	protected EntityManager entityManager;
 
 	@SuppressWarnings("rawtypes")
 	public JPADAO() {
-		ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
-		this.entityClass = (Class) genericSuperclass.getActualTypeArguments()[1];
+		this.persistenceUnitName = "TimetablePuzzle";
+		this.emFactory = Persistence.createEntityManagerFactory(this.persistenceUnitName);
+		this.entityManager = emFactory.createEntityManager();
+		Type genericSuperclass = (Type) getClass().getGenericSuperclass();
+		this.entityClass = (Class) genericSuperclass.getClass();
 	}
 
-	public void persist(E entity) { entityManager.persist(entity); }
+	public void persist(E entity) {
+		entityManager.persist(entity);
+		}
 
 	public void remove(E entity) { entityManager.remove(entity); }
 
