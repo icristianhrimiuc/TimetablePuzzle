@@ -2,12 +2,15 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.E;
-
 @Entity
 @Table(name="buildings")
-public class Building extends E{
+public class Building{
 	/***********Regular properties*************/
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+	
 	@Column(name="name")
 	private String _name;
 	
@@ -46,6 +49,11 @@ public class Building extends E{
 		}
 	}
 	/****************Getters and setters***************/
+
+	public int get_externalId() {
+		return _externalId;
+	}
+	
 	public String get_name() {
 		return _name;
 	}

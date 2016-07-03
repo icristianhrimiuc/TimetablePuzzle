@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.SubjectArea.Term;
 import timetablepuzzle.eclipselink.entities.administration.YearOfStudy.Year;
 import timetablepuzzle.eclipselink.entities.inputdata.CourseOffering;
 
 @Entity
 @Table(name="curriculas")
-public class Curricula extends E{
+public class Curricula{
 	/***********Regular properties*************/
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+	
 	@Column(name="name")
 	private String _name;
 	
@@ -53,6 +57,11 @@ public class Curricula extends E{
 	}
 	
 	/********************Getters and setters****************/	
+	
+	public int get_externalId() {
+		return _externalId;
+	}
+	
 	public String get_name()
 	{
 		return this._name;

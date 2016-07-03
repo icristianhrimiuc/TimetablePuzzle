@@ -3,13 +3,18 @@ package timetablepuzzle.eclipselink.entities.administration;
 import java.util.Date;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.inputdata.Solution;
 
 @Entity
 @Table(name="academic_sessions")
-public class AcademicSession extends E {
-	/***********Regular properties*************/	
+public class AcademicSession{
+	/***********Regular properties*************/
+	// Empty abstract class to be inherited by all entities 
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+	
 	@Column(name="name")
 	private String _name;
 
@@ -68,7 +73,11 @@ public class AcademicSession extends E {
 	}
 	
 	/***********************Getters and setters*******************/
-
+	
+	public int get_externalId() {
+		return _externalId;
+	}
+	
 	public String get_name() {
 		return _name;
 	}

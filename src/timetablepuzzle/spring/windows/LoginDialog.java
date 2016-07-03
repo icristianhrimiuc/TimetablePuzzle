@@ -18,7 +18,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import timetableSolver.PasswordAuthentication;
-import timetablepuzzle.eclipselink.DAO.services.administration.UserJPADAOService;
+import timetablepuzzle.eclipselink.DAO.JPA.services.administration.UserJPADAOService;
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.UserDAO;
 import timetablepuzzle.eclipselink.entities.administration.User;
 
 @SuppressWarnings("serial")
@@ -33,6 +34,7 @@ public class LoginDialog extends JDialog{
     private final JLabel _jlblStatus = new JLabel(" ");
     /**************Normal fields************/
     private static PasswordAuthentication passAuth = new PasswordAuthentication();
+    private UserDAO _userDAOService;
 
     /**
      * Default constructor.
@@ -91,7 +93,7 @@ public class LoginDialog extends JDialog{
             	// TO DO: get the user from the database, if one exists, 
             	// and check its password token against this strings token
             	String username = _jtfUsername.getText();
-            	User tempUser = new UserJPADAOService().findByUsername(username);
+            	User tempUser = _userDAOService.findByUsername(username);
             	if(tempUser != null)
             	{
                     if(passAuth.authenticate(_jpfPassword.getPassword(), tempUser.get_token()))
@@ -116,5 +118,8 @@ public class LoginDialog extends JDialog{
                 System.exit(0);
             }
         });
+        
+       	// Initialize the UserDAOService
+    	this._userDAOService  = new UserJPADAOService();
     }
 }

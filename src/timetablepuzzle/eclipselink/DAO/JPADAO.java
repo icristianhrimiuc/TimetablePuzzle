@@ -1,25 +1,26 @@
 package timetablepuzzle.eclipselink.DAO;
 
-import java.lang.reflect.Type;
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+
 import javax.persistence.*;
 
 import timetablepuzzle.eclipselink.DAO.interfaces.DAO;
-import timetablepuzzle.eclipselink.entities.E;
 
-public abstract class JPADAO implements DAO {
-	@SuppressWarnings("rawtypes")
-	protected Class entityClass;	
+public class JPADAO<E,K extends Serializable> implements DAO<E,K>{
+	
+	protected Class<? extends E> entityClass;	
 	protected String persistenceUnitName;
 	protected EntityManagerFactory emFactory;
 	protected EntityManager entityManager;
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	public JPADAO() {
 		this.persistenceUnitName = "TimetablePuzzle";
 		this.emFactory = Persistence.createEntityManagerFactory(this.persistenceUnitName);
 		this.entityManager = emFactory.createEntityManager();
-		Type genericSuperclass = (Type) getClass().getGenericSuperclass();
-		this.entityClass = (Class) genericSuperclass.getClass();
+		this.entityClass = (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass())
+                .getActualTypeArguments()[0];
 	}
 
 	public void persist(E entity) {
@@ -29,11 +30,16 @@ public abstract class JPADAO implements DAO {
 		}
 
 	public void remove(E entity) {
+		entityManager.getTransaction().begin();
 		entityManager.remove(entity);
+		entityManager.getTransaction().commit();
 		}
 
-	@SuppressWarnings("unchecked")
-	public E findById(int id) {
-		return (E)entityManager.find(entityClass, id); 
+	public E findById(K id) {  
+		entityManager.getTransaction().begin();
+		E entity = (E)entityManager.find(entityClass, id);
+		entityManager.getTransaction().commit();
+		
+		return entity;
 		}
 }
