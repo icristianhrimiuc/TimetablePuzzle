@@ -1,7 +1,5 @@
 package timetablepuzzle.eclipselink.entities.inputdata;
 
-import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.RoomDAO;
-import timetablepuzzle.eclipselink.DAO.services.inputdata.RoomJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.*;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.*;
@@ -10,8 +8,6 @@ import javax.persistence.*;
 @Entity
 @Table(name="rooms")
 public class Room extends E{
-	/***********Static fields*************/
-	public static RoomDAO roomDAO = new RoomJPADAOService();
 	/***********Regular properties*************/	
 	@Column(name="code")
 	private String _code;

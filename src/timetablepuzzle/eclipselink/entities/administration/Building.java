@@ -2,15 +2,11 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.DAO.interfaces.administration.BuildingDAO;
-import timetablepuzzle.eclipselink.DAO.services.administration.BuildingJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 
 @Entity
 @Table(name="buildings")
 public class Building extends E{
-	/***********Static fields*************/
-	public static BuildingDAO buildingDAO = new BuildingJPADAOService();
 	/***********Regular properties*************/
 	@Column(name="name")
 	private String _name;

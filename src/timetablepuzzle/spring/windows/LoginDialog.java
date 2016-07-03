@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import timetableSolver.PasswordAuthentication;
+import timetablepuzzle.eclipselink.DAO.services.administration.UserJPADAOService;
 import timetablepuzzle.eclipselink.entities.administration.User;
 
 @SuppressWarnings("serial")
@@ -90,7 +91,7 @@ public class LoginDialog extends JDialog{
             	// TO DO: get the user from the database, if one exists, 
             	// and check its password token against this strings token
             	String username = _jtfUsername.getText();
-            	User tempUser = User.userDAO.findByUsername(username);
+            	User tempUser = new UserJPADAOService().findByUsername(username);
             	if(tempUser != null)
             	{
                     if(passAuth.authenticate(_jpfPassword.getPassword(), tempUser.get_token()))

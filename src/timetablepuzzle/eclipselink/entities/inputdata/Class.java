@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.ClassDAO;
-import timetablepuzzle.eclipselink.DAO.services.inputdata.ClassJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 
 @Entity
 @Table(name="classes")
 public class Class extends E{
-	/***********Static fields*************/
-	public static ClassDAO classDAO = new ClassJPADAOService();
 	/***********Regular properties*************/
 	@Column(name="course_title")
 	private String _courseTitle;

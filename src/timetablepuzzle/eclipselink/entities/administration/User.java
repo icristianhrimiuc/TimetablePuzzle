@@ -1,7 +1,5 @@
 package timetablepuzzle.eclipselink.entities.administration;
 
-import timetablepuzzle.eclipselink.DAO.interfaces.administration.UserDAO;
-import timetablepuzzle.eclipselink.DAO.services.administration.UserJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 import javax.persistence.*;
 
@@ -10,7 +8,6 @@ import javax.persistence.*;
 public class User extends E{
 	/************Static Properties***********/
 	public static enum UserType{NOT_ASSIGNED,GUEST,SECRETARY,INSTRUCTOR,ADMIN};
-	public static UserDAO userDAO = new UserJPADAOService();
 	/************Regular Properties***********/
 	@Column(name="username")
 	private String _username;

@@ -2,8 +2,6 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.DAO.interfaces.administration.InstructorMeetingsDAO;
-import timetablepuzzle.eclipselink.DAO.services.administration.InstructorMeetingsJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.inputdata.Instructor;
 import timetablepuzzle.eclipselink.entities.inputdata.Offering;
@@ -11,8 +9,6 @@ import timetablepuzzle.eclipselink.entities.inputdata.Offering;
 @Entity
 @Table(name="instructor_meeetings")
 public class InstructorMeetings extends E{
-	/***********Static fields*************/
-	public static InstructorMeetingsDAO instructorMeetingsDAO = new InstructorMeetingsJPADAOService();
 	/***********Regular properties*************/
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="instructor",updatable = false,insertable = false,referencedColumnName="external_id")

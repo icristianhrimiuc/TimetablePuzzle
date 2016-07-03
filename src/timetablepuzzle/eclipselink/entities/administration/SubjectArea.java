@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.DAO.interfaces.administration.SubjectAreaDAO;
-import timetablepuzzle.eclipselink.DAO.services.administration.SubjectAreaJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 
 @Entity
 @Table(name="subject_areas")
 public class SubjectArea extends E{
-	/***********Static fields*************/
-	public static SubjectAreaDAO subjectAreaDAO = new SubjectAreaJPADAOService();
 	/***********Regular properties*************/
 	/***********Static fields*************/
 	public static enum Term{FIRST,SECOND,THIRD,FOURTH,UNASSIGNED};

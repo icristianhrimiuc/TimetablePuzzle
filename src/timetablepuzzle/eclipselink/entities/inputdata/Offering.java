@@ -4,17 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.OfferingDAO;
-import timetablepuzzle.eclipselink.DAO.services.inputdata.OfferingJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.DatePattern;
 import timetablepuzzle.eclipselink.entities.administration.InstructorMeetings;
+
 @Entity
 @Table(name="offerings")
 public class Offering extends E{
 	/*********Static fields***********/
 	public static enum OfferingType{LECTURE,SEMINARY,LABORATORY,GYM,UNASSIGNED};
-	public static OfferingDAO offeringDAO = new OfferingJPADAOService();
 	/************Regular Properties**********/	
 	@Column(name="name")
 	private String _name;

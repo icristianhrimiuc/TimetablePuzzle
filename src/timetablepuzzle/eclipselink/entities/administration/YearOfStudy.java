@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.DAO.interfaces.administration.YearOfStudyDAO;
-import timetablepuzzle.eclipselink.DAO.services.administration.YearOfStudyJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.inputdata.CourseOffering;
 import timetablepuzzle.eclipselink.entities.inputdata.StudentGroup;
@@ -16,7 +14,6 @@ import timetablepuzzle.eclipselink.entities.inputdata.StudentGroup;
 public class YearOfStudy extends E{
 	/***********Static fields*************/
 	public static enum Year{FIRST,SECOND,THIRD,FOURTH,FIFTH,SIXTH,UNASSIGNED};
-	public static YearOfStudyDAO yearOfStudyDAO = new YearOfStudyJPADAOService();
 	/***********Regular fields*************/	
 	@Column(name="year")
 	private Year _year;

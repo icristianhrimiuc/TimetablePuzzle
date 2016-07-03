@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.DAO.interfaces.administration.DepartmentDAO;
-import timetablepuzzle.eclipselink.DAO.services.administration.DepartmentJPADAOService;
 import timetablepuzzle.eclipselink.entities.E;
 
 @Entity
 @Table(name="departments")
 public class Department extends E{
-	/***********Static fields*************/
-	public static DepartmentDAO departmentDAO = new DepartmentJPADAOService();
 	/***********Regular properties*************/
 	@Column(name="name")
 	private String _name;

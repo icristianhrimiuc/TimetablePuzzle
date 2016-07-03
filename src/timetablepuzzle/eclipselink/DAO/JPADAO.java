@@ -23,11 +23,17 @@ public abstract class JPADAO implements DAO {
 	}
 
 	public void persist(E entity) {
+		entityManager.getTransaction().begin();
 		entityManager.persist(entity);
+		entityManager.getTransaction().commit();
 		}
 
-	public void remove(E entity) { entityManager.remove(entity); }
+	public void remove(E entity) {
+		entityManager.remove(entity);
+		}
 
 	@SuppressWarnings("unchecked")
-	public E findById(int id) { return (E)entityManager.find(entityClass, id); }
+	public E findById(int id) {
+		return (E)entityManager.find(entityClass, id); 
+		}
 }
