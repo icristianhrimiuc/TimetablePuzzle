@@ -5,16 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.inputdata.CourseOffering;
 import timetablepuzzle.eclipselink.entities.inputdata.StudentGroup;
 
 @Entity
 @Table(name="years_of_study")
-public class YearOfStudy extends E{
+public class YearOfStudy{
 	/***********Static fields*************/
 	public static enum Year{FIRST,SECOND,THIRD,FOURTH,FIFTH,SIXTH,UNASSIGNED};
-	/***********Regular fields*************/	
+	/***********Regular fields*************/
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+		
 	@Column(name="year")
 	private Year _year;
 	
@@ -58,6 +62,11 @@ public class YearOfStudy extends E{
 	}
 	
 	/********************Getters and setters****************/
+	
+	public int get_externalId() {
+		return _externalId;
+	}
+	
 	public Year get_year() {
 		return _year;
 	}

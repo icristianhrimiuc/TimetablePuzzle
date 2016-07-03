@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.DatePattern;
 import timetablepuzzle.eclipselink.entities.administration.InstructorMeetings;
 
 @Entity
 @Table(name="offerings")
-public class Offering extends E{
+public class Offering{
 	/*********Static fields***********/
 	public static enum OfferingType{LECTURE,SEMINARY,LABORATORY,GYM,UNASSIGNED};
 	/************Regular Properties**********/	
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+	
 	@Column(name="name")
 	private String _name;
 	
@@ -81,6 +85,11 @@ public class Offering extends E{
 		set_nrOfGroupSlots(nrOfGroupSlots);
 	}
 	/******************Getters and Setters****************/
+	
+	public int get_externalId() {
+		return _externalId;
+	}
+	
 	public String get_name() {
 		return _name;
 	}

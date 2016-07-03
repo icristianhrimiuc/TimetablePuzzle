@@ -5,8 +5,6 @@
 	<persistence-unit name="TimetablePuzzle" transaction-type="RESOURCE_LOCAL" >
 		<!-- EclipseLink -->
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-	
-		<class>timetablepuzzle.eclipselink.entities.E</class>
 		<class>timetablepuzzle.eclipselink.entities.administration.RoomFeature</class>
 		<class>timetablepuzzle.eclipselink.entities.administration.RoomType</class>
 		<class>timetablepuzzle.eclipselink.entities.administration.Location</class>

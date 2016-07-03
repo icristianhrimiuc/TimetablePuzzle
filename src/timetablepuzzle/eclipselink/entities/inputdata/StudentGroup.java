@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.E;
-
 @Entity
 @Table(name="student_groups")
-public class StudentGroup extends E{
-	/***********Regular properties*************/	
+public class StudentGroup{
+	/***********Regular properties*************/
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+	
 	@Column(name="code")
 	private String _code;
 	
@@ -50,6 +53,11 @@ public class StudentGroup extends E{
 	}
 
 	/*****************Getters and setters**************/
+	
+	public int get_externalId() {
+		return _externalId;
+	}
+	
 	public String get_code() {
 		return _code;
 	}

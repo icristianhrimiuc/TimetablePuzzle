@@ -1,14 +1,18 @@
 package timetablepuzzle.eclipselink.entities.administration;
 
-import timetablepuzzle.eclipselink.entities.E;
 import javax.persistence.*;
 
 @Entity
 @Table(name="users")
-public class User extends E{
+public class User{
 	/************Static Properties***********/
 	public static enum UserType{NOT_ASSIGNED,GUEST,SECRETARY,INSTRUCTOR,ADMIN};
 	/************Regular Properties***********/
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+	
 	@Column(name="username")
 	private String _username;
 	
@@ -53,6 +57,11 @@ public class User extends E{
 	}
 
 	/****************Getters and setters********************/
+	
+	public int get_externalId() {
+		return _externalId;
+	}
+	
 	public String get_username() {
 		return _username;
 	}

@@ -2,17 +2,20 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.E;
-
 @Entity
 @Table(name="time_preferences")
-public class TimePreferences extends E{
+public class TimePreferences{
 	/***********Static fields*************/
 	/**Days of the week**/
 	public static enum Day{MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY};	
 	public static enum TimePref{PROHIBITED,STRONGLY_DISCOURAGED,DISCOURAGED,
 		NEUTRAL,PREFFERED,STRONGLY_PREFFERED,REQUIRED};
 	/***********Regular properties*************/	
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+	
 	@Column(name="monday")
 	private String _monPref;
 	
@@ -92,6 +95,11 @@ public class TimePreferences extends E{
 	}
 	
 	/*********Getters and setters*********/
+	
+	public int get_externalId() {
+		return _externalId;
+	}
+	
 	public String get_monPref()
 	{
 		return this._monPref;

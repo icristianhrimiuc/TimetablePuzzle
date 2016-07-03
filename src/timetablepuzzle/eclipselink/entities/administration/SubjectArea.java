@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.E;
-
 @Entity
 @Table(name="subject_areas")
-public class SubjectArea extends E{
-	/***********Regular properties*************/
+public class SubjectArea{
 	/***********Static fields*************/
 	public static enum Term{FIRST,SECOND,THIRD,FOURTH,UNASSIGNED};
 	/***********Regular fields*************/	
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+	
 	@Column(name="name")
 	private String _name;
 	
@@ -43,6 +45,11 @@ public class SubjectArea extends E{
 	}
 	
 	/********************Getters and setters****************/
+
+	public int get_externalId() {
+		return _externalId;
+	}
+	
 	public String get_name() {
 		return _name;
 	}

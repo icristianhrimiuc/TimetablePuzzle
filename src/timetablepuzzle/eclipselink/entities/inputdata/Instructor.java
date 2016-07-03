@@ -2,15 +2,19 @@ package timetablepuzzle.eclipselink.entities.inputdata;
 
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.Day;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.TimePref;
 
 @Entity
 @Table(name="instructors")
-public class Instructor extends E{
+public class Instructor{
 	/***********Regular properties*************/
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+	
 	@Column(name="name")
 	private String _name;
 	
@@ -45,6 +49,11 @@ public class Instructor extends E{
 		set_timePreferences(timePreferences);
 	}
 	/**********Getters and setters**************/
+	
+	public int get_externalId() {
+		return _externalId;
+	}
+	
 	public String get_name() {
 		return _name;
 	}

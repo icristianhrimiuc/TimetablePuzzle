@@ -1,14 +1,18 @@
 package timetablepuzzle.eclipselink.entities.inputdata;
 
-import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.*;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.*;
 import javax.persistence.*;
 
 @Entity
 @Table(name="rooms")
-public class Room extends E{
-	/***********Regular properties*************/	
+public class Room{
+	/***********Regular properties*************/
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+		
 	@Column(name="code")
 	private String _code;
 	
@@ -62,6 +66,11 @@ public class Room extends E{
 	}
 
 	/***********Getters and setters for almost all the fields**************/
+	
+	public int get_externalId() {
+		return _externalId;
+	}
+	
 	public String get_code() {
 		return _code;
 	}

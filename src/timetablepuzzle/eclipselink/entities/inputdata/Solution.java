@@ -7,16 +7,20 @@ import java.util.Map;
 
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.E;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences.*;
 
 @Entity
 @Table(name="solutions")
-public class Solution extends E{
+public class Solution{
 	/**************Static variables*****************/
 	public static enum Message{VARIABLE_NOT_FOUND,UNASSIGNED,ASIGGN_SUCCESSFULL,ROOM_IS_UNAVAILABLE,
 		INSTRUCTOR_IS_UNAVAILABLE,STUDENTGROUP_IS_UNAVAILABLE};
-	/**************Private properties******************/
+	/**************Regular properties******************/
+	@Id
+	@Column(name="external_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected int _externalId;
+		
 	// Operations on ElementCollections are always cascaded.
 	@ElementCollection
     @MapKeyColumn(name="room")
@@ -150,7 +154,12 @@ public class Solution extends E{
 		set_nrOfDays(5);
 	}
 
-	/* Getter and Setter methods for almost all the fields of the class*/
+	/***********************Getter and Setter********************/
+	
+	public int get_externalId() {
+		return _externalId;
+	}
+		
 	@SuppressWarnings("unchecked")
 	public HashMap<Integer,Class[]> get_roomsTimetable() {
 		return (HashMap<Integer,Class[]>)_roomsTimetable.clone();
