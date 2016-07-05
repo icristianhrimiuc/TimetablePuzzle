@@ -29,6 +29,10 @@ public class User{
 	private String _lastName;
 	
 	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="lastviewed_acadyear")
+	private AcademicYear _lastViewedAcadYear;
+	
+	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="lastviewed_acadsession")
 	private AcademicSession _lastViewedAcadSession;
 	
@@ -42,7 +46,7 @@ public class User{
 	public User()
 	{
 		this(0,"NoUsername","NoToken",UserType.NOT_ASSIGNED, "NoFirstName",
-				"NoLastName", new AcademicSession(), new Faculty());
+				"NoLastName", new AcademicYear(), new AcademicSession(), new Faculty());
 	}
 	
 	/**
@@ -55,8 +59,8 @@ public class User{
 	 * @param lastName
 	 */
 	public User(int external_id, String username, String token, UserType userType,
-			String firstName, String lastName, AcademicSession lastViewedAcadSession, 
-			Faculty lastViewedFaculty)
+			String firstName, String lastName, AcademicYear lastViewedAcadYear, 
+			AcademicSession lastViewedAcadSession, Faculty lastViewedFaculty)
 	{
 		this._externalId = external_id;
 		this.set_username(username);
@@ -64,6 +68,7 @@ public class User{
 		this.set_userType(userType);
 		this.set_firstName(firstName);
 		this.set_lastName(lastName);
+		this.set_lastViewedAcadYear(lastViewedAcadYear);
 		this.set_lastViewedAcadSession(lastViewedAcadSession);
 		this.set_lastViewedFaculty(lastViewedFaculty);
 	}
@@ -114,6 +119,14 @@ public class User{
 		this._lastName = _lastName;
 	}
 
+	public AcademicYear get_lastViewedAcadYear() {
+		return _lastViewedAcadYear;
+	}
+
+	public void set_lastViewedAcadYear(AcademicYear _lastViewedAcadYear) {
+		this._lastViewedAcadYear = _lastViewedAcadYear;
+	}
+	
 	public AcademicSession get_lastViewedAcadSession() {
 		return _lastViewedAcadSession;
 	}

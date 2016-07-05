@@ -60,8 +60,6 @@ public class Solution{
 	)
 	private List<Class> _unassignedClasses;
 
-	// TO DO: This column should appear in the database, but int[]
-	// can not be mapped
 	// Operations on ElementCollections are always cascaded.
 	@ElementCollection
     @MapKeyColumn(name="class")

@@ -6,32 +6,31 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Toolkit;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
 import java.awt.Component;
-import java.awt.ComponentOrientation;
-import javax.swing.SwingConstants;
-import javax.swing.border.MatteBorder;
 
-import timetablepuzzle.eclipselink.entities.administration.User;
+import javax.swing.*;
 
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
-import javax.swing.BoxLayout;
+import java.util.List;
+import java.util.Set;
+
+import com.sun.xml.internal.ws.util.StringUtils;
+
+import timetablepuzzle.eclipselink.entities.administration.*;
+import timetablepuzzle.eclipselink.entities.inputdata.Class;
+import timetablepuzzle.eclipselink.entities.inputdata.Solution;
 
 public class Main {
     private LoginDialog _loginDialog;
 	private JFrame _frame;
+	// User required information
 	private User _loggedUser;
+	private AcademicYear _viewedAcadYear;
+	private AcademicSession _viewedAcadSession;
+	private Faculty _viewedFaculty;
+	private Solution _acceptedSolution;
 	// A panel that uses CardLayout
 	JPanel cards;
     final static String HOMECARD = "Home card";
@@ -48,7 +47,14 @@ public class Main {
 		_frame.setIconImage(Toolkit.getDefaultToolkit().getImage("E:\\DesktopI\\Licenta\\chestii\\Java\\TimetablePuzzle\\src\\resources\\icon.png"));
 		_loginDialog = new LoginDialog(_frame, true);
 		_loginDialog.setVisible(true);
+		
+		// The login operation was successful. Set the user required information
 		_loggedUser = _loginDialog.get_loggedUser();
+		_viewedAcadYear = _loggedUser.get_lastViewedAcadYear();
+		_viewedAcadSession = _loggedUser.get_lastViewedAcadSession();
+		_viewedFaculty = _loggedUser.get_lastViewedFaculty();
+		
+		// Set the rest of the main window's properties
 		_frame.setLocationRelativeTo(null);
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// TO DO: this function will try to get the user
@@ -57,8 +63,20 @@ public class Main {
 		
 		
 		/****************** Here i define the menu bar********************/
-		JMenuBar menuBarAdmin = new JMenuBar();
+		JMenuBar menuBarAdmin = CreateMenuBarAdmin();
 		_frame.setJMenuBar(menuBarAdmin);
+	}
+	
+	/********************Getters and setters****************/
+	public JFrame getFrame()
+	{
+		return this._frame;
+	}
+    
+	/****************Methods that model the class behavior********************/
+	private JMenuBar CreateMenuBarAdmin()
+	{
+		JMenuBar menuBarAdmin = new JMenuBar();
 		
 		
 		// Input Data menu
@@ -192,57 +210,15 @@ public class Main {
 		// Log out menu
 		JMenu mnLogOut = new JMenu("Log Out");
 		menuBarAdmin.add(mnLogOut);
-		/****************************************************/		
+		
+		// Return the created menu bar
+		return menuBarAdmin;
 	}
 	
-	/********************Getters and setters****************/
-	public JFrame getFrame()
-	{
-		return this._frame;
-	}
-    
-    public void AddComponentToPane(Container pane) {
-    	
-        /******************Create the HOME card***************************/
-    	JPanel homeCard = new JPanel();
-    	homeCard.setLayout(new BoxLayout(homeCard, BoxLayout.Y_AXIS));
-        
-        // Create the header
-    	JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
-        headerPanel.add(Box.createHorizontalGlue());
-        headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,20));
-        
-        // Create the user type & user last name section
-        String userLastName = _loggedUser.get_lastName();
-        String userType = _loggedUser.get_userType().toString();
-        JPanel hUserSection = CreateHeaderSection("User name&type:", userLastName + "-" + userType.toLowerCase(),"Show all users");
-        
-        //Create the academic session section
-        String lastViewedAcadSession = _loggedUser.get_lastViewedAcadSession().get_name();
-        JPanel hViewedAcademicSection = CreateHeaderSection("Academic session:", lastViewedAcadSession,"Change session");
-        
-        //Create the faculty section
-        String lastViewedFaculty = _loggedUser.get_lastViewedFaculty().get_name();
-        JPanel hViewedFaculty = CreateHeaderSection("Faculty:", lastViewedFaculty,"Change faculty");  
-        
-        // Add the different section to the header panel
-        headerPanel.add(hUserSection);
-        headerPanel.add(hViewedAcademicSection);
-        headerPanel.add(hViewedFaculty);
-        
-        // Create the centerPanel
-        JPanel centerPanel = new JPanel();
-        centerPanel.setBackground(Color.LIGHT_GRAY);
-        
-        
-        homeCard.add(headerPanel);
-        homeCard.add(centerPanel);
-        
-    	
-    	JPanel timetableCard = new JPanel();
-    	timetableCard.add(new JButton());
-         
+    public void AddComponentToPane(Container pane) 
+    {          
+    	JPanel homeCard = CreateHomeCard();
+    	JPanel timetableCard = CreateTimetableCard();         
     	
         //Create the panel that contains the "cards".
         cards = new JPanel(new CardLayout());
@@ -251,6 +227,55 @@ public class Main {
         cards.add(timetableCard, TIMETABLECARD);
          
         pane.add(cards, BorderLayout.CENTER);
+    }
+    
+    private JPanel CreateHomeCard()
+    {
+    	JPanel homeCard = new JPanel();
+    	homeCard.setLayout(new BoxLayout(homeCard, BoxLayout.Y_AXIS));
+        // Create the header panel
+    	JPanel headerPanel = CreateHeaderPanel();        
+        // Create the centerPanel
+        JPanel centerPanel = CreateTimetablePanel(Color.LIGHT_GRAY);
+        // Add components to panel
+        homeCard.add(headerPanel);
+        homeCard.add(new JSeparator());
+        homeCard.add(centerPanel);
+        
+        return homeCard;
+    }
+    
+    private JPanel CreateHeaderPanel()
+    {
+    	JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
+        headerPanel.add(Box.createHorizontalGlue());
+        headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,20));
+        
+        // Create the user type & user last name section
+        String userName = _loggedUser.get_firstName() + " " + _loggedUser.get_lastName();
+        String userType = _loggedUser.get_userType().toString();
+        JPanel hUserSection = CreateHeaderSection("User Name&Type:", userName + "-" + userType.toLowerCase(),"Show all users");
+        
+        //Create the academic year section
+        String lastViewedAcadYear = _viewedAcadYear.get_yearPeriod();
+        JPanel hViewedAcademicYear = CreateHeaderSection("Academic year:", lastViewedAcadYear,"Change year");
+        
+        //Create the academic session section
+        String lastViewedAcadSession = _viewedAcadSession.get_name();
+        JPanel hViewedAcademicSession = CreateHeaderSection("Academic session:", lastViewedAcadSession,"Change session");
+        
+        //Create the faculty section
+        String lastViewedFaculty = _loggedUser.get_lastViewedFaculty().get_name();
+        JPanel hViewedFaculty = CreateHeaderSection("Faculty:", lastViewedFaculty,"Change faculty");  
+        
+        // Add the different section to the header panel
+        headerPanel.add(hUserSection);
+        headerPanel.add(hViewedAcademicYear);
+        headerPanel.add(hViewedAcademicSession);
+        headerPanel.add(hViewedFaculty);
+        
+        return headerPanel;
     }
     
     private JPanel CreateHeaderSection(String jLabelText, String jButtonText, String jButtonToolTipText)
@@ -274,5 +299,128 @@ public class Main {
         headerSection.add(jButton);
         
         return headerSection;
+    }
+    
+    public JPanel CreateTimetablePanel(Color bgColor)
+    {
+    	JPanel timetablePanel = new JPanel();
+    	timetablePanel.setBackground(bgColor);
+    	timetablePanel.setLayout(new BorderLayout());
+        
+        // Create the north panel. It will contain a radio button for each day of the week
+        JPanel northPanel = new JPanel();
+        northPanel.setBackground(bgColor);
+        northPanel.setLayout(new GridBagLayout());
+        TimePreferences.Day[] daysOfTheWeek = TimePreferences.Day.values();
+        // Create the academic session radio buttons section
+        ButtonGroup dotwbg = new ButtonGroup();
+        for(TimePreferences.Day dayOfTheWeek : daysOfTheWeek)
+        {
+        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(dayOfTheWeek.name()));
+        	jrb.setBackground(bgColor);
+        	dotwbg.add(jrb);
+        	northPanel.add(jrb);
+        }        
+        
+        // Create the south panel. It will contain a radio button for each academic year
+        JPanel southPanel = new JPanel();
+        southPanel.setBackground(bgColor);
+        southPanel.setLayout(new GridBagLayout());
+        YearOfStudy.Year[] yearsOfStudy = YearOfStudy.Year.values();
+        // Create the academic session radio buttons section
+        ButtonGroup yosbg = new ButtonGroup();
+        for(YearOfStudy.Year yearOfStudy : yearsOfStudy)
+        {
+        	if(yearOfStudy != YearOfStudy.Year.UNASSIGNED)
+        	{
+	        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(yearOfStudy.name()));
+	        	jrb.setBackground(bgColor);
+	        	yosbg.add(jrb);
+	        	southPanel.add(jrb);
+        	}
+        }
+        
+        // Create the west panel.It will contain a radio button for each department in the faculty
+        JPanel westPanel = new JPanel();
+        westPanel.setBackground(bgColor);
+        westPanel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        List<Department> departments = _viewedFaculty.get_departments();
+        // Create the academic session radio buttons section
+        ButtonGroup dbg = new ButtonGroup();
+        for(int i=0; i<departments.size(); i++)
+        {
+        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(departments.get(i).get_name()));
+        	jrb.setBackground(bgColor);
+        	jrb.setHorizontalTextPosition(SwingConstants.CENTER);
+        	jrb.setVerticalTextPosition(JRadioButton.TOP);
+        	dbg.add(jrb);
+        	c.gridy = i;
+        	westPanel.add(jrb,c);
+        }
+        
+        // Create the east panel. It will contain 2 lists
+        JPanel eastPanel = new JPanel();
+        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
+        eastPanel.setBackground(bgColor);
+        // Create a list with unassigned classes
+        DefaultListModel<String> uClassesListModel = new DefaultListModel<String>();
+        List<Class> uClasses = _viewedAcadSession.get_solution().get_unassignedClasses();
+        for(Class uClass : uClasses)
+        {
+        	String className = uClass.get_meeting().get_name();
+        	int nrOfRemovals = _acceptedSolution.get_nrOfRemovals(uClass.get_externalId());
+        	uClassesListModel.addElement(className+"("+nrOfRemovals+")");
+        }
+        JList<String> jListUnassignedClasses = new JList<String>(uClassesListModel);
+        jListUnassignedClasses.setBackground(bgColor);
+        // Label to show the number of unassigned classes
+        JLabel jlNrOfUClasses = new JLabel(" Nr. of unassigned classes: " + uClasses.size() + " ");
+        
+        
+        // Create a list with assigned classes
+        DefaultListModel<String> aClassesListModel = new DefaultListModel<String>();
+        Set<Class> aClasses = _viewedAcadSession.get_solution().get_assignedClasses().keySet();
+        for(Class aClass : aClasses)
+        {
+        	String className = aClass.get_meeting().get_name();
+        	int nrOfRemovals = _acceptedSolution.get_nrOfRemovals(aClass.get_externalId());
+        	aClassesListModel.addElement(className+"("+nrOfRemovals+")");
+        }
+        JList<String> jListAssignedClasses = new JList<String>(aClassesListModel);
+        jListAssignedClasses.setBackground(bgColor);
+        // Label to show the number of assigned classes
+        JLabel jlNrOfAClasses = new JLabel(" Nr. of assigned classes: " + aClasses.size() + " ");
+        jlNrOfAClasses.setBackground(bgColor);
+        
+        // Add components to the east panel
+        eastPanel.add(jlNrOfUClasses);
+        eastPanel.add(jListUnassignedClasses);
+        eastPanel.add(jlNrOfAClasses);
+        eastPanel.add(jListAssignedClasses);
+        
+        // Create the center panel
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new GridBagLayout());
+        centerPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+        
+        
+        // Add components to panel
+        timetablePanel.add(northPanel, BorderLayout.NORTH);
+        timetablePanel.add(southPanel, BorderLayout.SOUTH);
+        timetablePanel.add(westPanel, BorderLayout.WEST);
+        timetablePanel.add(eastPanel, BorderLayout.EAST);
+        timetablePanel.add(centerPanel, BorderLayout.CENTER);
+        
+        
+        return timetablePanel;
+    }
+    
+    private JPanel CreateTimetableCard()
+    {
+    	JPanel timetableCard = new JPanel();
+    	// TO DO: add functionality to this card
+    	
+    	return timetableCard;
     }
 }
