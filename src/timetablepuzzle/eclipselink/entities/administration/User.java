@@ -28,12 +28,21 @@ public class User{
 	@Column(name="last_name")
 	private String _lastName;
 	
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="lastviewed_acadsession")
+	private AcademicSession _lastViewedAcadSession;
+	
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="lastviewed_faculty")
+	private Faculty _lastViewedFaculty;
+	
 	/*
 	 * Default constructor
 	 */
 	public User()
 	{
-		this(0,"NoUsername","NoToken",UserType.NOT_ASSIGNED, "NoFirstName", "NoLastName");
+		this(0,"NoUsername","NoToken",UserType.NOT_ASSIGNED, "NoFirstName",
+				"NoLastName", new AcademicSession(), new Faculty());
 	}
 	
 	/**
@@ -46,7 +55,8 @@ public class User{
 	 * @param lastName
 	 */
 	public User(int external_id, String username, String token, UserType userType,
-			String firstName, String lastName)
+			String firstName, String lastName, AcademicSession lastViewedAcadSession, 
+			Faculty lastViewedFaculty)
 	{
 		this._externalId = external_id;
 		this.set_username(username);
@@ -54,6 +64,8 @@ public class User{
 		this.set_userType(userType);
 		this.set_firstName(firstName);
 		this.set_lastName(lastName);
+		this.set_lastViewedAcadSession(lastViewedAcadSession);
+		this.set_lastViewedFaculty(lastViewedFaculty);
 	}
 
 	/****************Getters and setters********************/
@@ -100,6 +112,22 @@ public class User{
 
 	public void set_lastName(String _lastName) {
 		this._lastName = _lastName;
+	}
+
+	public AcademicSession get_lastViewedAcadSession() {
+		return _lastViewedAcadSession;
+	}
+
+	public void set_lastViewedAcadSession(AcademicSession _lastViewedAcadSession) {
+		this._lastViewedAcadSession = _lastViewedAcadSession;
+	}
+
+	public Faculty get_lastViewedFaculty() {
+		return _lastViewedFaculty;
+	}
+
+	public void set_lastViewedFaculty(Faculty _lastViewedFaculty) {
+		this._lastViewedFaculty = _lastViewedFaculty;
 	}
 	/***********Properties that model the class behavior***************/
 }

@@ -1,6 +1,8 @@
-package timetablepuzzle.swing.windows;
+package timetablepuzzle.swing;
 
 import java.awt.EventQueue;
+
+import timetablepuzzle.swing.windows.Main;
 
 public class Program {
 	/**

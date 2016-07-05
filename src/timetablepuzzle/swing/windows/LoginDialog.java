@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
 import timetablepuzzle.eclipselink.DAO.JPA.services.administration.UserJPADAOService;
 import timetablepuzzle.eclipselink.DAO.interfaces.administration.UserDAO;
 import timetablepuzzle.eclipselink.entities.administration.User;
-import timetablepuzzle.solver.PasswordAuthentication;
+import timetablepuzzle.swing.PasswordAuthentication;
 
 @SuppressWarnings("serial")
 public class LoginDialog extends JDialog{
@@ -35,6 +35,7 @@ public class LoginDialog extends JDialog{
     /**************Normal fields************/
     private static PasswordAuthentication passAuth = new PasswordAuthentication();
     private UserDAO _userDAOService;
+    private User _loggedUser;
 
     /**
      * Default constructor.
@@ -85,27 +86,32 @@ public class LoginDialog extends JDialog{
                 System.exit(0);  
             }
         });
+        
+        
+        // Text Field user name listener
+        _jtfUsername.addActionListener(new ActionListener(){
+        	@Override
+            public void actionPerformed(ActionEvent e)
+            {
+        		_loggedUser = CheckLoginInfo(parent);
+            }
+        });
+        
+        // Password field password listener
+        _jpfPassword.addActionListener(new ActionListener(){
+        	@Override
+            public void actionPerformed(ActionEvent e)
+            {
+        		_loggedUser = CheckLoginInfo(parent);
+            }
+        });        
 
         // Button Login listener
         _jbtOk.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-            	// TO DO: get the user from the database, if one exists, 
-            	// and check its password token against this strings token
-            	String username = _jtfUsername.getText();
-            	User tempUser = _userDAOService.findByUsername(username);
-            	if(tempUser != null)
-            	{
-                    if(passAuth.authenticate(_jpfPassword.getPassword(), tempUser.get_token()))
-                    {
-                        parent.setVisible(true);
-                        setVisible(false);
-                    } else {
-                        _jlblStatus.setText("Invalid password!");
-                    }
-            	}else {
-                    _jlblStatus.setText("Invalid username!");
-                }
+            public void actionPerformed(ActionEvent e) 
+            {
+            	_loggedUser = CheckLoginInfo(parent);
             }
         });
         
@@ -122,4 +128,32 @@ public class LoginDialog extends JDialog{
        	// Initialize the UserDAOService
     	this._userDAOService  = new UserJPADAOService();
     }
+    
+    private User CheckLoginInfo(final JFrame parent)
+    {
+    	// TO DO: get the user from the database, if one exists, 
+    	// and check its password token against this strings token
+    	String username = _jtfUsername.getText();
+    	User tempUser = _userDAOService.findByUsername(username);
+    	if(tempUser != null)
+    	{
+            if(passAuth.authenticate(_jpfPassword.getPassword(), tempUser.get_token()))
+            {
+            	parent.setVisible(true);
+                setVisible(false);
+            } else {
+                _jlblStatus.setText("Invalid password!");
+            }
+    	}else {
+            _jlblStatus.setText("Invalid username!");
+        }
+    	
+    	return tempUser;
+    }
+    
+    /*******************Getters and setters************************/
+
+	public User get_loggedUser() {
+		return _loggedUser;
+	}
 }

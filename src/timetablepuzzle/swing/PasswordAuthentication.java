@@ -1,6 +1,6 @@
 /*This code is not mine! It belongs to a user named erikson on stackoverflow.com,
  *  and i shall reference him in the documentation. I have no rights over this code*/
-package timetablepuzzle.solver;
+package timetablepuzzle.swing;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
