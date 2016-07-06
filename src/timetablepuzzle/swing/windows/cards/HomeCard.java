@@ -55,7 +55,7 @@ public class HomeCard extends JPanel{
 		"reloaded when the application is restarted." + "\n\n" +
 		"Best of luck!");
 		jtaWelcome.setBackground(new Color(0,0,0,0));
-		jtaWelcome.setFont(new Font("Courier New",Font.PLAIN, 12));
+		jtaWelcome.setFont(new Font("Courier New",Font.BOLD, 14));
 		jtaWelcome.setForeground(Color.BLACK);
 		jtaWelcome.setBorder(null);
 		jtaWelcome.setEditable(false);

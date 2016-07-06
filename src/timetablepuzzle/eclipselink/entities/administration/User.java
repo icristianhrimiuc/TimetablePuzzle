@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name="users")
 public class User{
 	/************Static Properties***********/
-	public static enum UserType{NOT_ASSIGNED,GUEST,SECRETARY,INSTRUCTOR,ADMIN};
+	public static enum UserType{NOT_ASSIGNED,GUEST,INSTRUCTOR,SECRETARY,ADMIN};
 	/************Regular Properties***********/
 	@Id
 	@Column(name="external_id")

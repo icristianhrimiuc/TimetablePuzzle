@@ -63,24 +63,30 @@ public class Main {
 		_loginDialog = new LoginDialog(_frame, true);
 		_loginDialog.setVisible(true);
 		
-		// The login operation was successful. Set the user required information
-		_loggedUser = _loginDialog.get_loggedUser();
-		_viewedAcadYear = _loggedUser.get_lastViewedAcadYear();
-		_viewedAcadSession = _loggedUser.get_lastViewedAcadSession();
-		_viewedFaculty = _loggedUser.get_lastViewedFaculty();
-		_bgColor = bgColor;
+		if(_loginDialog.isValidUser())
+		{
+			// The login operation was successful. Set the user required information
+			_loggedUser = _loginDialog.get_loggedUser();
+			_viewedAcadYear = _loggedUser.get_lastViewedAcadYear();
+			_viewedAcadSession = _loggedUser.get_lastViewedAcadSession();
+			_viewedFaculty = _loggedUser.get_lastViewedFaculty();
+			_bgColor = bgColor;
 
-		// Set the rest of the main window's properties
-		_frame.setExtendedState(_frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-		_frame.setJMenuBar(CreateMenuBar(_loggedUser.get_userType()));
-		
-		// Create all the cards
-		_cards = new HashMap<String,JPanel>();
-		_cards.put(HOMECARD,  new HomeCard("src\\resources\\homeBackground.png", bgColor));
-		_cards.put(TIMETABLECARD, new TimetableCard(_loggedUser, _viewedAcadYear, _viewedAcadSession, _viewedFaculty, _acceptedSolution, bgColor));
-		
-		// Add components to the content pane
-		this.AddComponentToPane(_frame.getContentPane());
+			// Set the rest of the main window's properties
+			_frame.setExtendedState(_frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+			_frame.setJMenuBar(CreateMenuBar(_loggedUser.get_userType()));
+			
+			// Create all the cards
+			_cards = new HashMap<String,JPanel>();
+			_cards.put(HOMECARD,  new HomeCard("src\\resources\\homeBackground.png", bgColor));
+			_cards.put(TIMETABLECARD, new TimetableCard(_loggedUser, _viewedAcadYear, _viewedAcadSession, _viewedFaculty, _acceptedSolution, bgColor));
+			
+			// Add components to the content pane
+			this.AddComponentToPane(_frame.getContentPane());
+			
+			// Display the main frame
+			_frame.setVisible(true);
+		}
 	}
 	
 	/********************Getters and setters****************/
@@ -94,6 +100,7 @@ public class Main {
 	}
     
 	/****************Methods that model the class behavior********************/
+	
 	private JMenuBar CreateMenuBar(UserType userType)
 	{
 		JMenuBar jMenuBar = new JMenuBar();
@@ -116,62 +123,77 @@ public class Main {
 		mnInputData.add(mntmInstructors);
 		mnInputData.add(mntmRooms);		
 		mnInputData.add(mntmStudentgroups);
+		// Add menu to menu bar
+		jMenuBar.add(mnInputData);
 		
 		
-		// Course Timetabling menu
-		JMenu mnCourseTimetabling = new JMenu("Course Timetabling");
-		// Course timetabling menu items
-		JMenuItem mntmSavedTimetables = new JMenuItem("Saved Timetables");
-		JMenuItem mntmTimetable = new JMenuItem("Timetable");
-		JMenuItem mntmAssignedClasses = new JMenuItem("Assigned Classes");
-		JMenuItem mntmUnassignedClasses = new JMenuItem("Unassigned Classes");
-		// Add menu items
-		mnCourseTimetabling.add(mntmSavedTimetables);
-		mnCourseTimetabling.add(new JSeparator());
-		mnCourseTimetabling.add(mntmTimetable);
-		mnCourseTimetabling.add(mntmAssignedClasses);		
-		mnCourseTimetabling.add(mntmUnassignedClasses);
+		if(userType == UserType.ADMIN || userType == UserType.SECRETARY || userType == UserType.INSTRUCTOR)
+		{
+			// Course Timetabling menu
+			JMenu mnCourseTimetabling = new JMenu("Course Timetabling");
+			// Course timetabling menu items
+			JMenuItem mntmSavedTimetables = new JMenuItem("Saved Timetables");
+			JMenuItem mntmTimetable = new JMenuItem("Timetable");
+			JMenuItem mntmAssignedClasses = new JMenuItem("Assigned Classes");
+			JMenuItem mntmUnassignedClasses = new JMenuItem("Unassigned Classes");
+			// Add menu items
+			mnCourseTimetabling.add(mntmSavedTimetables);
+			mnCourseTimetabling.add(new JSeparator());
+			mnCourseTimetabling.add(mntmTimetable);
+			mnCourseTimetabling.add(mntmAssignedClasses);		
+			mnCourseTimetabling.add(mntmUnassignedClasses);
+			// Add menu to menu bar
+			jMenuBar.add(mnCourseTimetabling);
+		}
 		
+		if(userType == UserType.ADMIN || userType == UserType.SECRETARY || userType == UserType.INSTRUCTOR)
+		{
+			// Administration menu
+			JMenu mnAdministration = new JMenu("Administration");
+			// Administration menu items
+			JMenuItem mntmFaculties = new JMenuItem("Faculties");
+			JMenuItem mntmDepartments = new JMenuItem("Departments");
+			JMenuItem mntmYearsOfStudy = new JMenuItem("Years Of Study");
+			JMenuItem mntmSubjectAreas = new JMenuItem("Subject Areas");
+			JMenuItem mntmCurriculas = new JMenuItem("Curriculas");
+			JMenuItem mntmAcademicYears = new JMenuItem("Academic Years");
+			JMenuItem mntmAcademicSessions = new JMenuItem("Academic Sessions");
+			JMenuItem mntmBuildings = new JMenuItem("Buildings");
+			// Add menu items
+			mnAdministration.add(mntmFaculties);
+			mnAdministration.add(mntmDepartments);
+			mnAdministration.add(mntmYearsOfStudy);
+			mnAdministration.add(mntmSubjectAreas);
+			mnAdministration.add(mntmCurriculas);
+			mnAdministration.add(new JSeparator());
+			mnAdministration.add(mntmAcademicYears);
+			mnAdministration.add(mntmAcademicSessions);		
+			mnAdministration.add(mntmBuildings);
+			// Add menu to menu bar
+			jMenuBar.add(mnAdministration);
+		}
 		
-		// Administration menu
-		JMenu mnAdministration = new JMenu("Administration");
-		// Administration menu items
-		JMenuItem mntmFaculties = new JMenuItem("Faculties");
-		JMenuItem mntmDepartments = new JMenuItem("Departments");
-		JMenuItem mntmYearsOfStudy = new JMenuItem("Years Of Study");
-		JMenuItem mntmSubjectAreas = new JMenuItem("Subject Areas");
-		JMenuItem mntmCurriculas = new JMenuItem("Curriculas");
-		JMenuItem mntmAcademicYears = new JMenuItem("Academic Years");
-		JMenuItem mntmAcademicSessions = new JMenuItem("Academic Sessions");
-		JMenuItem mntmBuildings = new JMenuItem("Buildings");
-		// Add menu items
-		mnAdministration.add(mntmFaculties);
-		mnAdministration.add(mntmDepartments);
-		mnAdministration.add(mntmYearsOfStudy);
-		mnAdministration.add(mntmSubjectAreas);
-		mnAdministration.add(mntmCurriculas);
-		mnAdministration.add(new JSeparator());
-		mnAdministration.add(mntmAcademicYears);
-		mnAdministration.add(mntmAcademicSessions);		
-		mnAdministration.add(mntmBuildings);
-		
-		
-		// Other menu
-		JMenu mnOther = new JMenu("Other");
-		// Other menu items
-		JMenuItem mntmLocations = new JMenuItem("Locations");
-		JMenuItem menuItem = new JMenuItem("Time Preferences");
-		JMenuItem mntmDatePatterns = new JMenuItem("Date Patterns");
-		JMenuItem mntmInstructorMeetings = new JMenuItem("Instructor Meetings");
-		JMenuItem mntmRoomtypes = new JMenuItem("RoomTypes");
-		JMenuItem mntmRoomfeatures = new JMenuItem("RoomFeatures");
-		// Add menu items
-		mnOther.add(mntmLocations);
-		mnOther.add(menuItem);
-		mnOther.add(mntmDatePatterns);
-		mnOther.add(mntmInstructorMeetings);
-		mnOther.add(mntmRoomtypes);		
-		mnOther.add(mntmRoomfeatures);
+		if(userType == UserType.ADMIN || userType == UserType.SECRETARY)
+		{
+			// Other menu
+			JMenu mnOther = new JMenu("Other");
+			// Other menu items
+			JMenuItem mntmLocations = new JMenuItem("Locations");
+			JMenuItem menuItem = new JMenuItem("Time Preferences");
+			JMenuItem mntmDatePatterns = new JMenuItem("Date Patterns");
+			JMenuItem mntmInstructorMeetings = new JMenuItem("Instructor Meetings");
+			JMenuItem mntmRoomtypes = new JMenuItem("RoomTypes");
+			JMenuItem mntmRoomfeatures = new JMenuItem("RoomFeatures");
+			// Add menu items
+			mnOther.add(mntmLocations);
+			mnOther.add(menuItem);
+			mnOther.add(mntmDatePatterns);
+			mnOther.add(mntmInstructorMeetings);
+			mnOther.add(mntmRoomtypes);		
+			mnOther.add(mntmRoomfeatures);
+			// Add menu to menu bar
+			jMenuBar.add(mnOther);
+		}
 		
 		
 		// Help menu
@@ -182,33 +204,34 @@ public class Main {
 		// Add menu items
 		mnHelp.add(mntmAbout);
 		mnHelp.add(mntmHelp);
+		// Add menu to menu bar
+		jMenuBar.add(mnHelp);
 		
 		
-		// Preferences menu
-		JMenu mnPreferences = new JMenu("Preferences");
-		// Preferences menu items
-		JMenuItem mntmChangeRole = new JMenuItem("Change Role");
-		JMenuItem mntmSettings = new JMenuItem("Settings");
-		JMenuItem mntmChangePassword = new JMenuItem("Change Password");
-		// Add menu items
-		mnPreferences.add(mntmChangeRole);
-		mnPreferences.add(mntmSettings);
-		mnPreferences.add(mntmChangePassword);
+		jMenuBar.add(Box.createHorizontalGlue());
+		
+		if(userType == UserType.ADMIN)
+		{
+			// Preferences menu
+			JMenu mnPreferences = new JMenu("Preferences");
+			// Preferences menu items
+			JMenuItem mntmChangeRole = new JMenuItem("Change Role");
+			JMenuItem mntmSettings = new JMenuItem("Settings");
+			JMenuItem mntmChangePassword = new JMenuItem("Change Password");
+			// Add menu items
+			mnPreferences.add(mntmChangeRole);
+			mnPreferences.add(mntmSettings);
+			mnPreferences.add(mntmChangePassword);
+			// Add menu to menu bar
+			jMenuBar.add(mnPreferences);
+		}
 		
 		
 		// Log out menu
 		JMenu mnLogOut = new JMenu("Log Out");
-		
-		
-		// Add menus to menu bar
-		jMenuBar.add(mnInputData);
-		jMenuBar.add(mnCourseTimetabling);
-		jMenuBar.add(mnAdministration);
-		jMenuBar.add(mnOther);
-		jMenuBar.add(mnHelp);
-		jMenuBar.add(Box.createHorizontalGlue());
-		jMenuBar.add(mnPreferences);
+		// Add menu to menu bar
 		jMenuBar.add(mnLogOut);
+		
 		
 		// Return the created menu bar
 		return jMenuBar;

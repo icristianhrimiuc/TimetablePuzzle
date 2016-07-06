@@ -36,6 +36,7 @@ public class LoginDialog extends JDialog{
     private static PasswordAuthentication passAuth = new PasswordAuthentication();
     private UserDAO _userDAOService;
     private User _loggedUser;
+    private boolean _isValidUser;
 
     /**
      * Default constructor.
@@ -139,7 +140,7 @@ public class LoginDialog extends JDialog{
     	{
             if(passAuth.authenticate(_jpfPassword.getPassword(), tempUser.get_token()))
             {
-            	parent.setVisible(true);
+            	_isValidUser = true;
                 setVisible(false);
             } else {
                 _jlblStatus.setText("Invalid password!");
@@ -155,5 +156,10 @@ public class LoginDialog extends JDialog{
 
 	public User get_loggedUser() {
 		return _loggedUser;
+	}
+	
+
+	public boolean isValidUser() {
+		return _isValidUser;
 	}
 }

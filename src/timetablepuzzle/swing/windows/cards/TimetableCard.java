@@ -40,6 +40,7 @@ public class TimetableCard extends JPanel{
 	 * TO DO: figure out what this field means
 	 */
 	private static final long serialVersionUID = 1L;
+	/***************Regular properties*********************/
 	// User required information
 	private User _loggedUser;
 	private AcademicYear _viewedAcadYear;
