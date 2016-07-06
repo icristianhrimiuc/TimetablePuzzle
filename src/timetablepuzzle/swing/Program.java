@@ -1,5 +1,6 @@
 package timetablepuzzle.swing;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import timetablepuzzle.swing.windows.Main;
@@ -12,7 +13,7 @@ public class Program {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main mainWindow = new Main();
+					Main mainWindow = new Main(Color.LIGHT_GRAY);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

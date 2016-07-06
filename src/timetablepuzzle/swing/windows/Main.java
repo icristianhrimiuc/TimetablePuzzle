@@ -6,23 +6,34 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.Component;
 
-import javax.swing.*;
+import java.util.HashMap;
 
-import java.util.List;
-import java.util.Set;
-
-import com.sun.xml.internal.ws.util.StringUtils;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
 
 import timetablepuzzle.eclipselink.entities.administration.*;
-import timetablepuzzle.eclipselink.entities.inputdata.Class;
+import timetablepuzzle.eclipselink.entities.administration.User.UserType;
 import timetablepuzzle.eclipselink.entities.inputdata.Solution;
+import timetablepuzzle.swing.windows.cards.HomeCard;
+import timetablepuzzle.swing.windows.cards.TimetableCard;
 
 public class Main {
+	/*****************Static properties****************/
+    final static String HOMECARD = "HomeCard";
+    final static String TIMETABLECARD = "TimetableCard";
+    /******************Regular properties*************/
+    // Main window fields
     private LoginDialog _loginDialog;
 	private JFrame _frame;
 	// User required information
@@ -31,20 +42,24 @@ public class Main {
 	private AcademicSession _viewedAcadSession;
 	private Faculty _viewedFaculty;
 	private Solution _acceptedSolution;
-	// A panel that uses CardLayout
-	JPanel cards;
-    final static String HOMECARD = "Home card";
-    final static String TIMETABLECARD = "Timetable card";
+	private Color _bgColor;
+	// A collection of easy retrievable cards
+	private HashMap<String,JPanel> _cards;
+	private JPanel _cardsPanel;
 
 	/**
 	 * Default constructor. Creates the application
 	 */
-	public Main() {
-		// Initialize the login dialog and display it
+	public Main(Color bgColor) {
+		// Initialize the main frame
 		_frame = new JFrame();
-		_frame.setTitle("TimetablePuzzle - University Timetabling Application");
 		_frame.setSize(800, 600);
-		_frame.setIconImage(Toolkit.getDefaultToolkit().getImage("E:\\DesktopI\\Licenta\\chestii\\Java\\TimetablePuzzle\\src\\resources\\icon.png"));
+		_frame.setLocationRelativeTo(null);
+		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		_frame.setTitle("TimetablePuzzle - University Timetabling Application");
+		_frame.setIconImage(Toolkit.getDefaultToolkit().getImage("src\\resources\\icon.png"));
+		
+		// Initialize the login dialog and display it
 		_loginDialog = new LoginDialog(_frame, true);
 		_loginDialog.setVisible(true);
 		
@@ -53,18 +68,19 @@ public class Main {
 		_viewedAcadYear = _loggedUser.get_lastViewedAcadYear();
 		_viewedAcadSession = _loggedUser.get_lastViewedAcadSession();
 		_viewedFaculty = _loggedUser.get_lastViewedFaculty();
-		
+		_bgColor = bgColor;
+
 		// Set the rest of the main window's properties
-		_frame.setLocationRelativeTo(null);
-		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// TO DO: this function will try to get the user
-		// It can't since the user is set after the credentials are inserted;
+		_frame.setExtendedState(_frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		_frame.setJMenuBar(CreateMenuBar(_loggedUser.get_userType()));
+		
+		// Create all the cards
+		_cards = new HashMap<String,JPanel>();
+		_cards.put(HOMECARD,  new HomeCard("src\\resources\\homeBackground.png", bgColor));
+		_cards.put(TIMETABLECARD, new TimetableCard(_loggedUser, _viewedAcadYear, _viewedAcadSession, _viewedFaculty, _acceptedSolution, bgColor));
+		
+		// Add components to the content pane
 		this.AddComponentToPane(_frame.getContentPane());
-		
-		
-		/****************** Here i define the menu bar********************/
-		JMenuBar menuBarAdmin = CreateMenuBarAdmin();
-		_frame.setJMenuBar(menuBarAdmin);
 	}
 	
 	/********************Getters and setters****************/
@@ -72,177 +88,152 @@ public class Main {
 	{
 		return this._frame;
 	}
+	
+	public Color get_bgColor() {
+		return _bgColor;
+	}
     
 	/****************Methods that model the class behavior********************/
-	private JMenuBar CreateMenuBarAdmin()
+	private JMenuBar CreateMenuBar(UserType userType)
 	{
-		JMenuBar menuBarAdmin = new JMenuBar();
+		JMenuBar jMenuBar = new JMenuBar();
 		
 		
 		// Input Data menu
 		JMenu mnInputData = new JMenu("InputData");
-		menuBarAdmin.add(mnInputData);
-		
+		// Input data menu items
 		JMenuItem mntmCourseOfferings = new JMenuItem("Course Offerings");
-		mnInputData.add(mntmCourseOfferings);
-		
 		JMenuItem mntmOfferings = new JMenuItem("Offerings");
-		mnInputData.add(mntmOfferings);
-		
-		JSeparator separator = new JSeparator();
-		mnInputData.add(separator);
-		
 		JMenuItem mntmClasses = new JMenuItem("Classes");
-		mnInputData.add(mntmClasses);
-		
 		JMenuItem mntmInstructors = new JMenuItem("Instructors");
-		mnInputData.add(mntmInstructors);
-		
 		JMenuItem mntmRooms = new JMenuItem("Rooms");
-		mnInputData.add(mntmRooms);
-		
 		JMenuItem mntmStudentgroups = new JMenuItem("StudentGroups");
+		// Add menu items
+		mnInputData.add(mntmCourseOfferings);
+		mnInputData.add(mntmOfferings);
+		mnInputData.add(new JSeparator());
+		mnInputData.add(mntmClasses);
+		mnInputData.add(mntmInstructors);
+		mnInputData.add(mntmRooms);		
 		mnInputData.add(mntmStudentgroups);
 		
 		
 		// Course Timetabling menu
 		JMenu mnCourseTimetabling = new JMenu("Course Timetabling");
-		menuBarAdmin.add(mnCourseTimetabling);
-		
+		// Course timetabling menu items
 		JMenuItem mntmSavedTimetables = new JMenuItem("Saved Timetables");
-		mnCourseTimetabling.add(mntmSavedTimetables);
-		
-		JSeparator separator_1 = new JSeparator();
-		mnCourseTimetabling.add(separator_1);
-		
 		JMenuItem mntmTimetable = new JMenuItem("Timetable");
-		mnCourseTimetabling.add(mntmTimetable);
-		
 		JMenuItem mntmAssignedClasses = new JMenuItem("Assigned Classes");
-		mnCourseTimetabling.add(mntmAssignedClasses);
-		
 		JMenuItem mntmUnassignedClasses = new JMenuItem("Unassigned Classes");
+		// Add menu items
+		mnCourseTimetabling.add(mntmSavedTimetables);
+		mnCourseTimetabling.add(new JSeparator());
+		mnCourseTimetabling.add(mntmTimetable);
+		mnCourseTimetabling.add(mntmAssignedClasses);		
 		mnCourseTimetabling.add(mntmUnassignedClasses);
 		
 		
 		// Administration menu
 		JMenu mnAdministration = new JMenu("Administration");
-		menuBarAdmin.add(mnAdministration);
-		
+		// Administration menu items
 		JMenuItem mntmFaculties = new JMenuItem("Faculties");
-		mnAdministration.add(mntmFaculties);
-		
 		JMenuItem mntmDepartments = new JMenuItem("Departments");
-		mnAdministration.add(mntmDepartments);
-		
 		JMenuItem mntmYearsOfStudy = new JMenuItem("Years Of Study");
-		mnAdministration.add(mntmYearsOfStudy);
-		
 		JMenuItem mntmSubjectAreas = new JMenuItem("Subject Areas");
-		mnAdministration.add(mntmSubjectAreas);
-		
 		JMenuItem mntmCurriculas = new JMenuItem("Curriculas");
-		mnAdministration.add(mntmCurriculas);
-		
-		JSeparator separator_2 = new JSeparator();
-		mnAdministration.add(separator_2);
-		
 		JMenuItem mntmAcademicYears = new JMenuItem("Academic Years");
-		mnAdministration.add(mntmAcademicYears);
-		
 		JMenuItem mntmAcademicSessions = new JMenuItem("Academic Sessions");
-		mnAdministration.add(mntmAcademicSessions);
-		
 		JMenuItem mntmBuildings = new JMenuItem("Buildings");
+		// Add menu items
+		mnAdministration.add(mntmFaculties);
+		mnAdministration.add(mntmDepartments);
+		mnAdministration.add(mntmYearsOfStudy);
+		mnAdministration.add(mntmSubjectAreas);
+		mnAdministration.add(mntmCurriculas);
+		mnAdministration.add(new JSeparator());
+		mnAdministration.add(mntmAcademicYears);
+		mnAdministration.add(mntmAcademicSessions);		
 		mnAdministration.add(mntmBuildings);
 		
 		
 		// Other menu
 		JMenu mnOther = new JMenu("Other");
-		menuBarAdmin.add(mnOther);
-		
+		// Other menu items
 		JMenuItem mntmLocations = new JMenuItem("Locations");
-		mnOther.add(mntmLocations);
-		
 		JMenuItem menuItem = new JMenuItem("Time Preferences");
-		mnOther.add(menuItem);
-		
 		JMenuItem mntmDatePatterns = new JMenuItem("Date Patterns");
-		mnOther.add(mntmDatePatterns);
-		
 		JMenuItem mntmInstructorMeetings = new JMenuItem("Instructor Meetings");
-		mnOther.add(mntmInstructorMeetings);
-		
 		JMenuItem mntmRoomtypes = new JMenuItem("RoomTypes");
-		mnOther.add(mntmRoomtypes);
-		
 		JMenuItem mntmRoomfeatures = new JMenuItem("RoomFeatures");
+		// Add menu items
+		mnOther.add(mntmLocations);
+		mnOther.add(menuItem);
+		mnOther.add(mntmDatePatterns);
+		mnOther.add(mntmInstructorMeetings);
+		mnOther.add(mntmRoomtypes);		
 		mnOther.add(mntmRoomfeatures);
 		
 		
 		// Help menu
 		JMenu mnHelp = new JMenu("Help");
-		mnHelp.setInheritsPopupMenu(true);
-		menuBarAdmin.add(mnHelp);
-		
+		// Help menu items
 		JMenuItem mntmAbout = new JMenuItem("About");
-		mnHelp.add(mntmAbout);
-		
 		JMenuItem mntmHelp = new JMenuItem("Help");
+		// Add menu items
+		mnHelp.add(mntmAbout);
 		mnHelp.add(mntmHelp);
-		menuBarAdmin.add(Box.createHorizontalGlue());
 		
 		
 		// Preferences menu
 		JMenu mnPreferences = new JMenu("Preferences");
-		menuBarAdmin.add(mnPreferences);
-		
+		// Preferences menu items
 		JMenuItem mntmChangeRole = new JMenuItem("Change Role");
-		mnPreferences.add(mntmChangeRole);
-		
 		JMenuItem mntmSettings = new JMenuItem("Settings");
-		mnPreferences.add(mntmSettings);
-		
 		JMenuItem mntmChangePassword = new JMenuItem("Change Password");
+		// Add menu items
+		mnPreferences.add(mntmChangeRole);
+		mnPreferences.add(mntmSettings);
 		mnPreferences.add(mntmChangePassword);
 		
 		
 		// Log out menu
 		JMenu mnLogOut = new JMenu("Log Out");
-		menuBarAdmin.add(mnLogOut);
+		
+		
+		// Add menus to menu bar
+		jMenuBar.add(mnInputData);
+		jMenuBar.add(mnCourseTimetabling);
+		jMenuBar.add(mnAdministration);
+		jMenuBar.add(mnOther);
+		jMenuBar.add(mnHelp);
+		jMenuBar.add(Box.createHorizontalGlue());
+		jMenuBar.add(mnPreferences);
+		jMenuBar.add(mnLogOut);
 		
 		// Return the created menu bar
-		return menuBarAdmin;
+		return jMenuBar;
 	}
 	
-    public void AddComponentToPane(Container pane) 
-    {          
-    	JPanel homeCard = CreateHomeCard();
-    	JPanel timetableCard = CreateTimetableCard();         
+    public void AddComponentToPane(Container pane)
+    {
+    	JPanel mainPanel = new JPanel();
+    	mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+    	mainPanel.add(CreateHeaderPanel());
+    	mainPanel.add(new JSeparator());
     	
         //Create the panel that contains the "cards".
-        cards = new JPanel(new CardLayout());
-        // Create the home card
-        cards.add(homeCard, HOMECARD);        
-        cards.add(timetableCard, TIMETABLECARD);
-         
-        pane.add(cards, BorderLayout.CENTER);
-    }
-    
-    private JPanel CreateHomeCard()
-    {
-    	JPanel homeCard = new JPanel();
-    	homeCard.setLayout(new BoxLayout(homeCard, BoxLayout.Y_AXIS));
-        // Create the header panel
-    	JPanel headerPanel = CreateHeaderPanel();        
-        // Create the centerPanel
-        JPanel centerPanel = CreateTimetablePanel(Color.LIGHT_GRAY);
-        // Add components to panel
-        homeCard.add(headerPanel);
-        homeCard.add(new JSeparator());
-        homeCard.add(centerPanel);
+        _cardsPanel = new JPanel(new CardLayout());
         
-        return homeCard;
+        for(String cardName : _cards.keySet())
+        {
+        	_cardsPanel.add(_cards.get(cardName),cardName);
+        }
+        CardLayout cl = (CardLayout) _cardsPanel.getLayout();
+        cl.show(_cardsPanel, HOMECARD);
+         
+        mainPanel.add(_cardsPanel, BorderLayout.CENTER);
+        
+        pane.add(mainPanel);
     }
     
     private JPanel CreateHeaderPanel()
@@ -300,127 +291,5 @@ public class Main {
         
         return headerSection;
     }
-    
-    public JPanel CreateTimetablePanel(Color bgColor)
-    {
-    	JPanel timetablePanel = new JPanel();
-    	timetablePanel.setBackground(bgColor);
-    	timetablePanel.setLayout(new BorderLayout());
-        
-        // Create the north panel. It will contain a radio button for each day of the week
-        JPanel northPanel = new JPanel();
-        northPanel.setBackground(bgColor);
-        northPanel.setLayout(new GridBagLayout());
-        TimePreferences.Day[] daysOfTheWeek = TimePreferences.Day.values();
-        // Create the academic session radio buttons section
-        ButtonGroup dotwbg = new ButtonGroup();
-        for(TimePreferences.Day dayOfTheWeek : daysOfTheWeek)
-        {
-        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(dayOfTheWeek.name()));
-        	jrb.setBackground(bgColor);
-        	dotwbg.add(jrb);
-        	northPanel.add(jrb);
-        }        
-        
-        // Create the south panel. It will contain a radio button for each academic year
-        JPanel southPanel = new JPanel();
-        southPanel.setBackground(bgColor);
-        southPanel.setLayout(new GridBagLayout());
-        YearOfStudy.Year[] yearsOfStudy = YearOfStudy.Year.values();
-        // Create the academic session radio buttons section
-        ButtonGroup yosbg = new ButtonGroup();
-        for(YearOfStudy.Year yearOfStudy : yearsOfStudy)
-        {
-        	if(yearOfStudy != YearOfStudy.Year.UNASSIGNED)
-        	{
-	        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(yearOfStudy.name()));
-	        	jrb.setBackground(bgColor);
-	        	yosbg.add(jrb);
-	        	southPanel.add(jrb);
-        	}
-        }
-        
-        // Create the west panel.It will contain a radio button for each department in the faculty
-        JPanel westPanel = new JPanel();
-        westPanel.setBackground(bgColor);
-        westPanel.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        List<Department> departments = _viewedFaculty.get_departments();
-        // Create the academic session radio buttons section
-        ButtonGroup dbg = new ButtonGroup();
-        for(int i=0; i<departments.size(); i++)
-        {
-        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(departments.get(i).get_name()));
-        	jrb.setBackground(bgColor);
-        	jrb.setHorizontalTextPosition(SwingConstants.CENTER);
-        	jrb.setVerticalTextPosition(JRadioButton.TOP);
-        	dbg.add(jrb);
-        	c.gridy = i;
-        	westPanel.add(jrb,c);
-        }
-        
-        // Create the east panel. It will contain 2 lists
-        JPanel eastPanel = new JPanel();
-        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
-        eastPanel.setBackground(bgColor);
-        // Create a list with unassigned classes
-        DefaultListModel<String> uClassesListModel = new DefaultListModel<String>();
-        List<Class> uClasses = _viewedAcadSession.get_solution().get_unassignedClasses();
-        for(Class uClass : uClasses)
-        {
-        	String className = uClass.get_meeting().get_name();
-        	int nrOfRemovals = _acceptedSolution.get_nrOfRemovals(uClass.get_externalId());
-        	uClassesListModel.addElement(className+"("+nrOfRemovals+")");
-        }
-        JList<String> jListUnassignedClasses = new JList<String>(uClassesListModel);
-        jListUnassignedClasses.setBackground(bgColor);
-        // Label to show the number of unassigned classes
-        JLabel jlNrOfUClasses = new JLabel(" Nr. of unassigned classes: " + uClasses.size() + " ");
-        
-        
-        // Create a list with assigned classes
-        DefaultListModel<String> aClassesListModel = new DefaultListModel<String>();
-        Set<Class> aClasses = _viewedAcadSession.get_solution().get_assignedClasses().keySet();
-        for(Class aClass : aClasses)
-        {
-        	String className = aClass.get_meeting().get_name();
-        	int nrOfRemovals = _acceptedSolution.get_nrOfRemovals(aClass.get_externalId());
-        	aClassesListModel.addElement(className+"("+nrOfRemovals+")");
-        }
-        JList<String> jListAssignedClasses = new JList<String>(aClassesListModel);
-        jListAssignedClasses.setBackground(bgColor);
-        // Label to show the number of assigned classes
-        JLabel jlNrOfAClasses = new JLabel(" Nr. of assigned classes: " + aClasses.size() + " ");
-        jlNrOfAClasses.setBackground(bgColor);
-        
-        // Add components to the east panel
-        eastPanel.add(jlNrOfUClasses);
-        eastPanel.add(jListUnassignedClasses);
-        eastPanel.add(jlNrOfAClasses);
-        eastPanel.add(jListAssignedClasses);
-        
-        // Create the center panel
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new GridBagLayout());
-        centerPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-        
-        
-        // Add components to panel
-        timetablePanel.add(northPanel, BorderLayout.NORTH);
-        timetablePanel.add(southPanel, BorderLayout.SOUTH);
-        timetablePanel.add(westPanel, BorderLayout.WEST);
-        timetablePanel.add(eastPanel, BorderLayout.EAST);
-        timetablePanel.add(centerPanel, BorderLayout.CENTER);
-        
-        
-        return timetablePanel;
-    }
-    
-    private JPanel CreateTimetableCard()
-    {
-    	JPanel timetableCard = new JPanel();
-    	// TO DO: add functionality to this card
-    	
-    	return timetableCard;
-    }
+
 }

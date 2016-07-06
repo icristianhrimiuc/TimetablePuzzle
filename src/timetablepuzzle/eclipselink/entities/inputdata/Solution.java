@@ -154,6 +154,7 @@ public class Solution{
 
 	/***********************Getter and Setter********************/
 	
+	
 	public int get_externalId() {
 		return _externalId;
 	}
@@ -209,7 +210,6 @@ public class Solution{
 	public void set_nrOfDays(int _nrOfDays) {
 		this._nrOfDays = _nrOfDays;
 	}
-	
 	/* Private methods to help simplify the code */
 	
 	/**
