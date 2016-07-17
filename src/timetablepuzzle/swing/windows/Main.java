@@ -7,6 +7,8 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Component;
 
 import java.util.HashMap;
@@ -28,7 +30,7 @@ import timetablepuzzle.eclipselink.entities.inputdata.Solution;
 import timetablepuzzle.swing.windows.cards.HomeCard;
 import timetablepuzzle.swing.windows.cards.TimetableCard;
 
-public class Main {
+public class Main implements ActionListener{
 	/*****************Static properties****************/
     final static String HOMECARD = "HomeCard";
     final static String TIMETABLECARD = "TimetableCard";
@@ -46,6 +48,7 @@ public class Main {
 	// A collection of easy retrievable cards
 	private HashMap<String,JPanel> _cards;
 	private JPanel _cardsPanel;
+	private CardLayout _cardLayout;
 
 	/**
 	 * Default constructor. Creates the application
@@ -61,12 +64,11 @@ public class Main {
 		
 		// Initialize the login dialog and display it
 		_loginDialog = new LoginDialog(_frame, true);
-		_loginDialog.setVisible(true);
+		_loggedUser = _loginDialog.execute();
 		
 		if(_loginDialog.isValidUser())
 		{
 			// The login operation was successful. Set the user required information
-			_loggedUser = _loginDialog.get_loggedUser();
 			_viewedAcadYear = _loggedUser.get_lastViewedAcadYear();
 			_viewedAcadSession = _loggedUser.get_lastViewedAcadSession();
 			_viewedFaculty = _loggedUser.get_lastViewedFaculty();
@@ -78,8 +80,11 @@ public class Main {
 			
 			// Create all the cards
 			_cards = new HashMap<String,JPanel>();
-			_cards.put(HOMECARD,  new HomeCard("src\\resources\\homeBackground.png", bgColor));
-			_cards.put(TIMETABLECARD, new TimetableCard(_loggedUser, _viewedAcadYear, _viewedAcadSession, _viewedFaculty, _acceptedSolution, bgColor));
+			_cards.put(HOMECARD,  new HomeCard("src\\resources\\homeBackground.png",
+					"src\\resources\\homeText.txt"));
+			_cards.put(TIMETABLECARD, new TimetableCard(_loggedUser, 
+					_viewedAcadYear, _viewedAcadSession, _viewedFaculty, 
+					_acceptedSolution, bgColor));
 			
 			// Add components to the content pane
 			this.AddComponentToPane(_frame.getContentPane());
@@ -105,11 +110,17 @@ public class Main {
 	{
 		JMenuBar jMenuBar = new JMenuBar();
 		
+		// Home menu
+		JMenu mnHome = new JMenu("Home");
+		mnHome.addActionListener(this);
+		// Add menu to menu bar
+		jMenuBar.add(mnHome);
 		
 		// Input Data menu
 		JMenu mnInputData = new JMenu("InputData");
 		// Input data menu items
 		JMenuItem mntmCourseOfferings = new JMenuItem("Course Offerings");
+		mntmCourseOfferings.addActionListener(this);
 		JMenuItem mntmOfferings = new JMenuItem("Offerings");
 		JMenuItem mntmClasses = new JMenuItem("Classes");
 		JMenuItem mntmInstructors = new JMenuItem("Instructors");
@@ -134,6 +145,7 @@ public class Main {
 			// Course timetabling menu items
 			JMenuItem mntmSavedTimetables = new JMenuItem("Saved Timetables");
 			JMenuItem mntmTimetable = new JMenuItem("Timetable");
+			mntmTimetable.addActionListener(this);
 			JMenuItem mntmAssignedClasses = new JMenuItem("Assigned Classes");
 			JMenuItem mntmUnassignedClasses = new JMenuItem("Unassigned Classes");
 			// Add menu items
@@ -237,6 +249,18 @@ public class Main {
 		return jMenuBar;
 	}
 	
+	public void actionPerformed(ActionEvent e) {
+        //...Get information from the action event...
+        //...Display it in the text area...
+		String action = e.getActionCommand();
+		if("Timetable".equals(action))
+		{
+			_cardLayout.show(_cardsPanel, TIMETABLECARD);
+		}else{
+			_cardLayout.show(_cardsPanel, HOMECARD);
+		}
+    }
+	
     public void AddComponentToPane(Container pane)
     {
     	JPanel mainPanel = new JPanel();
@@ -251,8 +275,8 @@ public class Main {
         {
         	_cardsPanel.add(_cards.get(cardName),cardName);
         }
-        CardLayout cl = (CardLayout) _cardsPanel.getLayout();
-        cl.show(_cardsPanel, HOMECARD);
+        _cardLayout = (CardLayout) _cardsPanel.getLayout();
+        _cardLayout.show(_cardsPanel, HOMECARD);
          
         mainPanel.add(_cardsPanel, BorderLayout.CENTER);
         
