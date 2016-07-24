@@ -8,74 +8,65 @@ import timetablepuzzle.eclipselink.entities.inputdata.Offering;
 @Entity
 @Table(name="instructor_meeetings")
 public class InstructorMeetings{
-	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="instructor",updatable = false,insertable = false,referencedColumnName="external_id")
-	private Instructor _instructor;
+	@JoinColumn(name="instructor_id",updatable = false,insertable = false,referencedColumnName="id")
+	private Instructor instructor;
 	
 	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="offering",updatable = false,insertable = false,referencedColumnName="external_id")
-	private Offering _offering;
+	@JoinColumn(name="offering_id",updatable = false,insertable = false,referencedColumnName="id")
+	private Offering offering;
 	
 	@Column(name="nrOfMeetings")
-	private int _nrOfMeetings;
-	
-	/**
-	 * Default constructor
-	 */
+	private int nrOfMeetings;
+
 	public InstructorMeetings()
 	{
 		this(0,new Instructor(),new Offering(),0);
 	}
-	
-	/**
-	 * Parameterized constructor
-	 * @param externalId
-	 * @param instructor
-	 * @param nrOfMeetings
-	 */
-	public InstructorMeetings(int externalId, Instructor instructor, Offering offering, int nrOfMeetings)
+
+	public InstructorMeetings(int id, Instructor instructor, Offering offering, int nrOfMeetings)
 	{
-		this._externalId = externalId;
-		this.set_instructor(instructor);
-		this.set_offering(offering);
-		this.set_nrOfMeetings(nrOfMeetings);
+		this.id = id;
+		this.setInstructor(instructor);
+		this.setOffering(offering);
+		this.setNrOfMeetings(nrOfMeetings);
 	}
 	
 	/***************Getters and setters****************/
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return this.id;
 	}
 	
-	public Instructor get_instructor() {
-		return _instructor;
+	public Instructor getInstructor() {
+		return this.instructor;
 	}
 
-	public void set_instructor(Instructor _instructor) {
-		this._instructor = _instructor;
+	public void setInstructor(Instructor instructor) {
+		this.instructor = instructor;
 	}
 	
-	public Offering get_offering()
+	public Offering getOffering()
 	{
-		return this._offering;
+		return this.offering;
 	}
 	
-	public void set_offering(Offering offering)
+	public void setOffering(Offering offering)
 	{
-		this._offering = offering;
+		this.offering = offering;
 	}
 
-	public int get_nrOfMeetings() {
-		return _nrOfMeetings;
+	public int getNrOfMeetings() {
+		return this.nrOfMeetings;
 	}
 
-	public void set_nrOfMeetings(int _nrOfMeetings) {
-		this._nrOfMeetings = _nrOfMeetings;
-	}	
+	public void setNrOfMeetings(int nrOfMeetings) {
+		this.nrOfMeetings = nrOfMeetings;
+	}
+	
+	/*******************Methods that model the class behavior*******************/
 }

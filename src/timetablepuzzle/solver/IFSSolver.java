@@ -285,16 +285,16 @@ public class IFSSolver {
         	
         	for(Class selClass : selClasses)
         	{
-            	int nrOfRemovals = currentSol.get_nrOfRemovals(selClass.get_externalId());
+            	int nrOfRemovals = currentSol.get_nrOfRemovals(selClass.getId());
             	// Each class has one dependency to each of the groups that should assist
             	// this is known as parallel dependency
-            	int nrOfDependencies = selClass.get_assignedStudentGroups().size();
+            	int nrOfDependencies = selClass.getAssignedStudentGroups().size();
             	// Check to see if the class is a lecture
-            	if(selClass.get_meeting().get_type() == Offering.OfferingType.LECTURE)
+            	if(selClass.getOffering().getType() == Offering.OfferingType.LECTURE)
             	{
             		// Each lecture has to be before all the laboratories of the groups 
             		// that should assist take place
-            		nrOfDependencies += selClass.get_assignedStudentGroups().size();
+            		nrOfDependencies += selClass.getAssignedStudentGroups().size();
             	}
             	int nrOfConflictingPlaces = _solution.GetDomainSize(selClass, true);
             	int nrOfNonCnflictingPlaces = _solution.GetDomainSize(selClass, false);

@@ -5,77 +5,55 @@ import javax.persistence.*;
 @Entity
 @Table(name="date_patterns")
 public class DatePattern{
-	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="name")
-	private String _name;
+	private String name;
 	
-	@Column(name="used_dates")
-	private String _usedDates;
+	@Column(name="dates")
+	private String dates;
 	
-	/**
-	 * Default constructor
-	 */
 	public DatePattern()
 	{
 		this(0,"NoName","");
 	}
 	
-	/**
-	 * Parameterized constructor. Create and initialize a date pattern with given parameters 
-	 * @param externalId
-	 * @param name
-	 */
-	public DatePattern(int externalId, String name, String usedDates)
+	public DatePattern(int id, String name, String dates)
 	{
-		_externalId = externalId;
-		set_name(name);
-		_usedDates = usedDates;
+		this.id = id;
+		setName(name);
+		setDates(dates);
 	}
 	
 	/**************Getters and setters******************/
+	public int getId() {
+		return this.id;
+	}
+	
+	public String getName() {
+		return name;
+	}
 
-	public int get_externalId() {
-		return _externalId;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	public String get_name() {
-		return _name;
-	}
-
-	public void set_name(String _name) {
-		this._name = _name;
-	}
-	
-	public String get_usedDates(){
-		return this._usedDates;
-	}
-	
-	public void set_usedDates(String usedDates)
+	public void setDates(String dates)
 	{
-		this._usedDates = usedDates;
+		this.dates = dates;
 	}
 	
 	/************Methods that model the class behavior**************/
-	/**
-	 * Add a new date interval to the existing usedDates
-	 * @param dateInterval
-	 */
-	public void AddDateInterval(String dateInterval)
+	public void addDateInterval(String dateInterval)
 	{
-		_usedDates = _usedDates + dateInterval + ";";
+		this.dates = this.dates + dateInterval + ";";
 	}
 	
-	/**
-	 * Returns the usedDates interval of this date pattern
-	 * @return
-	 */
-	public String[] GetUsedDatesIntervals()
+	public String[] getDates()
 	{
-		return this._usedDates.split(";");
+		return this.dates.split(";");
 	}
 }

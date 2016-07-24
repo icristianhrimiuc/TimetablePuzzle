@@ -7,66 +7,56 @@ import javax.persistence.*;
 public class Location{
 	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="longitude")
-    private double _longitude;
+    private double longitude;
 	
 	@Column(name="latitude")
-    private double _latitude;
+    private double latitude;
    
     public Location()
     {
     	this(0,0,0);
     }
-    /**
-     * Parameterized constructor. Create and initialize a point with given 
-     * (latitude, longitude) specified in degrees
-     * @param latitude
-     * @param longitude
-     */
-    public Location(int externalId, double latitude, double longitude) {
-    	this._externalId = externalId;
-        this.set_latitude(latitude);
-        this.set_longitude(longitude);
+
+    public Location(int id, double latitude, double longitude) {
+    	this.id = id;
+        this.setLatitude(latitude);
+        this.setLongitude(longitude);
     }
     
     /***********Getters and setters*****************/
 
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return this.id;
 	}
 	
-	public double get_longitude() {
-		return _longitude;
+	public double getLongitude() {
+		return this.longitude;
 	}
 
-	public void set_longitude(double _longitude) {
-		this._longitude = _longitude;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
-	public double get_latitude() {
-		return _latitude;
+	public double getLatitude() {
+		return this.latitude;
 	}
 
-	public void set_latitude(double _latitude) {
-		this._latitude = _latitude;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
+	
 	/****************Methods that model the class behavior********************/
-    /**
-     * Return distance between this location and that location
-     * measured in kilometers
-     * @param that
-     * @return
-     */
-    public double distanceTo(Location that) {
-        int meanEarthRadius = 6371; // km
-        double dLat = Math.toRadians(Math.abs(this._latitude - that._latitude));
-        double dLon = Math.toRadians(Math.abs(this._longitude - that._longitude));
-        double lat1 = Math.toRadians(this._latitude);
-        double lat2 = Math.toRadians(that._latitude);
+    public double DistanceTo(Location that) {
+        int meanEarthRadiusInKm = 6371;
+        double dLat = Math.toRadians(Math.abs(this.latitude - that.latitude));
+        double dLon = Math.toRadians(Math.abs(this.longitude - that.longitude));
+        double lat1 = Math.toRadians(this.latitude);
+        double lat2 = Math.toRadians(that.latitude);
 
         // Great circle distance in radians, using the harvesine formula
         // as it is numerically better-conditioned for small distances
@@ -74,13 +64,10 @@ public class Location{
                 Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         
-        return meanEarthRadius * c;
+        return meanEarthRadiusInKm * c;
     }
 
-    /**
-     * Return string representation of this point
-     */
     public String toString() {
-        return " (" + _latitude + ", " + _longitude + ")";
+        return " (" + latitude + ", " + longitude + ")";
     }
 }

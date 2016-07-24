@@ -46,8 +46,8 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 	{
 		boolean flag = true;
 		// Check constraint for the instructors schedule
-		Location selClassLocation = selClass.get_assignedRoom().get_building().get_location();
-		int selClassLength = selClass.get_meeting().get_nrOfTimeSlots();
+		Location selClassLocation = selClass.getAssignedRoom().getBuilding().get_location();
+		int selClassLength = selClass.getOffering().getNrOfTimeSlots();
 		int timeOfDay = dayNTime%solution.get_nrOfDays();
 		int instrId = selClass.getAssignedInstructorId();
 		Class[] instrClasses = solution.get_instructorsTimetable().get(instrId);
@@ -64,7 +64,7 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 			nextClass = instrClasses[dayNTime + selClassLength];
 			if(nextClass != null)
 			{
-				nextClassLocation = nextClass.get_assignedRoom().get_building().get_location();
+				nextClassLocation = nextClass.getAssignedRoom().getBuilding().get_location();
 				if(selClassLocation.distanceTo(nextClassLocation) > _maxDistanceBetweenBuildings)
 				{
 					flag = false;
@@ -78,7 +78,7 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 			beforeClass = instrClasses[dayNTime - 1];
 			if(beforeClass != null)
 			{
-				beforeClassLocation = beforeClass.get_assignedRoom().get_building().get_location();
+				beforeClassLocation = beforeClass.getAssignedRoom().getBuilding().get_location();
 				if(selClassLocation.distanceTo(beforeClassLocation) > _maxDistanceBetweenBuildings)
 				{
 					flag = false;
@@ -93,8 +93,8 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 	{
 		boolean flag = true;
 		// Check constraint for the studentGroup schedule
-		Location selClassLocation = selClass.get_assignedRoom().get_building().get_location();
-		int selClassLength = selClass.get_meeting().get_nrOfTimeSlots();
+		Location selClassLocation = selClass.getAssignedRoom().getBuilding().get_location();
+		int selClassLength = selClass.getOffering().getNrOfTimeSlots();
 		int timeOfDay = dayNTime%solution.get_nrOfDays();
 		List<Integer> stGrpsIds = selClass.getAssignedStudentGroupsIds();
 		HashMap<Integer,Class[]> studentsTimetable = solution.get_studentsTimetable();
@@ -115,7 +115,7 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 				nextClass = stGrpClasses[dayNTime + selClassLength];
 				if(nextClass != null)
 				{
-					nextClassLocation = nextClass.get_assignedRoom().get_building().get_location();
+					nextClassLocation = nextClass.getAssignedRoom().getBuilding().get_location();
 					if(selClassLocation.distanceTo(nextClassLocation) > _maxDistanceBetweenBuildings)
 					{
 						flag = false;
@@ -129,7 +129,7 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 				beforeClass = stGrpClasses[dayNTime - 1];
 				if(beforeClass != null)
 				{
-					beforeClassLocation = beforeClass.get_assignedRoom().get_building().get_location();
+					beforeClassLocation = beforeClass.getAssignedRoom().getBuilding().get_location();
 					if(selClassLocation.distanceTo(beforeClassLocation) > _maxDistanceBetweenBuildings)
 					{
 						flag = false;

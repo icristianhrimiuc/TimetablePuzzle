@@ -5,123 +5,120 @@ import java.util.HashMap;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.administration.SubjectArea.Term;
 import timetablepuzzle.eclipselink.entities.inputdata.CourseOffering;
 import timetablepuzzle.eclipselink.entities.inputdata.StudentGroup;
 
 @Entity
 @Table(name="years_of_study")
 public class YearOfStudy{
-	/***********Static fields*************/
-	public static enum Year{FIRST,SECOND,THIRD,FOURTH,FIFTH,SIXTH,UNASSIGNED};
-	/***********Regular fields*************/
+	public static enum CollegeYear{FIRST,SECOND,THIRD,FOURTH,FIFTH,SIXTH,UNASSIGNED};
+
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 		
-	@Column(name="year")
-	private Year _year;
+	@Column(name="college_year")
+	private CollegeYear collegeYear;
 	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=SubjectArea.class)
 	@JoinTable(name="yearofstudy_subjectAreas",
     joinColumns=
-         @JoinColumn(name="yearofstudy_external_id"),
+         @JoinColumn(name="yearofstudy_id"),
     inverseJoinColumns=
-         @JoinColumn(name="subjectrea_external_id"))
-	private List<SubjectArea> _areas;
+         @JoinColumn(name="subjectarea_id"))
+	private List<SubjectArea> subjectAreas;
 	
 	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="student_group")
-	private StudentGroup _students;
+	private StudentGroup students;
 	
 	@Transient
-	private List<CourseOffering> _commonCourses;
-	
-	/**
-	 * Default constructor
-	 */
+	private HashMap<Term, List<CourseOffering>> commonCoursesByTerm;
+
 	public YearOfStudy()
 	{
-		this(0, Year.UNASSIGNED, new ArrayList<SubjectArea>(), new StudentGroup());
+		this(0, CollegeYear.UNASSIGNED, new ArrayList<SubjectArea>(), new StudentGroup());
 	}
-	
-	/**
-	 * Parameterized constructor
-	 * @param externalId
-	 * @param year
-	 * @param areas
-	 * @param students
-	 */
-	public YearOfStudy(int externalId, Year year, 
-			List<SubjectArea> areas, StudentGroup students)
+
+	public YearOfStudy(int id, CollegeYear collegeYear, 
+			List<SubjectArea> subjectAreas, StudentGroup students)
 	{
-		_externalId = externalId;
-		set_year(year);
-		setAreas(areas);
-		set_students(students);
+		this.id = id;
+		setCollegeYear(collegeYear);
+		setSubjectAreas(subjectAreas);
+		setStudents(students);
 	}
 	
 	/********************Getters and setters****************/
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return id;
 	}
 	
-	public Year get_year() {
-		return _year;
+	public CollegeYear getCollegeYear() {
+		return collegeYear;
 	}
 
-	public void set_year(Year _year) {
-		this._year = _year;
+	public void setCollegeYear(CollegeYear collegeYear) {
+		this.collegeYear = collegeYear;
 	}
 	
-	public List<SubjectArea> get_areas()
+	public List<SubjectArea> getSubjectAreas()
 	{
-		return this._areas;
+		return this.subjectAreas;
 	}
 
-	public StudentGroup get_students() {
-		return _students;
+	public StudentGroup getStudents() {
+		return students;
 	}
 
-	public void set_students(StudentGroup _students) {
-		this._students = _students;
+	public void setStudents(StudentGroup students) {
+		this.students = students;
 	}
 	
 	/*******************Methods that model the class behavior*******************/
-	/**
-	 * Set the subject areas
-	 * This also checks for all the common courses
-	 * @param areas
-	 */
-	public void setAreas(List<SubjectArea> areas) {
-		this._areas = areas;
-		HashMap<CourseOffering, int[]> countCourses = new HashMap<CourseOffering,int[]>();
-		for(SubjectArea area : this._areas)
+	public void setSubjectAreas(List<SubjectArea> areas) {
+		this.subjectAreas = areas;
+		for(Term term : SubjectArea.Term.values())
 		{
-			for(Curricula term : area.get_studyTerms())
+			this.commonCoursesByTerm.put(term, determineCommonCoursesByTerm(term));
+		}
+	}
+
+	private List<CourseOffering> determineCommonCoursesByTerm(Term term) {
+		HashMap<CourseOffering, Integer> countedCourses = new HashMap<CourseOffering,Integer>();
+		for(SubjectArea area : this.subjectAreas)
+		{
+			for(CourseOffering course : area.getCurriculaToStudyByTerm(term).getCourses())
 			{
-				for(CourseOffering course : term.get_courses())
-				{
-					if(!countCourses.containsKey(course))
-					{
-						countCourses.put(course, new int[1]);
-					}
-					// increment the number of appearances for this course
-					countCourses.get(course)[0]++;
-				}
+				incrementNrOfAppearances(countedCourses, course);
 			}
 		}
 		
-		// Check to see what courses are common
-		this._commonCourses = new ArrayList<CourseOffering>();
-		int nrOfSubjectAreas = this._areas.size();
-		for(CourseOffering course : countCourses.keySet())
+		return extractCommonCourses(countedCourses);
+	}
+
+	private void incrementNrOfAppearances(HashMap<CourseOffering, Integer> countCourses,
+			CourseOffering course) {
+		if(!countCourses.containsKey(course))
 		{
-			if(countCourses.get(course)[0] == nrOfSubjectAreas)
+			countCourses.put(course,1);
+		}
+		countCourses.replace(course, countCourses.get(course)+1);
+	}
+
+	private List<CourseOffering> extractCommonCourses(HashMap<CourseOffering, Integer> countedCourses) {
+		List<CourseOffering> commonCourses= new ArrayList<CourseOffering>();
+		int nrOfSubjectAreas = this.subjectAreas.size();
+		for(CourseOffering course : countedCourses.keySet())
+		{
+			if(countedCourses.get(course) == nrOfSubjectAreas)
 			{
-				this._commonCourses.add(course);
+				commonCourses.add(course);
 			}
 		}
+		
+		return commonCourses;
 	}
 }

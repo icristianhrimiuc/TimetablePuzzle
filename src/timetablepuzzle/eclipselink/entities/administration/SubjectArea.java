@@ -1,69 +1,62 @@
 package timetablepuzzle.eclipselink.entities.administration;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import javax.persistence.*;
 
 @Entity
 @Table(name="subject_areas")
 public class SubjectArea{
-	/***********Static fields*************/
 	public static enum Term{FIRST,SECOND,THIRD,FOURTH,UNASSIGNED};
-	/***********Regular fields*************/	
+	
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="name")
-	private String _name;
+	private String name;
 	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=Curricula.class)
-	@JoinTable(name="subjectArea_curriculas",
+	@JoinTable(name="subjectarea_curriculas",
     joinColumns=
-         @JoinColumn(name="subjectArea_external_id"),
+         @JoinColumn(name="subjectarea_id"),
     inverseJoinColumns=
-         @JoinColumn(name="curricula_external_id"))
-	private List<Curricula> _studyTerms;
+         @JoinColumn(name="curricula_id"))
+	private HashMap<Term,Curricula> curriculasToStudyByTerm;
 	
 	public SubjectArea()
 	{
-		this(0,"NoName",new ArrayList<Curricula>());
+		this(0,"NoName",new HashMap<Term,Curricula>());
 	}
-	
-	/**
-	 * Parameterized constructor
-	 * @param externalId
-	 * @param name
-	 * @param studyTerms
-	 */
-	public SubjectArea(int externalId, String name, List<Curricula> studyTerms)
+
+	public SubjectArea(int id, String name, HashMap<Term,Curricula> curriculasToStudyByTerm)
 	{
-		_externalId = externalId;
-		set_name(name);
-		_studyTerms = studyTerms;
+		this.id = id;
+		setName(name);
+		this.curriculasToStudyByTerm = curriculasToStudyByTerm;
 	}
 	
 	/********************Getters and setters****************/
-
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return id;
 	}
 	
-	public String get_name() {
-		return _name;
+	public String getName() {
+		return name;
 	}
 
-	public void set_name(String _name) {
-		this._name = _name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public List<Curricula> get_studyTerms() {
-		return _studyTerms;
+	public Curricula getCurriculaToStudyByTerm(Term term) {
+		return curriculasToStudyByTerm.get(term);
+	}	
+	
+	public void setCurriculaToStudyByTerm(Term term, Curricula curriculasToStudyByTerm)
+	{
+		this.curriculasToStudyByTerm.put(term, curriculasToStudyByTerm);
 	}
-
-	public void set_studyTerms(List<Curricula> _studyTerms) {
-		this._studyTerms = _studyTerms;
-	}
+	
 	/*******************Methods that model the class behavior*******************/
 }

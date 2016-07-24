@@ -5,142 +5,128 @@ import javax.persistence.*;
 @Entity
 @Table(name="users")
 public class User{
-	/************Static Properties***********/
 	public static enum UserType{NOT_ASSIGNED,GUEST,INSTRUCTOR,SECRETARY,ADMIN};
-	/************Regular Properties***********/
+	
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="username")
-	private String _username;
+	private String username;
 	
-	@Column(name="pass_token")
-	private String _token;
+	@Column(name="password_token")
+	private String passwordToken;
 	
 	@Column(name="user_type")
-	private UserType _userType;
+	private UserType userType;
 
 	@Column(name="first_name")
-	private String _firstName;
+	private String firstName;
 	
 	@Column(name="last_name")
-	private String _lastName;
+	private String lastName;
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="lastviewed_acadyear")
-	private AcademicYear _lastViewedAcadYear;
+	@JoinColumn(name="lastviewed_academicyear_id")
+	private AcademicYear lastViewedAcademicYear;
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="lastviewed_acadsession")
-	private AcademicSession _lastViewedAcadSession;
+	@JoinColumn(name="lastviewed_academicsession_id")
+	private AcademicSession lastViewedAcademicSession;
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="lastviewed_faculty")
-	private Faculty _lastViewedFaculty;
-	
-	/*
-	 * Default constructor
-	 */
+	@JoinColumn(name="lastviewed_faculty_id")
+	private Faculty lastViewedFaculty;
+
 	public User()
 	{
 		this(0,"NoUsername","NoToken",UserType.NOT_ASSIGNED, "NoFirstName",
 				"NoLastName", new AcademicYear(), new AcademicSession(), new Faculty());
 	}
-	
-	/**
-	 * Parameterized constructor
-	 * @param external_id
-	 * @param username
-	 * @param md5Password
-	 * @param userType
-	 * @param firstName
-	 * @param lastName
-	 */
-	public User(int external_id, String username, String token, UserType userType,
-			String firstName, String lastName, AcademicYear lastViewedAcadYear, 
-			AcademicSession lastViewedAcadSession, Faculty lastViewedFaculty)
+
+	public User(int id, String username, String passwordToken, UserType userType,
+			String firstName, String lastName, AcademicYear lastViewedAcademicYear, 
+			AcademicSession lastViewedAcademicSession, Faculty lastViewedFaculty)
 	{
-		this._externalId = external_id;
-		this.set_username(username);
-		this.set_token(token);
-		this.set_userType(userType);
-		this.set_firstName(firstName);
-		this.set_lastName(lastName);
-		this.set_lastViewedAcadYear(lastViewedAcadYear);
-		this.set_lastViewedAcadSession(lastViewedAcadSession);
-		this.set_lastViewedFaculty(lastViewedFaculty);
+		this.id = id;
+		this.setUsername(username);
+		this.setToken(passwordToken);
+		this.setFirstName(firstName);
+		this.setLastName(lastName);
+		this.setLastViewedAcademicYear(lastViewedAcademicYear);
+		this.setLastViewedAcademicSession(lastViewedAcademicSession);
+		this.setLastViewedFaculty(lastViewedFaculty);
 	}
 
 	/****************Getters and setters********************/
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return id;
 	}
 	
-	public String get_username() {
-		return _username;
+	public String getUsername() {
+		return username;
 	}
 
-	public void set_username(String _username) {
-		this._username = _username;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	public String get_token() {
-		return _token;
+	public String getPasswordToken() {
+		return passwordToken;
 	}
 
-	public void set_token(String token) {
-		this._token = token;
+	public void setToken(String passwordToken) {
+		this.passwordToken = passwordToken;
 	}
 
-	public UserType get_userType() {
-		return _userType;
+	public UserType getUserType() {
+		return userType;
 	}
 
-	public void set_userType(UserType _userType) {
-		this._userType = _userType;
+	public void setUserType(UserType userType) {
+		this.userType = userType;
 	}
 
-	public String get_firstName() {
-		return _firstName;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void set_firstName(String _firstName) {
-		this._firstName = _firstName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String get_lastName() {
-		return _lastName;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void set_lastName(String _lastName) {
-		this._lastName = _lastName;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
-	public AcademicYear get_lastViewedAcadYear() {
-		return _lastViewedAcadYear;
+	public AcademicYear getLastViewedAcademicYear() {
+		return lastViewedAcademicYear;
 	}
 
-	public void set_lastViewedAcadYear(AcademicYear _lastViewedAcadYear) {
-		this._lastViewedAcadYear = _lastViewedAcadYear;
+	public void setLastViewedAcademicYear(AcademicYear lastViewedAcademicYear) {
+		this.lastViewedAcademicYear = lastViewedAcademicYear;
 	}
 	
-	public AcademicSession get_lastViewedAcadSession() {
-		return _lastViewedAcadSession;
+	public AcademicSession getLastViewedAcademicSession() {
+		return lastViewedAcademicSession;
 	}
 
-	public void set_lastViewedAcadSession(AcademicSession _lastViewedAcadSession) {
-		this._lastViewedAcadSession = _lastViewedAcadSession;
+	public void setLastViewedAcademicSession(AcademicSession lastViewedAcademicSession) {
+		this.lastViewedAcademicSession = lastViewedAcademicSession;
 	}
 
-	public Faculty get_lastViewedFaculty() {
-		return _lastViewedFaculty;
+	public Faculty getLastViewedFaculty() {
+		return lastViewedFaculty;
 	}
 
-	public void set_lastViewedFaculty(Faculty _lastViewedFaculty) {
-		this._lastViewedFaculty = _lastViewedFaculty;
+	public void setLastViewedFaculty(Faculty lastViewedFaculty) {
+		this.lastViewedFaculty = lastViewedFaculty;
 	}
+	
 	/***********Properties that model the class behavior***************/
 }

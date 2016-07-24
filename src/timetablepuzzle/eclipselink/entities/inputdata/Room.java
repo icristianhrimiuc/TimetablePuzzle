@@ -7,124 +7,108 @@ import javax.persistence.*;
 @Entity
 @Table(name="rooms")
 public class Room{
-	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 		
 	@Column(name="code")
-	private String _code;
+	private String code;
 	
 	@Column(name="name")
-	private String _name;
+	private String name;
 	
 	@ManyToOne(cascade=CascadeType.ALL,targetEntity=RoomType.class,optional=false)
-	@JoinColumn(name="room_type", nullable=false, updatable=false)
-	private RoomType _type;
+	@JoinColumn(name="roomtype_id", nullable=false, updatable=false)
+	private RoomType type;
 	
 	@Column(name="capacity")
-	private int _capacity;
+	private int capacity;
 	
 	@OneToOne(cascade=CascadeType.ALL,optional=false)
-    @JoinColumn(name="time_preferences", unique=true, nullable=false, updatable=false)
-	private TimePreferences _preferences;
+    @JoinColumn(name="timepreferences_id", unique=true, nullable=false, updatable=false)
+	private TimePreferences preferences;
 	
 	@ManyToOne(cascade=CascadeType.ALL,optional=false)
 	@JoinColumn(name="building",nullable=false,updatable=false)
-	private Building _building;
-	
-	/**
-	 * DefaultConstructor
-	 */
+	private Building building;
+
 	public Room()
 	{
 		this(0,"NoCode","NoName",new RoomType(),0,new TimePreferences(),new Building());
 	}
-	
-	/**
-	 * Parameterized constructor for creating an existing room 
-	 * with info from the database
-	 * @param externalId
-	 * @param code
-	 * @param name
-	 * @param type
-	 * @param capacity
-	 * @param preferences
-	 * @param building
-	 */
-	public Room(int externalId, String code, String name, RoomType type,
+
+	public Room(int id, String code, String name, RoomType type,
 			int capacity, TimePreferences preferences, Building building)
 	{
-		_externalId = externalId;
-		set_code(code);
-		set_name(name);
-		set_type(type);
-		set_capacity(capacity);
-		_preferences = preferences;
-		set_building(building);
+		this.id = id;
+		setCode(code);
+		setName(name);
+		setType(type);
+		setCapacity(capacity);
+		this.preferences = preferences;
+		setBuilding(building);
 	}
 
 	/***********Getters and setters for almost all the fields**************/
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return this.id;
 	}
 	
-	public String get_code() {
-		return _code;
+	public String getCode() {
+		return this.code;
 	}
 
-	public void set_code(String _code) {
-		this._code = _code;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public String get_name() {
-		return _name;
+	public String getName() {
+		return this.name;
 	}
 
-	public void set_name(String _name) {
-		this._name = _name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public RoomType get_type() {
-		return _type;
+	public RoomType getType() {
+		return type;
 	}
 
-	public void set_type(RoomType _type) {
-		this._type = _type;
+	public void setType(RoomType type) {
+		this.type = type;
 	}
 
-	public int get_capacity() {
-		return _capacity;
+	public int getCapacity() {
+		return this.capacity;
 	}
 
-	public void set_capacity(int _capacity) {
-		this._capacity = _capacity;
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
 	}
 
-	public TimePref[] get_preferencesByDay(Day dayOfTheWeek) {
-		return _preferences.GetPreferencesByDay(dayOfTheWeek);
+	public TimePreference[] getPreferencesByDay(DayOfTheWeek dayOfTheWeek) {
+		return this.preferences.getPreferencesByDay(dayOfTheWeek);
 	}
 
-	public void set_preferencesByDay(Day dayOfTheWeek, TimePref[] _preferences) {
-		this._preferences.SetPreferencesByDay(dayOfTheWeek, _preferences);
+	public void setPreferencesByDay(DayOfTheWeek dayOfTheWeek, TimePreference[] _preferences) {
+		this.preferences.setPreferencesByDay(dayOfTheWeek, _preferences);
 	}
 	
-	public TimePref get_preferencesByTime(Day dayOfTheWeek, int slotNr) {
-		return _preferences.GetPreferencesByTime(dayOfTheWeek, slotNr);
+	public TimePreference getPreferencesByTime(DayOfTheWeek dayOfTheWeek, int slotNr) {
+		return this.preferences.getPreferencesByDayAndTime(dayOfTheWeek, slotNr);
 	}
 
-	public void set_preferencesByTime(Day dayOfTheWeek, TimePref _preferences, int slotNr) {
-		this._preferences.SetPreferencesByTime(dayOfTheWeek, _preferences, slotNr);
+	public void setPreferencesByTime(DayOfTheWeek dayOfTheWeek, TimePreference _preferences, int slotNr) {
+		this.preferences.setPreferencesByDayAndTime(dayOfTheWeek, _preferences, slotNr);
 	}
 
-	public Building get_building() {
-		return _building;
+	public Building getBuilding() {
+		return this.building;
 	}
 
-	public void set_building(Building _building) {
-		this._building = _building;
+	public void setBuilding(Building building) {
+		this.building = building;
 	}
 	/***********Functions that model the class behavior***************/
 }

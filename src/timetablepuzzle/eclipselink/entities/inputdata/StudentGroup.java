@@ -7,82 +7,72 @@ import javax.persistence.*;
 @Entity
 @Table(name="student_groups")
 public class StudentGroup{
-	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="code")
-	private String _code;
+	private String code;
 	
 	@Column(name="name")
-	private String _name;
+	private String name;
 	
 	@OneToMany(targetEntity=StudentGroup.class)
-	@JoinTable(name="stGroup_stGroup",
+	@JoinTable(name="studentgroup_studentgroups",
     joinColumns=
-         @JoinColumn(name="parent_stGroup_external_id"),
+         @JoinColumn(name="parent_studentgroup_id"),
     inverseJoinColumns=
-         @JoinColumn(name="child_stGroup_external_id"))
-	private List<StudentGroup> _composingGroups;
+         @JoinColumn(name="child_studentgroup_id"))
+	private List<StudentGroup> composingGroups;
 	
 	@Column(name="nrofstudents")
-	private int _nrOfStudents;
-	
-	/**
-	 * Default constructor
-	 */
+	private int nrOfStudents;
+
 	public StudentGroup()
 	{
 		this(0,"NoCode","NoName",new ArrayList<StudentGroup>());
 	}
-	
-	/**
-	 * Create and initialize a new student group with the given parameters
-	 * @param externalId
-	 * @param code
-	 * @param name
-	 */
-	public StudentGroup(int externalId, String code, String name, List<StudentGroup> composingGroups)
+
+	public StudentGroup(int id, String code, String name, List<StudentGroup> composingGroups)
 	{
-		_externalId = externalId;
-		set_code(code);
-		set_name(name);
-		_composingGroups = composingGroups;
+		this.id = id;
+		setCode(code);
+		setName(name);
+		this.composingGroups = composingGroups;
 	}
 
 	/*****************Getters and setters**************/
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return this.id;
 	}
 	
-	public String get_code() {
-		return _code;
+	public String getCode() {
+		return this.code;
 	}
 
-	public void set_code(String _code) {
-		this._code = _code;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public String get_name() {
-		return _name;
+	public String getName() {
+		return this.name;
 	}
 
-	public void set_name(String _name) {
-		this._name = _name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public List<StudentGroup> get_composingGroups() {
-		return _composingGroups;
+	public List<StudentGroup> getComposingGroups() {
+		return this.composingGroups;
 	}
 
-	public int get_nrOfStudents() {
-		return _nrOfStudents;
+	public int getNrOfStudents() {
+		return this.nrOfStudents;
 	}
 
-	public void set_nrOfStudents(int _nrOfStudents) {
-		this._nrOfStudents = _nrOfStudents;
+	public void setNrOfStudents(int nrOfStudents) {
+		this.nrOfStudents = nrOfStudents;
 	}
+	/****************Methods that model class behavior******************/
 }

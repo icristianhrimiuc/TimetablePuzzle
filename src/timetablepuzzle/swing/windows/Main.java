@@ -69,14 +69,14 @@ public class Main implements ActionListener{
 		if(_loginDialog.isValidUser())
 		{
 			// The login operation was successful. Set the user required information
-			_viewedAcadYear = _loggedUser.get_lastViewedAcadYear();
-			_viewedAcadSession = _loggedUser.get_lastViewedAcadSession();
-			_viewedFaculty = _loggedUser.get_lastViewedFaculty();
+			_viewedAcadYear = _loggedUser.getLastViewedAcademicYear();
+			_viewedAcadSession = _loggedUser.getLastViewedAcademicSession();
+			_viewedFaculty = _loggedUser.getLastViewedFaculty();
 			_bgColor = bgColor;
 
 			// Set the rest of the main window's properties
 			_frame.setExtendedState(_frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-			_frame.setJMenuBar(CreateMenuBar(_loggedUser.get_userType()));
+			_frame.setJMenuBar(CreateMenuBar(_loggedUser.getUserType()));
 			
 			// Create all the cards
 			_cards = new HashMap<String,JPanel>();
@@ -291,8 +291,8 @@ public class Main implements ActionListener{
         headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,20));
         
         // Create the user type & user last name section
-        String userName = _loggedUser.get_firstName() + " " + _loggedUser.get_lastName();
-        String userType = _loggedUser.get_userType().toString();
+        String userName = _loggedUser.getFirstName() + " " + _loggedUser.getLastName();
+        String userType = _loggedUser.getUserType().toString();
         JPanel hUserSection = CreateHeaderSection("User Name&Type:", userName + "-" + userType.toLowerCase(),"Show all users");
         
         //Create the academic year section
@@ -300,11 +300,11 @@ public class Main implements ActionListener{
         JPanel hViewedAcademicYear = CreateHeaderSection("Academic year:", lastViewedAcadYear,"Change year");
         
         //Create the academic session section
-        String lastViewedAcadSession = _viewedAcadSession.get_name();
+        String lastViewedAcadSession = _viewedAcadSession.getName();
         JPanel hViewedAcademicSession = CreateHeaderSection("Academic session:", lastViewedAcadSession,"Change session");
         
         //Create the faculty section
-        String lastViewedFaculty = _loggedUser.get_lastViewedFaculty().get_name();
+        String lastViewedFaculty = _loggedUser.getLastViewedFaculty().getName();
         JPanel hViewedFaculty = CreateHeaderSection("Faculty:", lastViewedFaculty,"Change faculty");  
         
         // Add the different section to the header panel

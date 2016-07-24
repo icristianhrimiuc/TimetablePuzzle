@@ -69,7 +69,7 @@ public class LoginDialog extends JDialog{
         	@Override
             public void actionPerformed(ActionEvent e)
             {
-        		PopulateTheLoggedUserField();
+        		CheckCredentials();
             }
         });
     }
@@ -81,7 +81,7 @@ public class LoginDialog extends JDialog{
         	@Override
             public void actionPerformed(ActionEvent e)
             {
-        		PopulateTheLoggedUserField();
+        		CheckCredentials();
             }
         });
     }
@@ -162,7 +162,7 @@ public class LoginDialog extends JDialog{
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-            	PopulateTheLoggedUserField();
+            	CheckCredentials();
             }
         });
     	
@@ -184,13 +184,13 @@ public class LoginDialog extends JDialog{
     	return buttonCancel;
     }
     
-    private void PopulateTheLoggedUserField()
+    private void CheckCredentials()
     {
     	String username = usernameField.getText();
     	User tempUser = userDAOService.findByUsername(username);
     	if(tempUser != null)
     	{
-            if(passAuth.authenticate(passwordField.getPassword(), tempUser.get_token()))
+            if(passAuth.authenticate(passwordField.getPassword(), tempUser.getPasswordToken()))
             {
             	isValidUser = true;
             	loggedUser = tempUser;

@@ -3,99 +3,87 @@ package timetablepuzzle.eclipselink.entities.inputdata;
 import javax.persistence.*;
 
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences;
-import timetablepuzzle.eclipselink.entities.administration.TimePreferences.Day;
-import timetablepuzzle.eclipselink.entities.administration.TimePreferences.TimePref;
+import timetablepuzzle.eclipselink.entities.administration.TimePreferences.DayOfTheWeek;
+import timetablepuzzle.eclipselink.entities.administration.TimePreferences.TimePreference;
 
 @Entity
 @Table(name="instructors")
 public class Instructor{
-	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="name")
-	private String _name;
+	private String name;
 	
-	@Column(name="position")
-	private String _position;
+	@Column(name="academic_title")
+	private String academicTitle;
 	
 	@OneToOne(cascade=CascadeType.ALL,optional=false)
-	@JoinColumn(name="time_preferences", unique=true, nullable=false, updatable=false)
-	private TimePreferences _timePreferences;
-	
-	/**
-	 * Default Constructor
-	 */
+	@JoinColumn(name="timepreferences_id", unique=true, nullable=false, updatable=false)
+	private TimePreferences timePreferences;
+
 	public Instructor()
 	{
 		this(0,"NoName","NoPosition",new TimePreferences());
 	}
-	
-	/**
-	 * Parameterized constructor
-	 * @param externalId
-	 * @param name
-	 * @param position
-	 * @param preferences
-	 */
-	public Instructor(int externalId, String name, String position,
+
+	public Instructor(int id, String name, String academicTitle,
 			TimePreferences timePreferences)
 	{
-		_externalId = externalId;
-		set_name(name);
-		set_position(position);
-		set_timePreferences(timePreferences);
+		this.id = id;
+		setName(name);
+		setAcademicTitle(academicTitle);
+		setTimePreferences(timePreferences);
 	}
 	/**********Getters and setters**************/
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return id;
 	}
 	
-	public String get_name() {
-		return _name;
+	public String getName() {
+		return this.name;
 	}
 
-	public void set_name(String _name) {
-		this._name = _name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String get_position() {
-		return _position;
+	public String getAcademicTitle() {
+		return this.academicTitle;
 	}
 
-	public void set_position(String _position) {
-		this._position = _position;
+	public void setAcademicTitle(String commonCourses) {
+		this.academicTitle = commonCourses;
 	}
 	
-	public TimePreferences get_timePreferences()
+	public TimePreferences getTimePreferences()
 	{
-		return this._timePreferences;
+		return this.timePreferences;
 	}
 	
-	public void set_timePreferences(TimePreferences timePreferences)
+	public void setTimePreferences(TimePreferences timePreferences)
 	{
-		this._timePreferences = timePreferences;
+		this.timePreferences = timePreferences;
 	}
 	
-	public TimePref[] get_timePreferencesByDay(Day dayOfTheWeek) {
-		return _timePreferences.GetPreferencesByDay(dayOfTheWeek);
+	public TimePreference[] getTimePreferencesByDay(DayOfTheWeek dayOfTheWeek) {
+		return timePreferences.getPreferencesByDay(dayOfTheWeek);
 	}
 
-	public void set_preferencesByDay(Day dayOfTheWeek, TimePref[] timePreferences) {
-		this._timePreferences.SetPreferencesByDay(dayOfTheWeek, timePreferences);
+	public void setPreferencesByDay(DayOfTheWeek dayOfTheWeek, TimePreference[] timePreferences) {
+		this.timePreferences.setPreferencesByDay(dayOfTheWeek, timePreferences);
 	}
 	
-	public TimePref get_timePreferencesByTime(Day dayOfTheWeek, int slotNr) {
-		return _timePreferences.GetPreferencesByTime(dayOfTheWeek, slotNr);
+	public TimePreference getPreferencesByDayAndTime(DayOfTheWeek dayOfTheWeek, int slotNr) {
+		return timePreferences.getPreferencesByDayAndTime(dayOfTheWeek, slotNr);
 	}
 
-	public void set_timePreferencesByTime(Day dayOfTheWeek, TimePref _timePref,
+	public void setPreferencesByDayAndTime(DayOfTheWeek dayOfTheWeek, TimePreference timePref,
 			int slotNr) 
 	{
-		this._timePreferences.SetPreferencesByTime(dayOfTheWeek, _timePref, slotNr);
+		this.timePreferences.setPreferencesByDayAndTime(dayOfTheWeek, timePref, slotNr);
 	}
 	/**************Methods that model the class behavior******************/
 }

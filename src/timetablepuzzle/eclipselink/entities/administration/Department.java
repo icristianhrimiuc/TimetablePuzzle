@@ -7,62 +7,50 @@ import javax.persistence.*;
 @Entity
 @Table(name="departments")
 public class Department{
-	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="name")
-	private String _name;
+	private String name;
 	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=YearOfStudy.class)
 	@JoinTable(name="department_yearsofstudy",
     joinColumns=
-         @JoinColumn(name="department_external_id"),
+         @JoinColumn(name="department_id"),
     inverseJoinColumns=
-         @JoinColumn(name="yearofstudy_external_id"))
-	private List<YearOfStudy> _yearsOfStudy; 
-	
-	/**
-	 * Default constructor
-	 */
+         @JoinColumn(name="yearofstudy_id"))
+	private List<YearOfStudy> yearsOfStudy; 
+
 	public Department()
 	{
 		this(0, "NoName", new ArrayList<YearOfStudy>());
 	}
-	
-	/**
-	 * Parameterized constructor
-	 * @param externalId
-	 * @param name
-	 * @param areas
-	 */
-	public Department(int externalId, String name, List<YearOfStudy> yearsOfStudy)
+
+	public Department(int id, String name, List<YearOfStudy> yearsOfStudy)
 	{
-		_externalId = externalId;
-		set_name(name);
-		_yearsOfStudy = yearsOfStudy;
+		this.id = id;
+		setName(name);
+		this.yearsOfStudy = yearsOfStudy;
 	}
 	
 	/********************Getters and setters****************/
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return id;
 	}
 	
-	
-	public String get_name() {
-		return _name;
+	public String getName() {
+		return name;
 	}
 
-	public void set_name(String _name) {
-		this._name = _name;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	public List<YearOfStudy> get_yearsOfStudy()
+	public List<YearOfStudy> getYearsOfStudy()
 	{
-		return this._yearsOfStudy;
+		return this.yearsOfStudy;
 	}
 	
 	/*******************Methods that model the class behavior*******************/

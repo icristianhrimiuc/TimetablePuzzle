@@ -10,146 +10,127 @@ import timetablepuzzle.eclipselink.entities.administration.InstructorMeetings;
 @Entity
 @Table(name="offerings")
 public class Offering{
-	/*********Static fields***********/
 	public static enum OfferingType{LECTURE,SEMINARY,LABORATORY,GYM,UNASSIGNED};
-	/************Regular Properties**********/	
+
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="name")
-	private String _name;
+	private String name;
 	
 	@Column(name="type")
-	private OfferingType _type;
+	private OfferingType type;
 	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=Room.class)
 	@JoinTable(name="offering_rooms",
     joinColumns=
-         @JoinColumn(name="offering_external_id"),
+         @JoinColumn(name="offering_id"),
     inverseJoinColumns=
-         @JoinColumn(name="room_external_id"))
-	private List<Room> _rooms;
+         @JoinColumn(name="room_id"))
+	private List<Room> rooms;
 	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=InstructorMeetings.class)
 	@JoinTable(name="offering_instructormeetings",
     joinColumns=
-         @JoinColumn(name="offering_external_id"),
+         @JoinColumn(name="offering_id"),
     inverseJoinColumns=
-         @JoinColumn(name="instructormeetings_external_id"))
-	private List<InstructorMeetings> _nrOfMeetingsPerInstructor;
+         @JoinColumn(name="instructormeetings_id"))
+	private List<InstructorMeetings> nrOfMeetingsPerInstructor;
 	
 	@ManyToOne(cascade=CascadeType.ALL,targetEntity=DatePattern.class,optional=false)
 	@JoinColumn(name="date_pattern", nullable=false, updatable=false)
-	private DatePattern _datePattern;
+	private DatePattern datePattern;
 	
 	@Column(name="nroftimeslots")
-	private int _nrOfTimeSlots;
+	private int nrOfTimeSlots;
 	
 	@Column(name="nrofgroupslots")
-	private int _nrOfGroupSlots;
-	
-	/**
-	 * DefaultConstructor
-	 */
+	private int nrOfGroupSlots;
+
 	public Offering()
 	{
 		this(0,"NoName",OfferingType.UNASSIGNED,new ArrayList<Room>(),
 				new ArrayList<InstructorMeetings>(),new DatePattern(),0,0);
 	}
-	
-	/**
-	 * Parameterized constructor. Creates a class with data from the database
-	 * @param externalId
-	 * @param name
-	 * @param type
-	 * @param rooms
-	 * @param instructors
-	 * @param nrOfMeetingsPerInstructor
-	 * @param datePattern
-	 * @param nrOfTimeSlots
-	 * @param nrOfGroupSlots
-	 */
-	public Offering(int externalId, String name, OfferingType type,
+
+	public Offering(int id, String name, OfferingType type,
 			List<Room> rooms, List<InstructorMeetings> nrOfMeetingsPerInstructor,
 			DatePattern datePattern, int nrOfTimeSlots, int nrOfGroupSlots)
 	{
-		_externalId = externalId;
-		set_name(name);
-		set_type(type);
-		_rooms = rooms;
-		_nrOfMeetingsPerInstructor = nrOfMeetingsPerInstructor;
-		set_datePattern(datePattern);
-		set_nrOfTimeSlots(nrOfTimeSlots);
-		set_nrOfGroupSlots(nrOfGroupSlots);
+		this.id = id;
+		setName(name);
+		setType(type);
+		this.rooms = rooms;
+		this.nrOfMeetingsPerInstructor = nrOfMeetingsPerInstructor;
+		setDatePattern(datePattern);
+		setNrOfTimeSlots(nrOfTimeSlots);
+		setNrOfGroupSlots(nrOfGroupSlots);
 	}
+	
 	/******************Getters and Setters****************/
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return this.id;
 	}
 	
-	public String get_name() {
-		return _name;
+	public String getName() {
+		return this.name;
 	}
 
-	public void set_name(String _name) {
-		this._name = _name;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	public OfferingType get_type()
+	public OfferingType getType()
 	{
-		return this._type;
+		return this.type;
 	}
 	
-	public void set_type(OfferingType type)
+	public void setType(OfferingType type)
 	{
-		this._type = type;
+		this.type = type;
 	}
 
-	public List<Room> get_rooms() {
-		return _rooms;
+	public List<Room> getRooms() {
+		return this.rooms;
 	}
 
-	public List<InstructorMeetings> get_nrOfMeetingsPerInstructor() {
-		return _nrOfMeetingsPerInstructor;
+	public List<InstructorMeetings> getNrOfMeetingsPerInstructor() {
+		return nrOfMeetingsPerInstructor;
 	}
 
-	public DatePattern get_datePattern() {
-		return _datePattern;
+	public DatePattern getDatePattern() {
+		return datePattern;
 	}
 
-	public void set_datePattern(DatePattern _datePattern) {
-		this._datePattern = _datePattern;
+	public void setDatePattern(DatePattern datePattern) {
+		this.datePattern = datePattern;
 	}
 
-	public int get_nrOfTimeSlots() {
-		return _nrOfTimeSlots;
+	public int getNrOfTimeSlots() {
+		return this.nrOfTimeSlots;
 	}
 
-	public void set_nrOfTimeSlots(int _nrOfTimeSlots) {
-		this._nrOfTimeSlots = _nrOfTimeSlots;
+	public void setNrOfTimeSlots(int nrOfTimeSlots) {
+		this.nrOfTimeSlots = nrOfTimeSlots;
 	}
 
-	public int get_nrOfGroupSlots() {
-		return _nrOfGroupSlots;
+	public int getNrOfGroupSlots() {
+		return this.nrOfGroupSlots;
 	}
 
-	public void set_nrOfGroupSlots(int _nrOfGroupSlots) {
-		this._nrOfGroupSlots = _nrOfGroupSlots;
+	public void setNrOfGroupSlots(int nrOfGroupSlots) {
+		this.nrOfGroupSlots = nrOfGroupSlots;
 	}
+	
 	/***************Methods that model the class behavior***************/
-	/**
-	 * Return a list of all the possible instructors
-	 * @return
-	 */
-	public List<Instructor> GetInstructors()
+	public List<Instructor> getInstructors()
 	{
 		List<Instructor> instructors = new ArrayList<Instructor>();
-		for(InstructorMeetings instrMeeting : this._nrOfMeetingsPerInstructor)
+		for(InstructorMeetings instrMeeting : this.nrOfMeetingsPerInstructor)
 		{
-			instructors.add(instrMeeting.get_instructor());
+			instructors.add(instrMeeting.getInstructor());
 		}
 		
 		return instructors;

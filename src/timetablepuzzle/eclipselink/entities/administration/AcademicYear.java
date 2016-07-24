@@ -7,61 +7,50 @@ import javax.persistence.*;
 @Entity
 @Table(name="academic_years")
 public class AcademicYear{
-	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="year_period")
-	private String _yearPeriod;
+	private String yearPeriod;
 	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=AcademicSession.class)
 	@JoinTable(name="academicyear_academicsessions",
     joinColumns=
-         @JoinColumn(name="academicyear_external_id"),
+         @JoinColumn(name="academicyear_id"),
     inverseJoinColumns=
-         @JoinColumn(name="academicsession_external_id"))
-	private List<AcademicSession> _academicSessions;
+         @JoinColumn(name="academicsession_id"))
+	private List<AcademicSession> academicSessions;
 	
-	/**
-	 * Default constructor
-	 */
 	public AcademicYear()
 	{
 		this(0, "NoYearPeriod", new ArrayList<AcademicSession>());
 	}
 	
-	/**
-	 * Parameterized constructor
-	 * @param externalId
-	 * @param yearPeriod
-	 * @param academicSessions
-	 */
-	public AcademicYear(int externalId,String yearPeriod,
+	public AcademicYear(int id,String yearPeriod,
 			List<AcademicSession> academicSessions)
 	{
-		_externalId = externalId;
-		set_yearPeriod(yearPeriod);
-		_academicSessions = academicSessions;
+		this.id = id;
+		setYearPeriod(yearPeriod);
+		this.academicSessions = academicSessions;
 	}
 	
 	/********************Getters and setters****************/
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return this.id;
 	}
 	
-	public String get_yearPeriod() {
-		return _yearPeriod;
+	public String getYearPeriod() {
+		return yearPeriod;
 	}
 
-	public void set_yearPeriod(String _yearPeriod) {
-		this._yearPeriod = _yearPeriod;
+	public void setYearPeriod(String yearPeriod) {
+		this.yearPeriod = yearPeriod;
 	}
 
-	public List<AcademicSession> get_academicSessions() {
-		return _academicSessions;
+	public List<AcademicSession> getAcademicSessions() {
+		return academicSessions;
 	}
 	
 	/*******************Methods that model the class behavior*******************/

@@ -118,11 +118,11 @@ public class TimetableCard extends JPanel{
         JPanel northPanel = new JPanel();
         northPanel.setBackground(_bgColor);
         northPanel.setLayout(new GridBagLayout());
-        TimePreferences.Day[] daysOfTheWeek = TimePreferences.Day.values();
+        TimePreferences.DayOfTheWeek[] daysOfTheWeek = TimePreferences.DayOfTheWeek.values();
         // Create the academic session radio buttons section
         ButtonGroup dotwbg = new ButtonGroup();
         boolean dotwSel = false;
-        for(TimePreferences.Day dayOfTheWeek : daysOfTheWeek)
+        for(TimePreferences.DayOfTheWeek dayOfTheWeek : daysOfTheWeek)
         {
         	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(dayOfTheWeek.name()));
         	if(!dotwSel)
@@ -139,13 +139,13 @@ public class TimetableCard extends JPanel{
         JPanel southPanel = new JPanel();
         southPanel.setBackground(_bgColor);
         southPanel.setLayout(new GridBagLayout());
-        YearOfStudy.Year[] yearsOfStudy = YearOfStudy.Year.values();
+        YearOfStudy.CollegeYear[] yearsOfStudy = YearOfStudy.CollegeYear.values();
         // Create the academic session radio buttons section
         ButtonGroup yosbg = new ButtonGroup();
         boolean yosSel = false;
-        for(YearOfStudy.Year yearOfStudy : yearsOfStudy)
+        for(YearOfStudy.CollegeYear yearOfStudy : yearsOfStudy)
         {
-        	if(yearOfStudy != YearOfStudy.Year.UNASSIGNED)
+        	if(yearOfStudy != YearOfStudy.CollegeYear.UNASSIGNED)
         	{
 	        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(yearOfStudy.name()));
 	        	if(!yosSel)
@@ -170,7 +170,7 @@ public class TimetableCard extends JPanel{
         boolean dSel = false;
         for(int i=0; i<departments.size(); i++)
         {
-        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(departments.get(i).get_name()));
+        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(departments.get(i).getName()));
         	if(!dSel)
         	{
         		jrb.setSelected(true);
@@ -237,8 +237,8 @@ public class TimetableCard extends JPanel{
         DefaultListModel<String> classListModel = new DefaultListModel<String>();
         for(Class oneClass : classes)
         {
-        	String className = oneClass.get_meeting().get_name();
-        	int nrOfRemovals = _acceptedSolution.get_nrOfRemovals(oneClass.get_externalId());
+        	String className = oneClass.getOffering().getName();
+        	int nrOfRemovals = _acceptedSolution.get_nrOfRemovals(oneClass.getId());
         	classListModel.addElement(className+"("+nrOfRemovals+")");
         }
         JList<String> jListClasses = new JList<String>(classListModel);

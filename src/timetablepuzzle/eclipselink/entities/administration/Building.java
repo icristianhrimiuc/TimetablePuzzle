@@ -5,76 +5,60 @@ import javax.persistence.*;
 @Entity
 @Table(name="buildings")
 public class Building{
-	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="name")
-	private String _name;
+	private String name;
 	
 	@Column(name="abreviation")
-	private String _abreviation;
+	private String abreviation;
 
 	@OneToOne(cascade=CascadeType.ALL,optional=false)
-	@JoinColumn(name="location", unique=true, nullable=false, updatable=false)
-	private Location _location;
+	@JoinColumn(name="location_id", unique=true, nullable=false, updatable=false)
+	private Location location;
 	
-	/**
-	 * Default constructor
-	 */
 	public Building()
 	{
 		this(0,"NoName","NoAbbreviation",new Location());
 	}
 	
-	/**
-	 * Create and initialize a building with given parameters
-	 * @param externalID
-	 * @param name
-	 * @param abreviation
-	 * @param location
-	 */
-	public Building(int externalID, String name, String abreviation, Location location)
+	public Building(int id, String name, String abreviation, Location location)
 	{
-		_externalId = externalID;
-		set_name(name);
-		set_abreviation(abreviation);
-		if(location != null)
-		{
-			set_location(location);
-		}else{
-			set_location(new Location());
-		}
-	}
-	/****************Getters and setters***************/
-
-	public int get_externalId() {
-		return _externalId;
+		this.id = id;
+		setName(name);
+		setAbreviation(abreviation);
+		setLocation(location);
 	}
 	
-	public String get_name() {
-		return _name;
+	/****************Getters and setters***************/
+	public int getId() {
+		return this.id;
+	}
+	
+	public String getName() {
+		return name;
 	}
 
-	public void set_name(String _name) {
-		this._name = _name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String get_abreviation() {
-		return _abreviation;
+	public String getAbreviation() {
+		return abreviation;
 	}
 
-	public void set_abreviation(String _abreviation) {
-		this._abreviation = _abreviation;
+	public void setAbreviation(String abreviation) {
+		this.abreviation = abreviation;
 	}
 
-	public Location get_location() {
-		return _location;
+	public Location getLocation() {
+		return location;
 	}
 
-	public void set_location(Location _location) {
-		this._location = _location;
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 }

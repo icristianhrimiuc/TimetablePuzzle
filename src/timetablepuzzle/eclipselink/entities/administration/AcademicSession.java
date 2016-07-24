@@ -11,131 +11,105 @@ public class AcademicSession{
 	/***********Regular properties*************/
 	// Empty abstract class to be inherited by all entities 
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="name")
-	private String _name;
+	private String name;
 
+	// When the session starts, the classes also start
     @Temporal(TemporalType.DATE)
-	@Column(name="session_begins")
-	private Date _sessionBegins;
+	@Column(name="session_start_date")
+	private Date sessionStartDate;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(name="classes_end")
-	private Date _classesEnd;
+	@Column(name="classes_end_date")
+	private Date classesEndDate;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(name="exams_begin")
-	private Date _examsBegin;
+	@Column(name="exams_start_date")
+	private Date examsStartDate;
 	
+	// When the session ends, the exams also end
 	@Temporal(TemporalType.DATE)
-	@Column(name="session_ends")
-	private Date _sessionEnds;
+	@Column(name="session_end_date")
+	private Date sessionEndDate;
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="solution", unique=true)
-	private Solution _solution;
+	@JoinColumn(name="accepted_solution_id", unique=true)
+	private Solution acceptedSolution;
 	
-	@Transient
-	private boolean _hasSolution;
-	
-	/**
-	 * Default constructor
-	 */
 	public AcademicSession()
 	{
-		this(0, "NoName", new Date(), new Date(), new Date(), new Date(), null);
+		this(0, "NoName", new Date(), new Date(), new Date(), new Date(), new Solution());
 	}
 	
-	/**
-	 * Parameterized constructor
-	 * @param externalId
-	 * @param name
-	 * @param sessionBegins
-	 * @param classesEnd
-	 * @param examsBegin
-	 * @param sessionEnds
-	 * @param solution
-	 */
-	public AcademicSession(int externalId, String name,
-			Date sessionBegins, Date classesEnd, Date examsBegin, Date sessionEnds,
-			Solution solution)
+	public AcademicSession(int id, String name,
+			Date sessionStartDate, Date classesEndDate, Date examsStartDate, Date sessionEndDate,
+			Solution acceptedSolution)
 	{
-		_externalId = externalId;
-		set_name(name);
-		set_sessionBegins(sessionBegins);
-		set_classesEnd(classesEnd);
-		set_examsBegin(examsBegin);
-		set_sessionEnds(sessionEnds);
-		set_solution(solution);
+		this.id = id;
+		setName(name);
+		setSessionStartDate(sessionStartDate);
+		setClassesEndDate(classesEndDate);
+		setExamsStartDate(examsStartDate);
+		setSessionEndDate(sessionEndDate);
+		setAcceptedSolution(acceptedSolution);
 	}
 	
 	/***********************Getters and setters*******************/
-	
-	public int get_externalId() {
-		return _externalId;
-	}
-	
-	public String get_name() {
-		return _name;
+
+	public String getName() {
+		return name;
 	}
 
-	public void set_name(String _name) {
-		this._name = _name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public Date get_sessionBegins() {
-		return _sessionBegins;
+	public Date getSessionStartDate() {
+		return sessionStartDate;
 	}
 
-	public void set_sessionBegins(Date _sessionBegins) {
-		this._sessionBegins = _sessionBegins;
+	public void setSessionStartDate(Date sessionStartDate) {
+		this.sessionStartDate = sessionStartDate;
 	}
 
-	public Date get_classesEnd() {
-		return _classesEnd;
+	public Date getClassesEndDate() {
+		return classesEndDate;
 	}
 
-	public void set_classesEnd(Date _classesEnd) {
-		this._classesEnd = _classesEnd;
+	public void setClassesEndDate(Date classesEndDate) {
+		this.classesEndDate = classesEndDate;
 	}
 
-	public Date get_examsBegin()
-	{
-		return _examsBegin;
+	public Date getExamsStartDate() {
+		return examsStartDate;
 	}
 
-	public void set_examsBegin(Date _examsBegin) {
-		this._examsBegin = _examsBegin;
+	public void setExamsStartDate(Date examsStartDate) {
+		this.examsStartDate = examsStartDate;
 	}
 
-	public Date get_sessionEnds() {
-		return _sessionEnds;
+	public Date getSessionEndDate() {
+		return sessionEndDate;
 	}
 
-	public void set_sessionEnds(Date _sessionEnds) {
-		this._sessionEnds = _sessionEnds;
-	}
-	
-	public Solution get_solution() {
-		return _solution;
+	public void setSessionEndDate(Date sessionEndDate) {
+		this.sessionEndDate = sessionEndDate;
 	}
 
-	public void set_solution(Solution solution) {
-		
-		if(solution != null)
-		{
-			this._hasSolution = true;
-		}else{
-			this._hasSolution = false;
-		}
-		this._solution = solution;
+	public Solution getAcceptedSolution() {
+		return acceptedSolution;
 	}
 
-	public boolean get_hasSolution() {
-		return _hasSolution;
+	public void setAcceptedSolution(Solution acceptedSolution) {
+		this.acceptedSolution = acceptedSolution;
+	}
+
+	public boolean hasSolution() {
+		return this.acceptedSolution != null;
 	}
 	
 	/*******************Methods that model the class behavior*******************/

@@ -136,13 +136,13 @@ public class Solution{
 		for(Class uClass : _unassignedClasses)
 		{
 			// This is safe, because java sets it by default to zero
-			_nrOfRemovals.put(uClass.get_externalId(), 0);
+			_nrOfRemovals.put(uClass.getId(), 0);
 		}
 		// Set the number of removals for the assigned classes to 0
 		for(Class aClass : _assignedClasses.keySet())
 		{
 			// This is safe, because java sets it by default to zero
-			_nrOfRemovals.put(aClass.get_externalId(), 0);
+			_nrOfRemovals.put(aClass.getId(), 0);
 		}
 		// Since the union of the unassignedClasses set and the assignedClasses set
 		// must be the empty set, the total number of classes is equal to the size of
@@ -324,7 +324,7 @@ public class Solution{
 		{
 			// Assign the variable to the value
 			// For the entire length of the class
-			for(int  i=0; i<variable.get_meeting().get_nrOfTimeSlots(); i++)
+			for(int  i=0; i<variable.getOffering().getNrOfTimeSlots(); i++)
 			{
 				this._roomsTimetable.get(roomId)[value + i] = variable;
 				this._instructorsTimetable.get(instructorId)[value + i] = variable;
@@ -354,7 +354,7 @@ public class Solution{
 				List<Integer> stGroupsIds = oneClass.getAssignedStudentGroupsIds();
 				int dayNTime = this._assignedClasses.get(oneClass);
 				// Unassigns the class from all the tables
-				for(int  i=0; i<oneClass.get_meeting().get_nrOfTimeSlots(); i++)
+				for(int  i=0; i<oneClass.getOffering().getNrOfTimeSlots(); i++)
 				{
 					this._roomsTimetable.get(roomId)[dayNTime] = null;
 					this._instructorsTimetable.get(instructorId)[dayNTime] = null;
@@ -365,9 +365,9 @@ public class Solution{
 				}
 				this._unassignedClasses.add(oneClass);
 				// This line increments the number of removals for this one class
-				int nrOfRemovals = this._nrOfRemovals.get(oneClass.get_externalId());
+				int nrOfRemovals = this._nrOfRemovals.get(oneClass.getId());
 				nrOfRemovals++;
-				this._nrOfRemovals.replace(oneClass.get_externalId(), nrOfRemovals);
+				this._nrOfRemovals.replace(oneClass.getId(), nrOfRemovals);
 				nrOfUnassignedClasses++;
 			}	
 		}
@@ -395,30 +395,30 @@ public class Solution{
 		for(int i=0; i < _nrOfDays; i++)
 		{
 			// Get room and instructor preferences for the day
-			TimePref[] rmTimePref = uClass.get_assignedRoom().get_preferencesByDay(Day.values()[i]);
-			TimePref[] instrTimePref = uClass.get_assignedInstructor().get_timePreferencesByDay(Day.values()[i]);
+			TimePreference[] rmTimePref = uClass.getAssignedRoom().getPreferencesByDay(DayOfTheWeek.values()[i]);
+			TimePreference[] instrTimePref = uClass.getAssignedInstructor().getTimePreferencesByDay(DayOfTheWeek.values()[i]);
 			
 			// For each time of the day
 			for(int j=0; j< this._nrOfTimeSlotsPerDay; j++)
 			{
 				// Check is the room is free, if no check if the class occupying it is fixed
 				// Then check if the room access is allowed at that time and day
-				if((rmClasses[i*_nrOfDays+j] == null || ( conflicting && !rmClasses[i*_nrOfDays+j].is_fixed()))
-						&& (rmTimePref[i*_nrOfDays+j] != TimePref.PROHIBITED || 
-						(!conflicting && rmTimePref[i*_nrOfDays+j] != TimePref.STRONGLY_DISCOURAGED)))
+				if((rmClasses[i*_nrOfDays+j] == null || ( conflicting && !rmClasses[i*_nrOfDays+j].isFixed()))
+						&& (rmTimePref[i*_nrOfDays+j] != TimePreference.PROHIBITED || 
+						(!conflicting && rmTimePref[i*_nrOfDays+j] != TimePreference.STRONGLY_DISCOURAGED)))
 				{
 					// Check is the instructor is free, if no check if the class occupying it is fixed
 					// Then check if the instructor works at that time and day
-					if((instrClasses[i*_nrOfDays+j] == null || ( conflicting && !instrClasses[i*_nrOfDays+j].is_fixed()))
-							&& (instrTimePref[i*_nrOfDays+j] != TimePref.PROHIBITED ||
-							(!conflicting && instrTimePref[i*_nrOfDays+j] != TimePref.STRONGLY_DISCOURAGED)))
+					if((instrClasses[i*_nrOfDays+j] == null || ( conflicting && !instrClasses[i*_nrOfDays+j].isFixed()))
+							&& (instrTimePref[i*_nrOfDays+j] != TimePreference.PROHIBITED ||
+							(!conflicting && instrTimePref[i*_nrOfDays+j] != TimePreference.STRONGLY_DISCOURAGED)))
 					{
 						boolean stGrpsCheck = true;
 						// Check if any of the student groups are busy, if yes then check to see if the 
 						// class occupying them is fixed
 						for(Class[] stGrpClasses : stGrpsClasses)
 						{
-							if(!(stGrpClasses[i*_nrOfDays+j] == null || ( conflicting && !stGrpClasses[i*_nrOfDays+j].is_fixed())))
+							if(!(stGrpClasses[i*_nrOfDays+j] == null || ( conflicting && !stGrpClasses[i*_nrOfDays+j].isFixed())))
 							{
 								stGrpsCheck = false;
 								break;
@@ -447,7 +447,7 @@ public class Solution{
 			{
 				boolean isValidStartPos = true;
 				// For the length of the class, check if the time slots are free
-				for(int k=j; k< j+uClass.get_meeting().get_nrOfTimeSlots(); k++)
+				for(int k=j; k< j+uClass.getOffering().getNrOfTimeSlots(); k++)
 				{
 					isValidStartPos &= checksConflicting[i*_nrOfDays+k];
 				}

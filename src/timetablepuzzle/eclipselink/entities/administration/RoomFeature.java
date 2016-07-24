@@ -5,49 +5,34 @@ import javax.persistence.*;
 @Entity
 @Table(name="room_features")
 public class RoomFeature{
-	/***********Regular properties*************/	
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="feature")
-	private String _feature;
-	
-	/**
-	 * Default Constructor
-	 */
+	private String feature;
+
 	public RoomFeature()
 	{
 		this(0,"NoFeature");
 	}
-	
-	/**
-	 * Parameterized Constructor
-	 * @param externalId
-	 * @param feature
-	 */
-	public RoomFeature(int externalId, String feature)
+
+	public RoomFeature(int id, String feature)
 	{
-		set_externalId(externalId);
-		set_feature(feature);
+		this.id = id;
+		setFeature(feature);
 	}
 	
 	/******************Getters and setters****************/
-
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return id;
 	}
-	
-	public void set_externalId(int _externalId) {
-		this._externalId = _externalId;
+	public String getFeature() {
+		return feature;
 	}
 
-	public String get_feature() {
-		return _feature;
-	}
-
-	public void set_feature(String _feature) {
-		this._feature = _feature;
+	public void setFeature(String feature) {
+		this.feature = feature;
 	}	
 }

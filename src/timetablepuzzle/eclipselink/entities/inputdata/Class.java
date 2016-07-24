@@ -7,205 +7,162 @@ import javax.persistence.*;
 @Entity
 @Table(name="classes")
 public class Class{
-	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="course_title")
-	private String _courseTitle;
+	private String courseTitle;
 	
-	@Column(name="courseAbbreviation")
-	private String _courseAbbreviation;
-	
-	@ManyToOne(cascade=CascadeType.ALL,optional=false)
-    @JoinColumn(name="meeting", nullable=false, updatable=false)
-	private Offering _meeting;
+	@Column(name="course_abbreviation")
+	private String courseAbbreviation;
 	
 	@ManyToOne(cascade=CascadeType.ALL,optional=false)
-    @JoinColumn(name="room", nullable=false, updatable=false)
-	private Room _assignedRoom;
+    @JoinColumn(name="offering_id", nullable=false, updatable=false)
+	private Offering offering;
 	
 	@ManyToOne(cascade=CascadeType.ALL,optional=false)
-    @JoinColumn(name="instructor", nullable=false, updatable=false)
-	private Instructor _assignedInstructor;
+    @JoinColumn(name="assigned_room_id", nullable=false, updatable=false)
+	private Room assignedRoom;
 	
 	@ManyToOne(cascade=CascadeType.ALL,optional=false)
-    @JoinColumn(name="student_group", nullable=false, updatable=false)
-	private StudentGroup _assignedParentStGroup;
+    @JoinColumn(name="assigned_instructor_id", nullable=false, updatable=false)
+	private Instructor assignedInstructor;
+	
+	@ManyToOne(cascade=CascadeType.ALL,optional=false)
+    @JoinColumn(name="assigned_studentgroup_id", nullable=false, updatable=false)
+	private StudentGroup assignedParentStudentGroup;
 	
 	@Column(name="isFixed")
-	private boolean _fixed;
+	private boolean isFixed;
 	
 	@Transient
-	private List<StudentGroup> _assignedStudentGroups;
-	
-	/**
-	 * DefaultConstructor
-	 */
+	private List<StudentGroup> assignedStudentGroups;
+
 	public Class()
 	{
 		this(0,"NoTitle", "NoAbbreviation", new Offering(), new Room(),
 				new Instructor(), new StudentGroup());
 	}
-	
-	/**
-	 * Parameterized constructor for creating a brand new class
-	 * @param courseTitle
-	 * @param courseAbbreviation
-	 * @param meeting
-	 * @param assignedRoomPos
-	 * @param assignedInstructorPos
-	 */
-	public Class(String courseTitle, String courseAbbreviation, Offering meeting,
-			Room assignedRoom, Instructor assignedInstructor,
-			StudentGroup assignedParentStGroup)
+
+	public Class(int id, String courseTitle, String courseAbbreviation, Offering offering,
+			Room assignedRoom, Instructor assignedInstructor, StudentGroup assignedParentStudentGroup)
 	{
-		this(0,courseTitle,courseAbbreviation,meeting,assignedRoom,
-				assignedInstructor,assignedParentStGroup);
-	}
-	
-	/**
-	 * Parameterized constructor for creating a existing class stored in the database
-	 * @param externalId
-	 * @param courseTitle
-	 * @param courseAbbreviation
-	 * @param meeting
-	 * @param assignedRoomPos
-	 * @param assignedInstructorPos
-	 * @param assignedStudentGroups
-	 */
-	public Class(int externalId, String courseTitle, String courseAbbreviation, Offering meeting,
-			Room assignedRoom, Instructor assignedInstructor, StudentGroup assignedParentStGroup)
-	{
-		_externalId = externalId;
-		set_courseTitle(courseTitle);
-		set_courseAbbreviation(courseAbbreviation);
-		set_meeting(meeting);
-		set_assignedRoom(assignedRoom);
-		set_assignedInstructor(assignedInstructor);
-		set_assignedParentStGroup(assignedParentStGroup);
+		this.id = id;
+		setCourseTitle(courseTitle);
+		setCourseAbbreviation(courseAbbreviation);
+		setOffering(offering);
+		setAssignedRoom(assignedRoom);
+		setAssignedInstructor(assignedInstructor);
+		setAssignedParentStudentGroup(assignedParentStudentGroup);
 	}
 
 	/********************Getters and setters********************/
 	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return this.id;
 	}
 	
-	public String get_courseTitle() {
-		return _courseTitle;
+	public String getCourseTitle() {
+		return this.courseTitle;
 	}
 
-	public void set_courseTitle(String _courseTitle) {
-		this._courseTitle = _courseTitle;
+	public void setCourseTitle(String courseTitle) {
+		this.courseTitle = courseTitle;
 	}
 
-	public String get_courseAbbreviation() {
-		return _courseAbbreviation;
+	public String getCourseAbbreviation() {
+		return this.courseAbbreviation;
 	}
 
-	public void set_courseAbbreviation(String _courseAbbreviation) {
-		this._courseAbbreviation = _courseAbbreviation;
+	public void setCourseAbbreviation(String courseAbbreviation) {
+		this.courseAbbreviation = courseAbbreviation;
 	}
 
-	public Offering get_meeting() {
-		return _meeting;
+	public Offering getOffering() {
+		return this.offering;
 	}
 
-	public void set_meeting(Offering _meeting) {
-		this._meeting = _meeting;
+	public void setOffering(Offering offering) {
+		this.offering = offering;
 	}
 
-	public Room get_assignedRoom() {
-		return this._assignedRoom;
+	public Room getAssignedRoom() {
+		return this.assignedRoom;
 	}
 
-	public void set_assignedRoom(Room _assignedRoom) {
-		if(this._meeting.get_rooms().contains(_assignedRoom))
+	public void setAssignedRoom(Room assignedRoom) {
+		if(this.offering.getRooms().contains(assignedRoom))
 		{
-			this._assignedRoom = _assignedRoom;
+			this.assignedRoom = assignedRoom;
 		}
 	}
 
-	public Instructor get_assignedInstructor() {
-		return _assignedInstructor;
+	public Instructor getAssignedInstructor() {
+		return this.assignedInstructor;
 	}
 
-	public void set_assignedInstructor(Instructor _assignedInstructor) {
-		if(this._meeting.GetInstructors().contains(_assignedInstructor))
+	public void setAssignedInstructor(Instructor assignedInstructor) {
+		if(this.offering.GetInstructors().contains(assignedInstructor))
 		{
-			this._assignedInstructor = _assignedInstructor;
+			this.assignedInstructor = assignedInstructor;
 		}
 	}
 	
-	public StudentGroup get_assignedParentStGroup()
+	public StudentGroup getAssignedParentStudentGroup()
 	{
-		return this._assignedParentStGroup;
+		return this.assignedParentStudentGroup;
 	}
 	
-	public void set_assignedParentStGroup(StudentGroup assignedParentStGroup)
+	public void setAssignedParentStudentGroup(StudentGroup assignedParentStudentGroup)
 	{
-		this._assignedParentStGroup = assignedParentStGroup;
-		this._assignedStudentGroups = new ArrayList<StudentGroup>();
-		DiscoverStudentGroups(assignedParentStGroup);
+		this.assignedParentStudentGroup = assignedParentStudentGroup;
+		this.assignedStudentGroups = new ArrayList<StudentGroup>();
+		ExtractChildStudentGroups(assignedParentStudentGroup);
 	}
 
-	public List<StudentGroup> get_assignedStudentGroups() {
-		return _assignedStudentGroups;
+	public List<StudentGroup> getAssignedStudentGroups() {
+		return this.assignedStudentGroups;
 	}
 
-	public boolean is_fixed() {
-		return _fixed;
+	public boolean isFixed() {
+		return this.isFixed;
 	}
 
-	public void set_fixed(boolean _fixed) {
-		this._fixed = _fixed;
+	public void setIsFixed(boolean isFixed) {
+		this.isFixed = isFixed;
 	}
 	
 	/**************Methods that model the class behavior***************/
-	/**
-	 * Return the id of the assigned room
-	 * @return
-	 */
 	public int getAssignedRoomId() {
-		return this._assignedRoom.get_externalId();
+		return this.assignedRoom.getId();
 	}
 	
-	/**
-	 * Return the id of the assigned instructor
-	 * @return
-	 */
 	public int getAssignedInstructorId() {
-		return this._assignedInstructor.get_externalId();
+		return this.assignedInstructor.getId();
 	}
 	
-	/**
-	 * Return the ids of all assigned student groups
-	 * @return
-	 */
 	public List<Integer> getAssignedStudentGroupsIds()
 	{
 		List<Integer> stGroupsIds = new ArrayList<Integer>();
-		// For each component student group, get it's id
-		for(StudentGroup stGroup : this._assignedStudentGroups)
+		for(StudentGroup stGroup : this.assignedStudentGroups)
 		{
-			stGroupsIds.add(stGroup.get_externalId());
+			stGroupsIds.add(stGroup.getId());
 		}
 		
 		return stGroupsIds;
-	}	
+	}
 	
-	public void DiscoverStudentGroups(StudentGroup stGroup)
+	public void ExtractChildStudentGroups(StudentGroup parentStudentGroup)
 	{
-		if(stGroup.get_composingGroups().isEmpty())
+		if(parentStudentGroup.getComposingGroups().isEmpty())
 		{
-			this._assignedStudentGroups.add(stGroup);
+			this.assignedStudentGroups.add(parentStudentGroup);
 		}else{
-			for(StudentGroup componentGroup : stGroup.get_composingGroups())
+			for(StudentGroup componentGroup : parentStudentGroup.getComposingGroups())
 			{
-				DiscoverStudentGroups(componentGroup);
+				ExtractChildStudentGroups(componentGroup);
 			}
 		}
 	}

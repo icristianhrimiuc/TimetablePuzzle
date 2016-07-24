@@ -6,87 +6,78 @@ import javax.persistence.*;
 @Entity
 @Table(name="room_types")
 public class RoomType{
-	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 		
 	@Column(name="name")
-	private String _name;
+	private String name;
 	
-	@Column(name="min_capacity")
-	private int _minCapacity;
+	@Column(name="mincapacity")
+	private int minCapacity;
 	
-	@Column(name="max_capacity")
-	private int _maxCapacity;
+	@Column(name="maxcapacity")
+	private int maxCapacity;
 	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=RoomFeature.class)
 	@JoinTable(name="roomType_roomFeatures",
     joinColumns=
-         @JoinColumn(name="roomType_external_id"),
+         @JoinColumn(name="roomType_id"),
     inverseJoinColumns=
-         @JoinColumn(name="roomFeature_external_id"))
-	private List<RoomFeature> _roomFeatures;
+         @JoinColumn(name="roomFeature_id"))
+	private List<RoomFeature> roomFeatures;
 	
 	public RoomType()
 	{
 		this(0,"NoName",0,-1,0,null);
 	}
-	/**
-	 * Parameterized constructor
-	 * @param externalId
-	 * @param name
-	 * @param minCapacity
-	 * @param type
-	 * @param maxCapacity
-	 * @param roomFeatures
-	 */
-	public RoomType(int externalId, String name, int minCapacity, int type,
+
+	public RoomType(int id, String name, int minCapacity, int type,
 			int maxCapacity, List<RoomFeature> roomFeatures)
 	{
-		_externalId = externalId;
-		set_name(name);
-		set_minCapacity(minCapacity);
-		set_maxCapacity(maxCapacity);
-		set_roomFeatures(roomFeatures);
+		this.id = id;
+		setName(name);
+		setMinCapacity(minCapacity);
+		setMaxCapacity(maxCapacity);
+		setRoomFeatures(roomFeatures);
 	}
 
 	/**************Getters and setters*****************/
 
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return id;
 	}
 	
-	public String get_name() {
-		return _name;
+	public String getName() {
+		return name;
 	}
 
-	public void set_name(String _name) {
-		this._name = _name;
+	public void setName(String _name) {
+		this.name = _name;
 	}
 
-	public int get_minCapacity() {
-		return _minCapacity;
+	public int getMinCapacity() {
+		return minCapacity;
 	}
 
-	public void set_minCapacity(int _minCapacity) {
-		this._minCapacity = _minCapacity;
+	public void setMinCapacity(int _minCapacity) {
+		this.minCapacity = _minCapacity;
 	}
 
-	public int get_maxCapacity() {
-		return _maxCapacity;
+	public int getMaxCapacity() {
+		return maxCapacity;
 	}
 
-	public void set_maxCapacity(int _maxCapacity) {
-		this._maxCapacity = _maxCapacity;
+	public void setMaxCapacity(int _maxCapacity) {
+		this.maxCapacity = _maxCapacity;
 	}
 
-	public List<RoomFeature> get_roomFeatures() {
-		return _roomFeatures;
+	public List<RoomFeature> getRoomFeatures() {
+		return roomFeatures;
 	}
 
-	public void set_roomFeatures(List<RoomFeature> _roomFeatures) {
-		this._roomFeatures = _roomFeatures;
+	public void setRoomFeatures(List<RoomFeature> _roomFeatures) {
+		this.roomFeatures = _roomFeatures;
 	}
 }

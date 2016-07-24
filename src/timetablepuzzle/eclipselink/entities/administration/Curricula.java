@@ -5,91 +5,81 @@ import java.util.List;
 import javax.persistence.*;
 
 import timetablepuzzle.eclipselink.entities.administration.SubjectArea.Term;
-import timetablepuzzle.eclipselink.entities.administration.YearOfStudy.Year;
+import timetablepuzzle.eclipselink.entities.administration.YearOfStudy.CollegeYear;
 import timetablepuzzle.eclipselink.entities.inputdata.CourseOffering;
 
 @Entity
 @Table(name="curriculas")
 public class Curricula{
-	/***********Regular properties*************/
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="name")
-	private String _name;
+	private String name;
 	
 	@Column(name="year")
-	private Year _year;
+	private CollegeYear year;
 	
 	@Column(name="term")
-	private Term _term;
+	private Term term;
 	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=CourseOffering.class)
 	@JoinTable(name="curriculas_courseOfferings",
     joinColumns=
-         @JoinColumn(name="curricula_external_id"),
+         @JoinColumn(name="curricula_id"),
     inverseJoinColumns=
-         @JoinColumn(name="courseOffering_external_id"))
-	private List<CourseOffering> _courses;
-	
-	/**
-	 * Default constructor
-	 */
+         @JoinColumn(name="courseOffering_id"))
+	private List<CourseOffering> courses;
+
 	public Curricula()
 	{
-		this(0,"NoName", Year.UNASSIGNED, Term.UNASSIGNED, new ArrayList<CourseOffering>());
+		this(0,"NoName", CollegeYear.UNASSIGNED, Term.UNASSIGNED, new ArrayList<CourseOffering>());
 	}
-	
-	/**
-	 * Parameterized constructor
-	 * @param externalId
-	 * @param courses
-	 */
-	public Curricula(int externalId, String name, Year year, Term term,  List<CourseOffering> courses)
+
+	public Curricula(int id, String name, CollegeYear year, Term term,  List<CourseOffering> courses)
 	{
-		_externalId = externalId;
-		set_name(name);
-		set_year(year);
-		set_term(term);
-		_courses = courses;
+		this.id = id;
+		setName(name);
+		setYear(year);
+		setTerm(term);
+		this.courses = courses;
 	}
 	
 	/********************Getters and setters****************/	
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return this.id;
 	}
 	
-	public String get_name()
+	public String getName()
 	{
-		return this._name;
+		return this.name;
 	}
 	
-	public void set_name(String name)
+	public void setName(String name)
 	{
-		this._name = name;
+		this.name = name;
 	}
 
-	public Year get_year() {
-		return _year;
+	public CollegeYear getYear() {
+		return year;
 	}
 
-	public void set_year(Year _year) {
-		this._year = _year;
+	public void setYear(CollegeYear year) {
+		this.year = year;
 	}
 
-	public Term get_term() {
-		return _term;
+	public Term getTerm() {
+		return term;
 	}
 
-	public void set_term(Term _term) {
-		this._term = _term;
+	public void setTerm(Term term) {
+		this.term = term;
 	}
 
-	public List<CourseOffering> get_courses() {
-		return _courses;
+	public List<CourseOffering> getCourses() {
+		return courses;
 	}
 	/*******************Methods that model the class behavior*******************/
 }

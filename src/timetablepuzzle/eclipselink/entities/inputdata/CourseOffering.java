@@ -5,89 +5,76 @@ import javax.persistence.*;
 @Entity
 @Table(name="course_offerings")
 public class CourseOffering{
-	/***********Regular properties*************/	
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 	
 	@Column(name="abbreviation")
-	private String _abbreviation;
+	private String abbreviation;
 	
 	@Column(name="title")
-	private String _title;
+	private String title;
 	
 	@OneToOne(cascade=CascadeType.ALL,optional=false)
-    @JoinColumn(name="lecture_offering", unique=true, nullable=false, updatable=false)
-	private Offering _lecture;
+    @JoinColumn(name="lecture_offering_id", unique=true, nullable=false, updatable=false)
+	private Offering lecture;
 	
 	@OneToOne(cascade=CascadeType.ALL,optional=false)
-    @JoinColumn(name="individualMeetings_offering", unique=true, nullable=false, updatable=false)
-	private Offering _individualMeetings;
-	
-	/**
-	 * Default constructor
-	 */
+    @JoinColumn(name="individualMeetings_offering_id", unique=true, nullable=false, updatable=false)
+	private Offering individualMeetings;
+
 	public CourseOffering()
 	{
 		this(0,"NoAbbreviation","NoTitle",new Offering(), new Offering());
 	}
-	
-	/**
-	 * Parameterized constructor
-	 * @param externalId
-	 * @param abbreviation
-	 * @param title
-	 * @param lecture
-	 * @param individualMeetings
-	 */
-	public CourseOffering(int externalId, String abbreviation,
+
+	public CourseOffering(int id, String abbreviation,
 			String title, Offering lecture, Offering individualMeetings)
 	{
-		_externalId = externalId;
-		set_abbreviation(abbreviation);
-		set_title(title);
-		set_lecture(lecture);
-		set_individualMeetings(individualMeetings);
+		this.id = id;
+		setAbbreviation(abbreviation);
+		setTitle(title);
+		setLecture(lecture);
+		setIndividualMeetings(individualMeetings);
 	}
 	
 	/******************Getters and Setters****************/
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return this.id;
 	}
 	
-	public String get_abbreviation() {
-		return _abbreviation;
+	public String getAbbreviation() {
+		return this.abbreviation;
 	}
 
-	public void set_abbreviation(String _abbreviation) {
-		this._abbreviation = _abbreviation;
+	public void setAbbreviation(String abbreviation) {
+		this.abbreviation = abbreviation;
 	}
 
-	public String get_title() {
-		return _title;
+	public String getTitle() {
+		return this.title;
 	}
 
-	public void set_title(String _title) {
-		this._title = _title;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public Offering get_lecture() {
-		return _lecture;
+	public Offering getLecture() {
+		return this.lecture;
 	}
 
-	public void set_lecture(Offering _lecture) {
-		this._lecture = _lecture;
+	public void setLecture(Offering lecture) {
+		this.lecture = lecture;
 	}
 
-	public Offering get_individualMeetings() {
-		return _individualMeetings;
+	public Offering getIndividualMeetings() {
+		return individualMeetings;
 	}
 	
-	public void set_individualMeetings(Offering individualMeetings)
+	public void setIndividualMeetings(Offering individualMeetings)
 	{
-		this._individualMeetings = individualMeetings;
+		this.individualMeetings = individualMeetings;
 	}
 	/***************Methods that model the class behavior***************/
 }
