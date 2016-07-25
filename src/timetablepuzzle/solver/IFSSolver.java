@@ -178,7 +178,7 @@ public class IFSSolver {
 	 * @return
 	 */
 	public IFSSolver SetMaxPctOfViolatedSC(double percent) {
-		_maxPctOfViolatedSC = _maxPPointsForAClass * _solution.get_nrOfClasses() * percent;
+		_maxPctOfViolatedSC = _maxPPointsForAClass * _solution.getNrOfClasses() * percent;
 		
 		return this;
 	}
@@ -224,7 +224,7 @@ public class IFSSolver {
         if(_currentIteration < _maxIterations)
         {
             // Here i should check if the current solution is good enough
-            if( _solution.get_unassignedClasses().isEmpty())
+            if( _solution.getUnassignedClasses().isEmpty())
             {
                 // If there are no more variables to assign and 
                 // less than 10% of the soft constraints are violated
@@ -267,7 +267,7 @@ public class IFSSolver {
     	double worstClassValue = Double.MAX_VALUE;
     	
         // Check to see if all variables were assigned
-    	List<Class> unassignedClasses = currentSol.get_unassignedClasses();
+    	List<Class> unassignedClasses = currentSol.getUnassignedClasses();
         if(!unassignedClasses.isEmpty())
         {
             // Select the variables that are involved in the largest number of constraints
@@ -285,7 +285,7 @@ public class IFSSolver {
         	
         	for(Class selClass : selClasses)
         	{
-            	int nrOfRemovals = currentSol.get_nrOfRemovals(selClass.getId());
+            	int nrOfRemovals = currentSol.getNrOfRemovals(selClass.getId());
             	// Each class has one dependency to each of the groups that should assist
             	// this is known as parallel dependency
             	int nrOfDependencies = selClass.getAssignedStudentGroups().size();
@@ -321,7 +321,7 @@ public class IFSSolver {
             // Select from the assigned variables the one that violates the highest number of soft constraints
             // TO DO: Select from the assigned variables the one that violates the highest number of constraints
         	// Decide whether to keep all the classes, or just a randomly selected part of them 
-        	HashMap<Class,Integer> assignedClasses = currentSol.get_assignedClasses();
+        	HashMap<Class,Integer> assignedClasses = currentSol.getAssignedClasses();
         	int totalNrOfPPointsPerClass;
         	int maxNrOfPPointsPerClass = 0;
         	
@@ -370,7 +370,7 @@ public class IFSSolver {
     private List<Class> RandomlySelectClasses(Solution currentSol)
     {
     	List<Class> selClasses = new ArrayList<Class>();
-    	for(Class uClass : currentSol.get_unassignedClasses())
+    	for(Class uClass : currentSol.getUnassignedClasses())
     	{
     		if(this._rnd.nextDouble() <= this._selectionProbability)
     		{
@@ -390,7 +390,7 @@ public class IFSSolver {
      */
     private int CompareSolutions(Solution first, Solution second)
     {
-    	 return (second.get_unassignedClasses().size() - first.get_unassignedClasses().size()) * 
+    	 return (second.getUnassignedClasses().size() - first.getUnassignedClasses().size()) * 
     			this._minPPointsForAClass + 
     			(CheckSoftConstraints(first) - CheckSoftConstraints(second));
     }

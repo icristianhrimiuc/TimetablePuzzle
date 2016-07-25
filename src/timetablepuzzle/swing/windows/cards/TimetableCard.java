@@ -189,10 +189,10 @@ public class TimetableCard extends JPanel{
         eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
         eastPanel.setBackground(_bgColor);
         // Create a list with unassigned classes
-        List<Class> uClasses = _viewedAcadSession.get_solution().get_unassignedClasses();
+        List<Class> uClasses = _viewedAcadSession.get_solution().getUnassignedClasses();
         JComponent uScrollPane = CreateScrollableListOfClasses(uClasses, _bgColor, " Unassigned classes: " + uClasses.size() + " ");
         // Create a list with assigned classes
-        Set<Class> aClasses = _viewedAcadSession.get_solution().get_assignedClasses().keySet();
+        Set<Class> aClasses = _viewedAcadSession.get_solution().getAssignedClasses().keySet();
         JComponent aScrollPane = CreateScrollableListOfClasses(aClasses, _bgColor, " Assigned classes: " + aClasses.size() + " ");
         // Create a panel for the solver controls
         JPanel solverControls = new JPanel();
@@ -238,7 +238,7 @@ public class TimetableCard extends JPanel{
         for(Class oneClass : classes)
         {
         	String className = oneClass.getOffering().getName();
-        	int nrOfRemovals = _acceptedSolution.get_nrOfRemovals(oneClass.getId());
+        	int nrOfRemovals = _acceptedSolution.getNrOfRemovals(oneClass.getId());
         	classListModel.addElement(className+"("+nrOfRemovals+")");
         }
         JList<String> jListClasses = new JList<String>(classListModel);

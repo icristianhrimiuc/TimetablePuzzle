@@ -48,16 +48,16 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 		// Check constraint for the instructors schedule
 		Location selClassLocation = selClass.getAssignedRoom().getBuilding().get_location();
 		int selClassLength = selClass.getOffering().getNrOfTimeSlots();
-		int timeOfDay = dayNTime%solution.get_nrOfDays();
+		int timeOfDay = dayNTime%solution.getNrOfDays();
 		int instrId = selClass.getAssignedInstructorId();
-		Class[] instrClasses = solution.get_instructorsTimetable().get(instrId);
+		Class[] instrClasses = solution.getInstructorsTimetable().get(instrId);
 		// Helper variables
 		Class beforeClass;
 		Location beforeClassLocation;
 		Class nextClass;
 		Location nextClassLocation;
 		if(timeOfDay >= 0 && 
-				timeOfDay < (solution.get_nrOfTimeSlotsPerDay() - selClassLength))
+				timeOfDay < (solution.getNrOfTimeSlotsPerDay() - selClassLength))
 		{
 			// Then it is the first class of the day, or something between the first and the last
 			// (first exclusive)Get the next class, if one exists
@@ -71,7 +71,7 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 				}
 			}
 		}
-		if(timeOfDay > selClassLength && timeOfDay <= (solution.get_nrOfTimeSlotsPerDay() - selClassLength))
+		if(timeOfDay > selClassLength && timeOfDay <= (solution.getNrOfTimeSlotsPerDay() - selClassLength))
 		{
 			// Then it is the last class of the day, or something between the first and the last
 			// (last exclusive)Get the before class, if one exists
@@ -95,9 +95,9 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 		// Check constraint for the studentGroup schedule
 		Location selClassLocation = selClass.getAssignedRoom().getBuilding().get_location();
 		int selClassLength = selClass.getOffering().getNrOfTimeSlots();
-		int timeOfDay = dayNTime%solution.get_nrOfDays();
+		int timeOfDay = dayNTime%solution.getNrOfDays();
 		List<Integer> stGrpsIds = selClass.getAssignedStudentGroupsIds();
-		HashMap<Integer,Class[]> studentsTimetable = solution.get_studentsTimetable();
+		HashMap<Integer,Class[]> studentsTimetable = solution.getStudentsTimetable();
 		Class[] stGrpClasses;
 		for(Integer stGrpId : stGrpsIds)
 		{
@@ -108,7 +108,7 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 			Class nextClass;
 			Location nextClassLocation;
 			if(timeOfDay >= 0 && 
-					timeOfDay < (solution.get_nrOfTimeSlotsPerDay() - selClassLength))
+					timeOfDay < (solution.getNrOfTimeSlotsPerDay() - selClassLength))
 			{
 				// Then it is the first class of the day, or something between the first and the last
 				// (first exclusive)Get the next class, if one exists
@@ -122,7 +122,7 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 					}
 				}
 			}
-			if(timeOfDay > selClassLength && timeOfDay <= (solution.get_nrOfTimeSlotsPerDay() - selClassLength))
+			if(timeOfDay > selClassLength && timeOfDay <= (solution.getNrOfTimeSlotsPerDay() - selClassLength))
 			{
 				// Then it is the last class of the day, or something between the first and the last
 				// (last exclusive)Get the before class, if one exists

@@ -104,7 +104,7 @@ public class Class{
 	}
 
 	public void setAssignedInstructor(Instructor assignedInstructor) {
-		if(this.offering.GetInstructors().contains(assignedInstructor))
+		if(this.offering.getInstructors().contains(assignedInstructor))
 		{
 			this.assignedInstructor = assignedInstructor;
 		}

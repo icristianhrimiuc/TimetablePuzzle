@@ -12,205 +12,177 @@ import timetablepuzzle.eclipselink.entities.administration.TimePreferences.*;
 @Entity
 @Table(name="solutions")
 public class Solution{
-	/**************Static variables*****************/
 	public static enum Message{VARIABLE_NOT_FOUND,UNASSIGNED,ASIGGN_SUCCESSFULL,ROOM_IS_UNAVAILABLE,
 		INSTRUCTOR_IS_UNAVAILABLE,STUDENTGROUP_IS_UNAVAILABLE};
-	/**************Regular properties******************/
+
 	@Id
-	@Column(name="external_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int _externalId;
+	protected int id;
 		
 	// Operations on ElementCollections are always cascaded.
 	@ElementCollection
-    @MapKeyColumn(name="room")
-	@Column(name="classassignments")
+    @MapKeyColumn(name="room_id")
+	@Column(name="roomassignments")
 	@CollectionTable(
 	      name="solution_roomassignments",
-	      joinColumns=@JoinColumn(name="solution")
+	      joinColumns=@JoinColumn(name="solution_id")
 	)
-	private Map<Integer,String> _roomsAssignments;
+	private Map<Integer,String> roomsAssignments;
 	
-	// Operations on ElementCollections are always cascaded.
 	@ElementCollection
-    @MapKeyColumn(name="instructor")
-	@Column(name="classassignments")
+    @MapKeyColumn(name="instructor_id")
+	@Column(name="instructorassignments")
 	@CollectionTable(
 	      name="solution_instructorassignments",
-	      joinColumns=@JoinColumn(name="solution")
+	      joinColumns=@JoinColumn(name="solution_id")
 	)
-	private Map<Integer,String> _instructorsAssignments;
+	private Map<Integer,String> instructorsAssignments;
 	
-	// Operations on ElementCollections are always cascaded.
 	@ElementCollection
-    @MapKeyColumn(name="students")
-	@Column(name="classassignments")
+    @MapKeyColumn(name="studentgroup_id")
+	@Column(name="studentgroupassignments")
 	@CollectionTable(
-	      name="solution_studentsassignments",
-	      joinColumns=@JoinColumn(name="solution")
+	      name="solution_studentgroupassignments",
+	      joinColumns=@JoinColumn(name="solution_id")
 	)
-	private Map<Integer,String> _studentsAssignments;
+	private Map<Integer,String> studentsAssignments;
 	
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinTable
 	(
 	    name="unassigned_classes",
-	    joinColumns={ @JoinColumn(name="solution", referencedColumnName="external_id") },
-	    inverseJoinColumns={ @JoinColumn(name="unassigned_class", referencedColumnName="external_id", unique=true) }
+	    joinColumns={ @JoinColumn(name="solution_id", referencedColumnName="id") },
+	    inverseJoinColumns={ @JoinColumn(name="unassigned_class_id", referencedColumnName="id", unique=true) }
 	)
-	private List<Class> _unassignedClasses;
+	private List<Class> unassignedClasses;
 
-	// Operations on ElementCollections are always cascaded.
 	@ElementCollection
-    @MapKeyColumn(name="class")
+    @MapKeyColumn(name="class_id")
 	@Column(name="nrofremovals")
 	@CollectionTable(
 	      name="solution_nrofremovals",
-	      joinColumns=@JoinColumn(name="solution")
+	      joinColumns=@JoinColumn(name="solution_id")
 	)
-	private Map<Integer,Integer> _nrOfRemovals;
+	private Map<Integer,Integer> nrOfRemovals;
 	
 	@Column(name="nrofclasses")
-	private int _nrOfClasses;
+	private int nrOfClasses;
 	
 	@Column(name="nroftimeslotsperday")
-	private int _nrOfTimeSlotsPerDay;
+	private int nrOfTimeSlotsPerDay;
 	
 	@Column(name="nrOfdays")
-	private int _nrOfDays;
+	private int nrOfDays;
 	
 	@Transient
-	private HashMap<Integer,Class[]> _roomsTimetable;
+	private HashMap<Integer,Class[]> roomsTimetable;
 	
 	@Transient
-	private HashMap<Integer,Class[]> _instructorsTimetable;
+	private HashMap<Integer,Class[]> instructorsTimetable;
 	
 	@Transient
-	private HashMap<Integer,Class[]> _studentsTimetable;
+	private HashMap<Integer,Class[]> studentsTimetable;
 	
 	@Transient
-	private HashMap<Class,Integer> _assignedClasses;
-	
-	/**
-	 * DefaultConstructor
-	 */
+	private HashMap<Class,Integer> assignedClasses;
+
 	public Solution()
 	{
-		this(0, new ArrayList<Class>());
-	}
-	
-	/**
-	 * Constructor for creating a brand new solution
-	 * @param nrOfTimeSlotsPerDay
-	 */
-	public Solution(int nrOfTimeSlotsPerDay, List<Class> unassignedClasses)
-	{
-		this(0, nrOfTimeSlotsPerDay, unassignedClasses,
+		this(0, 0, new ArrayList<Class>(),
 				new HashMap<Integer, Class[]>(),
 				new HashMap<Integer, Class[]>(),
 				new HashMap<Integer, Class[]>());
-		AllocateMemoryForClasses(this._unassignedClasses);
 	}
-	
-	/** 
-	 * Constructor for creating a partially or totally solution
-	 * from informations stored in the database
-	 * @param externalId
-	 * @param nrOfTimeSlotsPerDay
-	 * @param unassignedClasses
-	 * @param assignedClasses
-	 */
-	public Solution(int externalId, int nrOfTimeSlotsPerDay,List<Class> unassignedClasses,
+
+	public Solution(int id, int nrOfTimeSlotsPerDay,List<Class> unassignedClasses,
 			HashMap<Integer,Class[]> roomsTimetable,
 			HashMap<Integer,Class[]> instructorsTimetable, 
 			HashMap<Integer,Class[]> studentsTimetable)
 	{
-		_externalId = externalId;
-		_roomsTimetable = roomsTimetable;
-		_instructorsTimetable = instructorsTimetable;
-		_studentsTimetable = studentsTimetable;
-		_unassignedClasses = unassignedClasses;
+		this.id = id;
+		this.roomsTimetable = roomsTimetable;
+		this.instructorsTimetable = instructorsTimetable;
+		this.studentsTimetable = studentsTimetable;
+		this.unassignedClasses = unassignedClasses;
+		this.nrOfRemovals = new HashMap<Integer,Integer>();
+		AllocateMemoryForClasses(unassignedClasses);
 		FindAssignedClasses();
-		_nrOfRemovals = new HashMap<Integer,Integer>();
-		// Set the nrOfRemovals for the unassigned classes to 0
-		for(Class uClass : _unassignedClasses)
-		{
-			// This is safe, because java sets it by default to zero
-			_nrOfRemovals.put(uClass.getId(), 0);
-		}
-		// Set the number of removals for the assigned classes to 0
-		for(Class aClass : _assignedClasses.keySet())
-		{
-			// This is safe, because java sets it by default to zero
-			_nrOfRemovals.put(aClass.getId(), 0);
-		}
+		ResetTheNumberOfRemovals();
 		// Since the union of the unassignedClasses set and the assignedClasses set
 		// must be the empty set, the total number of classes is equal to the size of
 		// HashMap storing the number of removals
-		set_nrOfClasses(_nrOfRemovals.size());
-		set_nrOfTimeSlotsPerDay(nrOfTimeSlotsPerDay);
-		set_nrOfDays(5);
+		setNrOfClasses(nrOfRemovals.size());
+		setNrOfTimeSlotsPerDay(nrOfTimeSlotsPerDay);
+		setNrOfDays(nrOfDays);
 	}
 
+	private void ResetTheNumberOfRemovals() {
+		for(Class uClass : this.unassignedClasses)
+		{
+			nrOfRemovals.put(uClass.getId(), 0);
+		}
+		for(Class aClass : this.assignedClasses.keySet())
+		{
+			nrOfRemovals.put(aClass.getId(), 0);
+		}
+	}
 	/***********************Getter and Setter********************/
-	
-	
-	public int get_externalId() {
-		return _externalId;
+	public int getId() {
+		return this.id;
 	}
 		
 	@SuppressWarnings("unchecked")
-	public HashMap<Integer,Class[]> get_roomsTimetable() {
-		return (HashMap<Integer,Class[]>)_roomsTimetable.clone();
+	public HashMap<Integer,Class[]> getRoomsTimetable() {
+		return (HashMap<Integer,Class[]>)roomsTimetable.clone();
 	}
 
 	@SuppressWarnings("unchecked")
-	public HashMap<Integer,Class[]> get_instructorsTimetable() {
-		return (HashMap<Integer,Class[]>)_instructorsTimetable.clone();
+	public HashMap<Integer,Class[]> getInstructorsTimetable() {
+		return (HashMap<Integer,Class[]>)instructorsTimetable.clone();
 	}
 
 	@SuppressWarnings("unchecked")
-	public HashMap<Integer, Class[]> get_studentsTimetable() {
-		return (HashMap<Integer,Class[]>)_studentsTimetable.clone();
+	public HashMap<Integer, Class[]> getStudentsTimetable() {
+		return (HashMap<Integer,Class[]>)studentsTimetable.clone();
 	}
 
-	public int get_nrOfTimeSlotsPerDay() {
-		return _nrOfTimeSlotsPerDay;
+	public int getNrOfTimeSlotsPerDay() {
+		return this.nrOfTimeSlotsPerDay;
 	}
 
-	public void set_nrOfTimeSlotsPerDay(int _nrOfTimeSlotsPerDay) {
-		this._nrOfTimeSlotsPerDay = _nrOfTimeSlotsPerDay;
+	public void setNrOfTimeSlotsPerDay(int nrOfTimeSlotsPerDay) {
+		this.nrOfTimeSlotsPerDay = nrOfTimeSlotsPerDay;
 	}
 
-	public List<Class> get_unassignedClasses() {
-		return _unassignedClasses;
-	} 
+	public List<Class> getUnassignedClasses() {
+		return this.unassignedClasses;
+	}
 
-	public HashMap<Class,Integer> get_assignedClasses() {
-		return _assignedClasses;
+	public HashMap<Class,Integer> getAssignedClasses() {
+		return this.assignedClasses;
 	}
 	
-	public int get_nrOfRemovals(int classId)
+	public int getNrOfRemovals(int classId)
 	{
-		return this._nrOfRemovals.get(classId);
+		return this.nrOfRemovals.get(classId);
 	}
 
-	public int get_nrOfClasses() {
-		return _nrOfClasses;
+	public int getNrOfClasses() {
+		return this.nrOfClasses;
 	}
 
-	public void set_nrOfClasses(int _nrOfClasses) {
-		this._nrOfClasses = _nrOfClasses;
+	public void setNrOfClasses(int nrOfClasses) {
+		this.nrOfClasses = nrOfClasses;
 	}
 
-	public int get_nrOfDays() {
-		return _nrOfDays;
+	public int getNrOfDays() {
+		return this.nrOfDays;
 	}
 
-	public void set_nrOfDays(int _nrOfDays) {
-		this._nrOfDays = _nrOfDays;
+	public void setNrOfDays(int nrOfDays) {
+		this.nrOfDays = nrOfDays;
 	}
-	/* Private methods to help simplify the code */
 	
 	/**
 	 * Gets a list of classes and starts allocating memory for 
@@ -224,26 +196,26 @@ public class Solution{
 		{
 			// Allocate memory for the room
 			int roomId = oneClass.getAssignedRoomId();
-			if(!this._roomsTimetable.containsKey(roomId))
+			if(!this.roomsTimetable.containsKey(roomId))
 			{
-				this._roomsTimetable.put(roomId,
-						new Class[this._nrOfTimeSlotsPerDay]);
+				this.roomsTimetable.put(roomId,
+						new Class[this.nrOfTimeSlotsPerDay]);
 			}
 			// Allocate memory for the instructor
 			int instructorId = oneClass.getAssignedInstructorId();
-			if(!this._instructorsTimetable.containsKey(instructorId))
+			if(!this.instructorsTimetable.containsKey(instructorId))
 			{
-				this._instructorsTimetable.put(instructorId,
-						new Class[this._nrOfTimeSlotsPerDay]);
+				this.instructorsTimetable.put(instructorId,
+						new Class[this.nrOfTimeSlotsPerDay]);
 			}
 			// Allocate memory for the student groups
 			List<Integer> stGroupsIds = oneClass.getAssignedStudentGroupsIds();
 			for(Integer stGroupId : stGroupsIds)
 			{
-				if(!this._studentsTimetable.containsKey(stGroupId))
+				if(!this.studentsTimetable.containsKey(stGroupId))
 				{
-					this._studentsTimetable.put(stGroupId,
-							new Class[this._nrOfTimeSlotsPerDay]);
+					this.studentsTimetable.put(stGroupId,
+							new Class[this.nrOfTimeSlotsPerDay]);
 				}
 			}			
 		}
@@ -256,18 +228,18 @@ public class Solution{
 	 */
 	private void FindAssignedClasses()
 	{
-		this._assignedClasses = new HashMap<Class,Integer>();
+		this.assignedClasses = new HashMap<Class,Integer>();
 		
-		for(Class[] roomClasses : this._roomsTimetable.values())
+		for(Class[] roomClasses : this.roomsTimetable.values())
 		{
 			// For each room
-			for(int i=0; i< this._nrOfTimeSlotsPerDay; i++)
+			for(int i=0; i< this.nrOfTimeSlotsPerDay; i++)
 			{
 				// For each class
 				if(roomClasses[i] != null)
 				{
 					// If it exists, save it and it's index
-					this._assignedClasses.put(roomClasses[i], i);
+					this.assignedClasses.put(roomClasses[i], i);
 				}
 			}
 		}
@@ -288,16 +260,16 @@ public class Solution{
 		int instructorId = variable.getAssignedInstructorId();
 		List<Integer> stGroupsIds = variable.getAssignedStudentGroupsIds();
 		// Check to see if the variable belongs to this solution
-		if(this._unassignedClasses.contains(variable))
+		if(this.unassignedClasses.contains(variable))
 		{
 			// Check to see if any of the necessary resources are occupied
-			if(this._roomsTimetable.get(roomId)[value] == null)
+			if(this.roomsTimetable.get(roomId)[value] == null)
 			{
-				if(this._instructorsTimetable.get(instructorId)[value] == null)
+				if(this.instructorsTimetable.get(instructorId)[value] == null)
 				{
 					for(Integer stGroupId : stGroupsIds)
 					{
-						if(this._studentsTimetable.get(stGroupId)[value] != null)
+						if(this.studentsTimetable.get(stGroupId)[value] != null)
 						{
 							// One or more of the student groups
 							// that were supposed to attend the given
@@ -326,15 +298,15 @@ public class Solution{
 			// For the entire length of the class
 			for(int  i=0; i<variable.getOffering().getNrOfTimeSlots(); i++)
 			{
-				this._roomsTimetable.get(roomId)[value + i] = variable;
-				this._instructorsTimetable.get(instructorId)[value + i] = variable;
+				this.roomsTimetable.get(roomId)[value + i] = variable;
+				this.instructorsTimetable.get(instructorId)[value + i] = variable;
 				for(Integer stGroupId : stGroupsIds)
 				{
-					this._studentsTimetable.get(stGroupId)[value + i] = variable;
+					this.studentsTimetable.get(stGroupId)[value + i] = variable;
 				}
 			}
-			this._unassignedClasses.remove(variable);
-			this._assignedClasses.put(variable, value);
+			this.unassignedClasses.remove(variable);
+			this.assignedClasses.put(variable, value);
 			status = Message.ASIGGN_SUCCESSFULL;
 		}
 		
@@ -347,27 +319,27 @@ public class Solution{
 		
 		for(Class oneClass : classes)
 		{
-			if(this._assignedClasses.containsKey(oneClass))
+			if(this.assignedClasses.containsKey(oneClass))
 			{
 				int roomId = oneClass.getAssignedRoomId();
 				int instructorId = oneClass.getAssignedInstructorId();
 				List<Integer> stGroupsIds = oneClass.getAssignedStudentGroupsIds();
-				int dayNTime = this._assignedClasses.get(oneClass);
+				int dayNTime = this.assignedClasses.get(oneClass);
 				// Unassigns the class from all the tables
 				for(int  i=0; i<oneClass.getOffering().getNrOfTimeSlots(); i++)
 				{
-					this._roomsTimetable.get(roomId)[dayNTime] = null;
-					this._instructorsTimetable.get(instructorId)[dayNTime] = null;
+					this.roomsTimetable.get(roomId)[dayNTime] = null;
+					this.instructorsTimetable.get(instructorId)[dayNTime] = null;
 					for(Integer stGroupId : stGroupsIds)
 					{
-						this._studentsTimetable.get(stGroupId)[dayNTime] = null;
+						this.studentsTimetable.get(stGroupId)[dayNTime] = null;
 					}
 				}
-				this._unassignedClasses.add(oneClass);
+				this.unassignedClasses.add(oneClass);
 				// This line increments the number of removals for this one class
-				int nrOfRemovals = this._nrOfRemovals.get(oneClass.getId());
+				int nrOfRemovals = this.nrOfRemovals.get(oneClass.getId());
 				nrOfRemovals++;
-				this._nrOfRemovals.replace(oneClass.getId(), nrOfRemovals);
+				this.nrOfRemovals.replace(oneClass.getId(), nrOfRemovals);
 				nrOfUnassignedClasses++;
 			}	
 		}
@@ -377,48 +349,48 @@ public class Solution{
 	
 	public int GetDomainSize(Class uClass, boolean conflicting)
 	{
-		Class[] rmClasses = this._roomsTimetable.get(uClass.getAssignedRoomId());
-		Class[] instrClasses = this._instructorsTimetable.get(uClass.getAssignedInstructorId());
+		Class[] rmClasses = this.roomsTimetable.get(uClass.getAssignedRoomId());
+		Class[] instrClasses = this.instructorsTimetable.get(uClass.getAssignedInstructorId());
 		List<Integer> stGrpsIds = uClass.getAssignedStudentGroupsIds();
 		List<Class[]> stGrpsClasses = new ArrayList<Class[]>();
 		for(int stGrId : stGrpsIds)
 		{
-			stGrpsClasses.add(this._studentsTimetable.get(stGrId));
+			stGrpsClasses.add(this.studentsTimetable.get(stGrId));
 		}
 		
 		// Calculate the domain size, depending on the mode
 		// This will memorize if a time of day is eligible as a start position
-		boolean[] checksConflicting = new boolean[_nrOfDays*_nrOfTimeSlotsPerDay];
+		boolean[] checksConflicting = new boolean[nrOfDays*nrOfTimeSlotsPerDay];
 		
 		// First, calculate which slot is free according to all the conditions 
 		// For each day
-		for(int i=0; i < _nrOfDays; i++)
+		for(int i=0; i < nrOfDays; i++)
 		{
 			// Get room and instructor preferences for the day
 			TimePreference[] rmTimePref = uClass.getAssignedRoom().getPreferencesByDay(DayOfTheWeek.values()[i]);
 			TimePreference[] instrTimePref = uClass.getAssignedInstructor().getTimePreferencesByDay(DayOfTheWeek.values()[i]);
 			
 			// For each time of the day
-			for(int j=0; j< this._nrOfTimeSlotsPerDay; j++)
+			for(int j=0; j< this.nrOfTimeSlotsPerDay; j++)
 			{
 				// Check is the room is free, if no check if the class occupying it is fixed
 				// Then check if the room access is allowed at that time and day
-				if((rmClasses[i*_nrOfDays+j] == null || ( conflicting && !rmClasses[i*_nrOfDays+j].isFixed()))
-						&& (rmTimePref[i*_nrOfDays+j] != TimePreference.PROHIBITED || 
-						(!conflicting && rmTimePref[i*_nrOfDays+j] != TimePreference.STRONGLY_DISCOURAGED)))
+				if((rmClasses[i*nrOfDays+j] == null || ( conflicting && !rmClasses[i*nrOfDays+j].isFixed()))
+						&& (rmTimePref[i*nrOfDays+j] != TimePreference.PROHIBITED || 
+						(!conflicting && rmTimePref[i*nrOfDays+j] != TimePreference.STRONGLY_DISCOURAGED)))
 				{
 					// Check is the instructor is free, if no check if the class occupying it is fixed
 					// Then check if the instructor works at that time and day
-					if((instrClasses[i*_nrOfDays+j] == null || ( conflicting && !instrClasses[i*_nrOfDays+j].isFixed()))
-							&& (instrTimePref[i*_nrOfDays+j] != TimePreference.PROHIBITED ||
-							(!conflicting && instrTimePref[i*_nrOfDays+j] != TimePreference.STRONGLY_DISCOURAGED)))
+					if((instrClasses[i*nrOfDays+j] == null || ( conflicting && !instrClasses[i*nrOfDays+j].isFixed()))
+							&& (instrTimePref[i*nrOfDays+j] != TimePreference.PROHIBITED ||
+							(!conflicting && instrTimePref[i*nrOfDays+j] != TimePreference.STRONGLY_DISCOURAGED)))
 					{
 						boolean stGrpsCheck = true;
 						// Check if any of the student groups are busy, if yes then check to see if the 
 						// class occupying them is fixed
 						for(Class[] stGrpClasses : stGrpsClasses)
 						{
-							if(!(stGrpClasses[i*_nrOfDays+j] == null || ( conflicting && !stGrpClasses[i*_nrOfDays+j].isFixed())))
+							if(!(stGrpClasses[i*nrOfDays+j] == null || ( conflicting && !stGrpClasses[i*nrOfDays+j].isFixed())))
 							{
 								stGrpsCheck = false;
 								break;
@@ -428,7 +400,7 @@ public class Solution{
 						if(stGrpsCheck)
 						{
 							// Everything checks out, this is a valid domain start position
-							checksConflicting[i*_nrOfDays+j] = true;
+							checksConflicting[i*nrOfDays+j] = true;
 						}
 					}
 				}						
@@ -440,19 +412,19 @@ public class Solution{
 		// to the class length
 		// For each day
 		int domainSize = 0;
-		for(int i = 0; i < _nrOfDays; i++)
+		for(int i = 0; i < nrOfDays; i++)
 		{
 			// For each time of day
-			for(int j=0; j< _nrOfTimeSlotsPerDay; j++)
+			for(int j=0; j< nrOfTimeSlotsPerDay; j++)
 			{
 				boolean isValidStartPos = true;
 				// For the length of the class, check if the time slots are free
 				for(int k=j; k< j+uClass.getOffering().getNrOfTimeSlots(); k++)
 				{
-					isValidStartPos &= checksConflicting[i*_nrOfDays+k];
+					isValidStartPos &= checksConflicting[i*nrOfDays+k];
 				}
 				// Memorize if the start position is a valid one 
-				checksConflicting[i*_nrOfDays+j] = isValidStartPos;
+				checksConflicting[i*nrOfDays+j] = isValidStartPos;
 				if(isValidStartPos)domainSize++;
 			}
 		}
@@ -461,26 +433,26 @@ public class Solution{
 	}
 
 	public Map<Integer,String> get_roomsAssignments() {
-		return _roomsAssignments;
+		return roomsAssignments;
 	}
 
 	public void set_roomsAssignments(Map<Integer,String> _roomsAssignments) {
-		this._roomsAssignments = _roomsAssignments;
+		this.roomsAssignments = _roomsAssignments;
 	}
 
 	public Map<Integer,String> get_instructorsAssignments() {
-		return _instructorsAssignments;
+		return instructorsAssignments;
 	}
 
 	public void set_instructorsAssignments(Map<Integer,String> _instructorsAssignments) {
-		this._instructorsAssignments = _instructorsAssignments;
+		this.instructorsAssignments = _instructorsAssignments;
 	}
 
 	public Map<Integer,String> get_studentsAssignments() {
-		return _studentsAssignments;
+		return studentsAssignments;
 	}
 
 	public void set_studentsAssignments(Map<Integer,String> _studentsAssignments) {
-		this._studentsAssignments = _studentsAssignments;
+		this.studentsAssignments = _studentsAssignments;
 	}
 }
