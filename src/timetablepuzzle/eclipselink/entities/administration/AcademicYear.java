@@ -10,7 +10,7 @@ public class AcademicYear{
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int id;
+	private int id;
 	
 	@Column(name="year_period")
 	private String yearPeriod;

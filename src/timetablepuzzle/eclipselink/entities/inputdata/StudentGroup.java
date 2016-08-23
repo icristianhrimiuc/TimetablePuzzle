@@ -10,7 +10,7 @@ public class StudentGroup{
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int id;
+	private int id;
 	
 	@Column(name="code")
 	private String code;

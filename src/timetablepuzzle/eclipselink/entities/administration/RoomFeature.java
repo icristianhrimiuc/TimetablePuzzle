@@ -8,7 +8,7 @@ public class RoomFeature{
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int id;
+	private int id;
 	
 	@Column(name="feature")
 	private String feature;

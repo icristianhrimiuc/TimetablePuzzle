@@ -17,7 +17,7 @@ public class YearOfStudy{
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int id;
+	private int id;
 		
 	@Column(name="college_year")
 	private CollegeYear collegeYear;

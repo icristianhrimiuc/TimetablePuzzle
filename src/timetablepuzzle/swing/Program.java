@@ -3,7 +3,7 @@ package timetablepuzzle.swing;
 import java.awt.Color;
 import java.awt.EventQueue;
 
-import timetablepuzzle.swing.windows.Main;
+import timetablepuzzle.swing.windows.MainWindow;
 
 public class Program {
 	/**
@@ -13,7 +13,7 @@ public class Program {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main mainWindow = new Main(Color.LIGHT_GRAY);
+					MainWindow mainWindow = new MainWindow(Color.LIGHT_GRAY);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

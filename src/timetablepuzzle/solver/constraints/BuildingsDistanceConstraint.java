@@ -1,6 +1,5 @@
 package timetablepuzzle.solver.constraints;
 
-import java.util.HashMap;
 import java.util.List;
 
 import timetablepuzzle.eclipselink.entities.administration.Location;
@@ -8,137 +7,84 @@ import timetablepuzzle.eclipselink.entities.inputdata.Class;
 import timetablepuzzle.eclipselink.entities.inputdata.Solution;
 
 public class BuildingsDistanceConstraint extends AbstractHardConstraint {
-	// The maximum allowed distance between two consecutive classes locations
-	private int _maxDistanceBetweenBuildings;
-	
-	/**
-	 * Default constructor
-	 */
-	public BuildingsDistanceConstraint()
-	{
-		_maxDistanceBetweenBuildings = 300;
+	public static final int DefaultMaxDistanceBetweenBuildings = 300;
+
+	private int maxDistanceBetweenBuildings;
+
+	public BuildingsDistanceConstraint(Solution solution) {
+		super(solution);
+		this.maxDistanceBetweenBuildings = DefaultMaxDistanceBetweenBuildings;
 	}
-	
-	
+
 	/**
-	 * Checks if a given class can be assigned to a given 
-	 * dayNTime without violating this constraint
+	 * Checks if a given class can be assigned to a given dayAndTimeSlot without
+	 * violating this constraint
+	 * 
 	 * @param solution
 	 * @param selClass
 	 * @param dayNTime
 	 */
-	public boolean IsValidCombination(Solution solution, Class selClass, int dayNTime)
-	{
-		// Caution: this function assumes that the user verified that the selClass fits from the 
-		// time slot given for the extent of it's length
-		return CheckInstructorSchedule(solution, selClass, dayNTime) &&
-				CheckStudentGroupsSchedule(solution, selClass, dayNTime);
+	public boolean IsValidAssignment(Class aClass, int dayAndTimeSlot) {
+		return this.checker.IsValidAssignment(aClass, dayAndTimeSlot) && CanInstructorTakeClass(aClass, dayAndTimeSlot)
+				&& CanStudentGroupsTakeClass(aClass, dayAndTimeSlot);
 	}
-	
-	/**
-	 * Check constraint for the instructors schedule
-	 * @param solution
-	 * @param selClass
-	 * @param dayNTime
-	 * @return
-	 */
-	private boolean CheckInstructorSchedule(Solution solution, Class selClass, int dayNTime)
-	{
-		boolean flag = true;
-		// Check constraint for the instructors schedule
-		Location selClassLocation = selClass.getAssignedRoom().getBuilding().get_location();
-		int selClassLength = selClass.getOffering().getNrOfTimeSlots();
-		int timeOfDay = dayNTime%solution.getNrOfDays();
-		int instrId = selClass.getAssignedInstructorId();
-		Class[] instrClasses = solution.getInstructorsTimetable().get(instrId);
-		// Helper variables
-		Class beforeClass;
-		Location beforeClassLocation;
-		Class nextClass;
-		Location nextClassLocation;
-		if(timeOfDay >= 0 && 
-				timeOfDay < (solution.getNrOfTimeSlotsPerDay() - selClassLength))
+
+	private boolean CanInstructorTakeClass(Class aClass, int dayAndTimeSlot) {
+		Location aClassLocation = aClass.getAssignedRoom().getBuilding().getLocation();
+		int instructorId = aClass.getAssignedInstructorId();
+		int previousDayAndTimeSlot = dayAndTimeSlot - 1;
+		int nextDayAndTimeSlot = dayAndTimeSlot + aClass.GetClassDuration();
+
+		return IsValidInstructorTimeSlot(aClassLocation, instructorId, previousDayAndTimeSlot)
+				&& IsValidInstructorTimeSlot(aClassLocation, instructorId, nextDayAndTimeSlot);
+	}
+
+	private boolean IsValidInstructorTimeSlot(Location aClassLocation, int instructorId, int dayAndTimeSlot) {
+		return this.solution.getTimeslotPattern().IsFirstTimeslotOfTheDay(dayAndTimeSlot)
+				|| this.solution.IsInstructorFree(instructorId, dayAndTimeSlot)
+				|| IsValidDistance(aClassLocation, GetInstructorClassLocation(instructorId, dayAndTimeSlot));
+	}
+
+	private boolean IsValidDistance(Location firstLocation, Location secondLocation) {
+		return firstLocation.DistanceTo(secondLocation) <= this.maxDistanceBetweenBuildings;
+	}
+
+	private Location GetInstructorClassLocation(int instructorId, int dayAndTimeSlot) {
+		int classId = this.solution.GetInstructorAssignment(instructorId, dayAndTimeSlot);
+		Class aClass = this.solution.GetClassById(classId);
+
+		return aClass.getAssignedRoom().getBuilding().getLocation();
+	}
+
+	private boolean CanStudentGroupsTakeClass(Class aClass, int dayAndTimeSlot) {
+		Location aClassLocation = aClass.getAssignedRoom().getBuilding().getLocation();
+		List<Integer> studentGroupsIds = aClass.getAssignedStudentGroupsIds();
+		int previousDayAndTimeSlot = dayAndTimeSlot - 1;
+		int nextDayAndTimeSlot = dayAndTimeSlot + aClass.GetClassDuration();
+		boolean canStudentGroupsTakeClass = true;
+		for(Integer studentGroupId : studentGroupsIds)
 		{
-			// Then it is the first class of the day, or something between the first and the last
-			// (first exclusive)Get the next class, if one exists
-			nextClass = instrClasses[dayNTime + selClassLength];
-			if(nextClass != null)
+			if(!IsValidStudentGroupTimeSlot(aClassLocation, studentGroupId, previousDayAndTimeSlot)
+					|| !IsValidStudentGroupTimeSlot(aClassLocation, studentGroupId, nextDayAndTimeSlot))
 			{
-				nextClassLocation = nextClass.getAssignedRoom().getBuilding().get_location();
-				if(selClassLocation.distanceTo(nextClassLocation) > _maxDistanceBetweenBuildings)
-				{
-					flag = false;
-				}
-			}
-		}
-		if(timeOfDay > selClassLength && timeOfDay <= (solution.getNrOfTimeSlotsPerDay() - selClassLength))
-		{
-			// Then it is the last class of the day, or something between the first and the last
-			// (last exclusive)Get the before class, if one exists
-			beforeClass = instrClasses[dayNTime - 1];
-			if(beforeClass != null)
-			{
-				beforeClassLocation = beforeClass.getAssignedRoom().getBuilding().get_location();
-				if(selClassLocation.distanceTo(beforeClassLocation) > _maxDistanceBetweenBuildings)
-				{
-					flag = false;
-				}					
+				canStudentGroupsTakeClass = false;
+				break;
 			}
 		}
 		
-		return flag;
+		return canStudentGroupsTakeClass;
 	}
-	
-	private boolean CheckStudentGroupsSchedule(Solution solution, Class selClass, int dayNTime)
-	{
-		boolean flag = true;
-		// Check constraint for the studentGroup schedule
-		Location selClassLocation = selClass.getAssignedRoom().getBuilding().get_location();
-		int selClassLength = selClass.getOffering().getNrOfTimeSlots();
-		int timeOfDay = dayNTime%solution.getNrOfDays();
-		List<Integer> stGrpsIds = selClass.getAssignedStudentGroupsIds();
-		HashMap<Integer,Class[]> studentsTimetable = solution.getStudentsTimetable();
-		Class[] stGrpClasses;
-		for(Integer stGrpId : stGrpsIds)
-		{
-			stGrpClasses = studentsTimetable.get(stGrpId);
-			// Helper variables
-			Class beforeClass;
-			Location beforeClassLocation;
-			Class nextClass;
-			Location nextClassLocation;
-			if(timeOfDay >= 0 && 
-					timeOfDay < (solution.getNrOfTimeSlotsPerDay() - selClassLength))
-			{
-				// Then it is the first class of the day, or something between the first and the last
-				// (first exclusive)Get the next class, if one exists
-				nextClass = stGrpClasses[dayNTime + selClassLength];
-				if(nextClass != null)
-				{
-					nextClassLocation = nextClass.getAssignedRoom().getBuilding().get_location();
-					if(selClassLocation.distanceTo(nextClassLocation) > _maxDistanceBetweenBuildings)
-					{
-						flag = false;
-					}
-				}
-			}
-			if(timeOfDay > selClassLength && timeOfDay <= (solution.getNrOfTimeSlotsPerDay() - selClassLength))
-			{
-				// Then it is the last class of the day, or something between the first and the last
-				// (last exclusive)Get the before class, if one exists
-				beforeClass = stGrpClasses[dayNTime - 1];
-				if(beforeClass != null)
-				{
-					beforeClassLocation = beforeClass.getAssignedRoom().getBuilding().get_location();
-					if(selClassLocation.distanceTo(beforeClassLocation) > _maxDistanceBetweenBuildings)
-					{
-						flag = false;
-					}					
-				}
-			}
-		}
-				
-		
-		return flag;
+
+	private boolean IsValidStudentGroupTimeSlot(Location aClassLocation, int studentGroupId, int dayAndTimeSlot) {;
+		return this.solution.getTimeslotPattern().IsFirstTimeslotOfTheDay(dayAndTimeSlot)
+				|| this.solution.IsStudentGroupFree(studentGroupId, dayAndTimeSlot)
+				|| IsValidDistance(aClassLocation, GetStudentGroupClassLocation(studentGroupId, dayAndTimeSlot));
+	}
+
+	private Location GetStudentGroupClassLocation(int studentGroupId, int dayAndTimeSlot) {
+		int classId = this.solution.GetStudentGroupAssignment(studentGroupId, dayAndTimeSlot);
+		Class aClass = this.solution.GetClassById(classId);
+
+		return aClass.getAssignedRoom().getBuilding().getLocation();
 	}
 }

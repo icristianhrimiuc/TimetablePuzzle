@@ -7,7 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -39,188 +38,97 @@ public class TimetableCard extends JPanel{
 	private static final long serialVersionUID = 1L;
 
 	// User required information
-	private User _loggedUser;
-	private AcademicYear _viewedAcadYear;
-	private AcademicSession _viewedAcadSession;
-	private Faculty _viewedFaculty;
-	private Solution _acceptedSolution;
-	private Color _bgColor;
+	private User loggedUser;
+	private AcademicYear viewedAcadYear;
+	private AcademicSession viewedAcadSession;
+	private Faculty viewedFaculty;
+	private Solution acceptedSolution;
+	private Color bgColor;
 	
-	public TimetableCard(User loggerUser, AcademicYear viewedAcadYear, AcademicSession viewedAcadSession,
-			Faculty viewedFaculty, Solution acceptedSolution, Color bgColor)
+	public TimetableCard(User loggerUser, Color bgColor)
 	{
-		this.set_loggedUser(loggerUser);
-		this.set_viewedAcadYear(viewedAcadYear);
-		this.set_viewedAcadSession(viewedAcadSession);
-		this.set_viewedFaculty(viewedFaculty);
-		this.set_acceptedSolution(acceptedSolution);
-		this.set_bgColor(bgColor);
+		this.setLoggedUser(loggerUser);
+		this.setViewedAcadYear(loggerUser.getLastViewedAcademicYear());
+		this.setViewedAcadSession(loggerUser.getLastViewedAcademicSession());
+		this.setViewedFaculty(loggedUser.getLastViewedFaculty());
+		this.setAcceptedSolution(this.viewedAcadSession.getAcceptedSolution());
+		this.setBgColor(bgColor);
 		this.CreateTimetableCardPanel();
 	}
 
 	/******************Getters and setters********************/
-	public User get_loggedUser() {
-		return _loggedUser;
+	public User getLoggedUser() {
+		return loggedUser;
 	}
 
-	public void set_loggedUser(User _loggedUser) {
-		this._loggedUser = _loggedUser;
+	public void setLoggedUser(User loggedUser) {
+		this.loggedUser = loggedUser;
 	}
 
-	public AcademicYear get_viewedAcadYear() {
-		return _viewedAcadYear;
+	public AcademicYear getViewedAcadYear() {
+		return viewedAcadYear;
 	}
 
-	public void set_viewedAcadYear(AcademicYear _viewedAcadYear) {
-		this._viewedAcadYear = _viewedAcadYear;
+	public void setViewedAcadYear(AcademicYear viewedAcadYear) {
+		this.loggedUser.setLastViewedAcademicYear(viewedAcadYear);
+		this.viewedAcadYear = viewedAcadYear;
 	}
 
-	public AcademicSession get_viewedAcadSession() {
-		return _viewedAcadSession;
+	public AcademicSession getViewedAcadSession() {
+		return viewedAcadSession;
 	}
 
-	public void set_viewedAcadSession(AcademicSession _viewedAcadSession) {
-		this._viewedAcadSession = _viewedAcadSession;
+	public void setViewedAcadSession(AcademicSession viewedAcadSession) {
+		this.loggedUser.setLastViewedAcademicSession(viewedAcadSession);
+		this.viewedAcadSession = viewedAcadSession;
+		this.acceptedSolution = viewedAcadSession.getAcceptedSolution();
 	}
 
-	public Faculty get_viewedFaculty() {
-		return _viewedFaculty;
+	public Faculty getViewedFaculty() {
+		return viewedFaculty;
 	}
 
-	public void set_viewedFaculty(Faculty _viewedFaculty) {
-		this._viewedFaculty = _viewedFaculty;
+	public void setViewedFaculty(Faculty viewedFaculty) {
+		this.loggedUser.setLastViewedFaculty(viewedFaculty);
+		this.viewedFaculty = viewedFaculty;
 	}
 
-	public Solution get_acceptedSolution() {
-		return _acceptedSolution;
+	public Solution getAcceptedSolution() {
+		return acceptedSolution;
 	}
 
-	public void set_acceptedSolution(Solution _acceptedSolution) {
-		this._acceptedSolution = _acceptedSolution;
+	public void setAcceptedSolution(Solution acceptedSolution) {
+		this.loggedUser.getLastViewedAcademicSession().setAcceptedSolution(acceptedSolution);
+		this.acceptedSolution = acceptedSolution;
 	}
 	
-	public Color get_bgColor() {
-		return _bgColor;
+	public Color getBgColor() {
+		return bgColor;
 	}
 
-	public void set_bgColor(Color _bgColor) {
-		this._bgColor = _bgColor;
+	public void setBgColor(Color bgColor) {
+		this.bgColor = bgColor;
 	}
 	
 	/********************Methods that model the class behavior*********************/
-	
 	public JPanel CreateTimetableCardPanel()
     {
-    	this.setBackground(_bgColor);
+    	this.setBackground(bgColor);
     	this.setLayout(new BorderLayout());
         
         // Create the north panel. It will contain a radio button for each day of the week
-        JPanel northPanel = new JPanel();
-        northPanel.setBackground(_bgColor);
-        northPanel.setLayout(new GridBagLayout());
-        TimePreferences.DayOfTheWeek[] daysOfTheWeek = TimePreferences.DayOfTheWeek.values();
-        // Create the academic session radio buttons section
-        ButtonGroup dotwbg = new ButtonGroup();
-        boolean dotwSel = false;
-        for(TimePreferences.DayOfTheWeek dayOfTheWeek : daysOfTheWeek)
-        {
-        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(dayOfTheWeek.name()));
-        	if(!dotwSel)
-        	{
-        		jrb.setSelected(true);
-        		dotwSel = true;
-        	}
-        	jrb.setBackground(_bgColor);
-        	dotwbg.add(jrb);
-        	northPanel.add(jrb);
-        }
-        
+        JPanel northPanel = CreateNorthPanel();        
         // Create the south panel. It will contain a radio button for each academic year
-        JPanel southPanel = new JPanel();
-        southPanel.setBackground(_bgColor);
-        southPanel.setLayout(new GridBagLayout());
-        YearOfStudy.CollegeYear[] yearsOfStudy = YearOfStudy.CollegeYear.values();
-        // Create the academic session radio buttons section
-        ButtonGroup yosbg = new ButtonGroup();
-        boolean yosSel = false;
-        for(YearOfStudy.CollegeYear yearOfStudy : yearsOfStudy)
-        {
-        	if(yearOfStudy != YearOfStudy.CollegeYear.UNASSIGNED)
-        	{
-	        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(yearOfStudy.name()));
-	        	if(!yosSel)
-	        	{
-	        		jrb.setSelected(true);
-	        		yosSel = true;
-	        	}
-	        	jrb.setBackground(_bgColor);
-	        	yosbg.add(jrb);
-	        	southPanel.add(jrb);
-        	}
-        }
-        
+        JPanel southPanel = CreateSouthPanel();        
         // Create the west panel.It will contain a radio button for each department in the faculty
-        JPanel westPanel = new JPanel();
-        westPanel.setBackground(_bgColor);
-        westPanel.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        List<Department> departments = _viewedFaculty.get_departments();
-        // Create the academic session radio buttons section
-        ButtonGroup dbg = new ButtonGroup();
-        boolean dSel = false;
-        for(int i=0; i<departments.size(); i++)
-        {
-        	JRadioButton jrb = new JRadioButton(StringUtils.capitalize(departments.get(i).getName()));
-        	if(!dSel)
-        	{
-        		jrb.setSelected(true);
-        		dSel = true;
-        	}
-        	jrb.setBackground(_bgColor);
-        	jrb.setHorizontalTextPosition(SwingConstants.CENTER);
-        	jrb.setVerticalTextPosition(JRadioButton.TOP);
-        	dbg.add(jrb);
-        	c.gridy = i;
-        	westPanel.add(jrb,c);
-        }
-        
+        JPanel westPanel = CreateWestPanel();        
         // Create the east panel. It will contain 2 lists
-        JPanel eastPanel = new JPanel();
-        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
-        eastPanel.setBackground(_bgColor);
-        // Create a list with unassigned classes
-        List<Class> uClasses = _viewedAcadSession.get_solution().getUnassignedClasses();
-        JComponent uScrollPane = CreateScrollableListOfClasses(uClasses, _bgColor, " Unassigned classes: " + uClasses.size() + " ");
-        // Create a list with assigned classes
-        Set<Class> aClasses = _viewedAcadSession.get_solution().getAssignedClasses().keySet();
-        JComponent aScrollPane = CreateScrollableListOfClasses(aClasses, _bgColor, " Assigned classes: " + aClasses.size() + " ");
-        // Create a panel for the solver controls
-        JPanel solverControls = new JPanel();
-        solverControls.setLayout(new BoxLayout(solverControls, BoxLayout.X_AXIS));
-        solverControls.setBackground(_bgColor);
-        solverControls.setBorder(CreateEmptyTitleBorder("Solver controls"));
-        solverControls.setMaximumSize(new Dimension(Integer.MAX_VALUE,30));
-        // Text field for the number of steps
-        JTextField jtfNrOfSteps = new JTextField();
-        jtfNrOfSteps.setText("Steps");
-        jtfNrOfSteps.setForeground(Color.GRAY);
-        // Solver buttons
-        JButton jbDoSteps = new JButton("Step");
-        JButton jbRun = new JButton("Run");
-        // Add controls to panel
-        solverControls.add(jtfNrOfSteps);
-        solverControls.add(jbDoSteps);
-        solverControls.add(jbRun);        
-        // Add components to the east panel
-        eastPanel.add(solverControls);
-        eastPanel.add(uScrollPane);
-        eastPanel.add(aScrollPane);
+        JPanel eastPanel = CreateEastPanel();
         
         // Create the center panel
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridBagLayout());
         centerPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-        
         
         // Add components to panel
         this.add(northPanel, BorderLayout.NORTH);
@@ -229,16 +137,139 @@ public class TimetableCard extends JPanel{
         this.add(eastPanel, BorderLayout.EAST);
         this.add(centerPanel, BorderLayout.CENTER);
         
-        
         return this;
     }
+
+	private JPanel CreateNorthPanel() {
+		JPanel northPanel = new JPanel();
+        northPanel.setBackground(this.bgColor);
+        northPanel.setLayout(new GridBagLayout());
+        TimePreferences.DayOfTheWeek[] daysOfTheWeek = TimePreferences.DayOfTheWeek.values();
+        
+        // Create the academic session radio buttons section
+        ButtonGroup daysOfTheWeekButtonGroup = new ButtonGroup();
+        boolean isAnyDayOfTheWeekSelected = false;
+        for(TimePreferences.DayOfTheWeek dayOfTheWeek : daysOfTheWeek)
+        {
+        	JRadioButton jRadioButton = new JRadioButton(StringUtils.capitalize(dayOfTheWeek.name()));
+        	if(!isAnyDayOfTheWeekSelected)
+        	{
+        		jRadioButton.setSelected(true);
+        		isAnyDayOfTheWeekSelected = true;
+        	}
+        	jRadioButton.setBackground(this.bgColor);
+        	daysOfTheWeekButtonGroup.add(jRadioButton);
+        	northPanel.add(jRadioButton);
+        }
+        
+		return northPanel;
+	}
+
+	private JPanel CreateSouthPanel() {
+		JPanel southPanel = new JPanel();
+        southPanel.setBackground(this.bgColor);
+        southPanel.setLayout(new GridBagLayout());
+        YearOfStudy.CollegeYear[] yearsOfStudy = YearOfStudy.CollegeYear.values();
+        
+        // Create the academic session radio buttons section
+        ButtonGroup yearsOfStudyButtonGroup = new ButtonGroup();
+        boolean isAnyYearOfStudySelected = false;
+        for(YearOfStudy.CollegeYear yearOfStudy : yearsOfStudy)
+        {
+        	if(yearOfStudy != YearOfStudy.CollegeYear.UNASSIGNED)
+        	{
+	        	JRadioButton jRadioButton = new JRadioButton(StringUtils.capitalize(yearOfStudy.name()));
+	        	if(!isAnyYearOfStudySelected)
+	        	{
+	        		jRadioButton.setSelected(true);
+	        		isAnyYearOfStudySelected = true;
+	        	}
+	        	jRadioButton.setBackground(bgColor);
+	        	yearsOfStudyButtonGroup.add(jRadioButton);
+	        	southPanel.add(jRadioButton);
+        	}
+        }
+        
+		return southPanel;
+	}
+
+	private JPanel CreateWestPanel() {
+		JPanel westPanel = new JPanel();
+        westPanel.setBackground(this.bgColor);
+        westPanel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        List<Department> departments = viewedFaculty.getDepartments();
+        
+        // Create the academic session radio buttons section
+        ButtonGroup departmentsButtonGroup = new ButtonGroup();
+        boolean isAnyDepartmentSelelected = false;
+        for(int i=0; i<departments.size(); i++)
+        {
+        	JRadioButton jRadioButton = new JRadioButton(StringUtils.capitalize(departments.get(i).getName()));
+        	if(!isAnyDepartmentSelelected)
+        	{
+        		jRadioButton.setSelected(true);
+        		isAnyDepartmentSelelected = true;
+        	}
+        	jRadioButton.setBackground(this.bgColor);
+        	jRadioButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        	jRadioButton.setVerticalTextPosition(JRadioButton.TOP);
+        	departmentsButtonGroup.add(jRadioButton);
+        	c.gridy = i;
+        	westPanel.add(jRadioButton,c);
+        }
+        
+		return westPanel;
+	}
+
+	private JPanel CreateEastPanel() {
+		JPanel eastPanel = new JPanel();
+        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
+        eastPanel.setBackground(this.bgColor);
+        
+        // Create a list with unassigned classes
+        List<Class> uClasses = this.acceptedSolution.GetUnassignedClasses();
+        JComponent uScrollPane = CreateScrollableListOfClasses(uClasses, bgColor, " Unassigned classes: " + uClasses.size() + " ");
+        
+        // Create a list with assigned classes
+        List<Class> aClasses = this.acceptedSolution.GetAssignedClasses();
+        JComponent aScrollPane = CreateScrollableListOfClasses(aClasses, bgColor, " Assigned classes: " + aClasses.size() + " ");
+        
+        // Create a panel for the solver controls
+        JPanel solverControls = new JPanel();
+        solverControls.setLayout(new BoxLayout(solverControls, BoxLayout.X_AXIS));
+        solverControls.setBackground(bgColor);
+        solverControls.setBorder(CreateEmptyTitleBorder("Solver controls"));
+        solverControls.setMaximumSize(new Dimension(Integer.MAX_VALUE,30));
+        
+        // Text field for the number of steps
+        JTextField jtfNrOfSteps = new JTextField();
+        jtfNrOfSteps.setText("Steps");
+        jtfNrOfSteps.setForeground(Color.GRAY);
+        
+        // Solver buttons
+        JButton jbDoSteps = new JButton("Step");
+        JButton jbRun = new JButton("Run");
+        
+        // Add controls to panel
+        solverControls.add(jtfNrOfSteps);
+        solverControls.add(jbDoSteps);
+        solverControls.add(jbRun);      
+        
+        // Add components to the east panel
+        eastPanel.add(solverControls);
+        eastPanel.add(uScrollPane);
+        eastPanel.add(aScrollPane);
+        
+		return eastPanel;
+	}
     
     private JComponent CreateScrollableListOfClasses(Collection<Class> classes, Color bgColor, String borderText) {
         DefaultListModel<String> classListModel = new DefaultListModel<String>();
         for(Class oneClass : classes)
         {
         	String className = oneClass.getOffering().getName();
-        	int nrOfRemovals = _acceptedSolution.getNrOfRemovals(oneClass.getId());
+        	int nrOfRemovals = acceptedSolution.getNrOfRemovals(oneClass.getId());
         	classListModel.addElement(className+"("+nrOfRemovals+")");
         }
         JList<String> jListClasses = new JList<String>(classListModel);

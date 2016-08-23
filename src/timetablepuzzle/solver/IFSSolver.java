@@ -9,39 +9,45 @@ import timetablepuzzle.eclipselink.entities.inputdata.*;
 import timetablepuzzle.eclipselink.entities.inputdata.Class;
 import timetablepuzzle.solver.constraints.AbstractHardConstraint;
 import timetablepuzzle.solver.constraints.AbstractSoftConstraint;
+import timetablepuzzle.usecases.solution.DomainSizeCalculator;
+import timetablepuzzle.usecases.solution.SolutionAssignManager;
+import timetablepuzzle.usecases.solution.SolutionUnassignManager;
 
 public class IFSSolver {
 	/*****************Input data***********************/
     // A partial(feasible) solution
-    private Solution _solution;
+    private Solution solution;
+    private SolutionAssignManager assignManager;
+    private SolutionUnassignManager unassignManager;
+    private DomainSizeCalculator domainSizeCalculator;
     // Hard constraints
     private ArrayList<AbstractHardConstraint> _hardConstraints;
     // Soft constraints
     private ArrayList<AbstractSoftConstraint> _softConstraints;
     /*****************Work data***********************/
-    IFSSolver _singleton = null;
+    IFSSolver singleton = null;
     // One of the stop conditions
-    private long _maxIterations;
+    private long maxIterations;
     // Another stop condition
-    private long _maxTimeInSeconds;
+    private long maxTimeInSeconds;
     // The variable selection coefficients
-    private int[] _varSelCoeff;
+    private int[] varSelCoeff;
     // The probability for a class to be selected 
     // during the variable selection process
-    private double _selectionProbability;
+    private double selectionProbability;
     // The size limit that decides when to stop applying the 
     // selectionProbability for the variable selection process
-    private int _sizeSelLimit;
+    private int sizeSelLimit;
     // The number of the current iteration
-    private long _currentIteration;
+    private long currentIteration;
     // Random numberGenerator;
-    private Random _rnd;
+    private Random rnd;
     // Memorize the maximum number of penalty points that a class can get
-    private int _maxPPointsForAClass;
+    private int maxPPointsForAClass;
     // Memorize the minimum number of penalty points that a class can get
-    private int _minPPointsForAClass;
+    private int minPPointsForAClass;
     // The maximum percentage of soft constraints that is allowed to be violated
-    private double _maxPctOfViolatedSC;
+    private double maxPctOfViolatedSC;
 
     /**
      * Private Constructor to allow the singleton behavior
@@ -50,39 +56,39 @@ public class IFSSolver {
      */
     private IFSSolver(long maxIterations, long maxTimeInSeconds, 
     		ArrayList<AbstractHardConstraint> hardContraints, 
-    		ArrayList<AbstractSoftConstraint> softConstrints)
+    		ArrayList<AbstractSoftConstraint> softConstraints)
     {
-        this._maxIterations = maxIterations;
-        this._maxTimeInSeconds = maxTimeInSeconds;
+        this.maxIterations = maxIterations;
+        this.maxTimeInSeconds = maxTimeInSeconds;
         this._hardConstraints = hardContraints;
-        this._softConstraints = softConstrints;
+        this._softConstraints = softConstraints;
         int[] coeff = {1,1,1,1};
         SetVarSelCoeff(coeff);
-        _selectionProbability = 0.2;
-        _sizeSelLimit = 30;
-        _rnd = new Random();
+        selectionProbability = 0.2;
+        sizeSelLimit = 30;
+        rnd = new Random();
         // Calculate maximum and minimum number of penalty points for the set of soft constraints
         int maxPPoints = 0;
-        int minPPoints = _softConstraints.get(0).get_pointsOfPenaltyPerViolation();
+        int minPPoints = _softConstraints.get(0).getNrOfPenaltyPointsPerViolation();
         int curPPoints;
         for(AbstractSoftConstraint softConstraint : _softConstraints)
         {
-        	curPPoints = softConstraint.get_pointsOfPenaltyPerViolation();
+        	curPPoints = softConstraint.getNrOfPenaltyPointsPerViolation();
         	maxPPoints += curPPoints;
         	if(curPPoints < minPPoints)
         	{
         		minPPoints = curPPoints;
         	}
         }
-        this._maxPPointsForAClass = maxPPoints;
-        this._minPPointsForAClass = minPPoints;
+        this.maxPPointsForAClass = maxPPoints;
+        this.minPPointsForAClass = minPPoints;
         SetMaxPctOfViolatedSC(0.1);
     }
     
     /* Getters and setters for the solver fields */
     
 	public Solution get_solution() {
-		return _solution;
+		return solution;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -97,16 +103,16 @@ public class IFSSolver {
 	
 	public int[] get_varSelCoeff()
 	{
-		return this._varSelCoeff;
+		return this.varSelCoeff;
 	}
 	
 	public double get_selectionProbability()
 	{
-		return this._selectionProbability;
+		return this.selectionProbability;
 	}
 
 	public double get_maxPctOfViolatedSC() {
-		return _maxPctOfViolatedSC;
+		return maxPctOfViolatedSC;
 	}
 
 	/* Public methods that model the class behavior */
@@ -121,15 +127,15 @@ public class IFSSolver {
     		ArrayList<AbstractHardConstraint> hardContraints, 
     		ArrayList<AbstractSoftConstraint> softConstraints)
     {
-        if(_singleton == null ||
-        		_maxIterations != maxIterations ||
-        		_maxTimeInSeconds != maxTimeInSeconds)
+        if(this.singleton == null ||
+        		this.maxIterations != maxIterations ||
+        		this.maxTimeInSeconds != maxTimeInSeconds)
         {
-                _singleton = new IFSSolver(maxIterations, maxTimeInSeconds,
+                this.singleton = new IFSSolver(maxIterations, maxTimeInSeconds,
                 		hardContraints, softConstraints);
         }
 
-        return _singleton;
+        return this.singleton;
     }
 	
 	/**
@@ -139,10 +145,10 @@ public class IFSSolver {
 	 * @return
 	 */
 	public IFSSolver SetInitialSolution(Solution _solution) {
-		this._solution = _solution;
+		this.solution = _solution;
 		// A new solution has been set, the algorithm starts
 		// from iteration 0
-		this._currentIteration = 0;
+		this.currentIteration = 0;
 		
 		return this;
 	}
@@ -153,7 +159,7 @@ public class IFSSolver {
 	 */
 	public IFSSolver SetVarSelCoeff(int[] coeff)
 	{
-		this._varSelCoeff = coeff;
+		this.varSelCoeff = coeff;
 		
 		return this;
 	}
@@ -165,7 +171,7 @@ public class IFSSolver {
 	 */
 	public IFSSolver SetSelectionProbability(double selectionProbability)
 	{
-		this._selectionProbability = selectionProbability;
+		this.selectionProbability = selectionProbability;
 		
 		return this;
 	}
@@ -174,11 +180,11 @@ public class IFSSolver {
 	 * Set the maximum percentage of allowed violated soft constraints.
 	 * A 100% percentage means that all variables violate all 
 	 * soft constraints and take the maximum of penalty points for the violation
-	 * @param _maxPctOfViolatedSC
+	 * @param maxPctOfViolatedSC
 	 * @return
 	 */
 	public IFSSolver SetMaxPctOfViolatedSC(double percent) {
-		_maxPctOfViolatedSC = _maxPPointsForAClass * _solution.getNrOfClasses() * percent;
+		maxPctOfViolatedSC = maxPPointsForAClass * solution.GetNrOfCLassesInSolution() * percent;
 		
 		return this;
 	}
@@ -190,14 +196,14 @@ public class IFSSolver {
     public Solution DoSteps(long nrOfSteps)
     {
         long step = 0;
-        Solution currentSol = _solution;
-        Solution bestSol = _solution;
+        Solution currentSol = solution;
+        Solution bestSol = solution;
         Class variable;
 
         while(step <= nrOfSteps && CanContinue(currentSol))
         {
         	step++;
-        	_currentIteration++;
+        	currentIteration++;
         	variable = SelectVariable(currentSol);
 //        	Integer value = SelectValue(currentSol,variable);
 //        	List<Class> conflictingVars = currentSol.GetConflictingVariables(variable, value);
@@ -221,15 +227,15 @@ public class IFSSolver {
     {
     	boolean canContinue = true; 
     	
-        if(_currentIteration < _maxIterations)
+        if(currentIteration < maxIterations)
         {
             // Here i should check if the current solution is good enough
-            if( _solution.getUnassignedClasses().isEmpty())
+            if( solution.GetUnassignedClasses().isEmpty())
             {
                 // If there are no more variables to assign and 
                 // less than 10% of the soft constraints are violated
                 // then the solution is good enough
-                if(CheckSoftConstraints(this._solution) <= this._maxPctOfViolatedSC)
+                if(CheckSoftConstraints(this.solution) <= this.maxPctOfViolatedSC)
                 {
                 	canContinue = false;
                 }
@@ -249,7 +255,7 @@ public class IFSSolver {
 
         for (AbstractSoftConstraint softConstraint : this._softConstraints)
         {
-            totalPenaltyPoints += softConstraint.CalculatePenaltyPoints(solution);
+            totalPenaltyPoints += softConstraint.CalculateTotalNrOfPenaltyPoints();
         }
 
         return totalPenaltyPoints;
@@ -267,7 +273,7 @@ public class IFSSolver {
     	double worstClassValue = Double.MAX_VALUE;
     	
         // Check to see if all variables were assigned
-    	List<Class> unassignedClasses = currentSol.getUnassignedClasses();
+    	List<Class> unassignedClasses = currentSol.GetUnassignedClasses();
         if(!unassignedClasses.isEmpty())
         {
             // Select the variables that are involved in the largest number of constraints
@@ -276,7 +282,7 @@ public class IFSSolver {
         	
         	// Decide whether to keep all the classes, or just a randomly selected part of them 
         	List<Class> selClasses;
-        	if(unassignedClasses.size() > this._sizeSelLimit)
+        	if(unassignedClasses.size() > this.sizeSelLimit)
         	{
             	selClasses = RandomlySelectClasses(currentSol);
         	}else{
@@ -296,12 +302,12 @@ public class IFSSolver {
             		// that should assist take place
             		nrOfDependencies += selClass.getAssignedStudentGroups().size();
             	}
-            	int nrOfConflictingPlaces = _solution.GetDomainSize(selClass, true);
-            	int nrOfNonCnflictingPlaces = _solution.GetDomainSize(selClass, false);
-            	double classValue = -1 * _varSelCoeff[0] * nrOfRemovals + 
-            			-1 * _varSelCoeff[1] * nrOfDependencies + 
-            			_varSelCoeff[2] * nrOfConflictingPlaces + 
-            			_varSelCoeff[3] * nrOfNonCnflictingPlaces;
+            	int nrOfConflictingPlaces = this.domainSizeCalculator.GetConflictingDomainSize(selClass);
+            	int nrOfNonCnflictingPlaces = this.domainSizeCalculator.GetNonConflictingDomainSize(selClass);
+            	double classValue = -1 * varSelCoeff[0] * nrOfRemovals + 
+            			-1 * varSelCoeff[1] * nrOfDependencies + 
+            			varSelCoeff[2] * nrOfConflictingPlaces + 
+            			varSelCoeff[3] * nrOfNonCnflictingPlaces;
             	if(classValue < worstClassValue)
             	{
             		worstClasses.clear();
@@ -321,17 +327,17 @@ public class IFSSolver {
             // Select from the assigned variables the one that violates the highest number of soft constraints
             // TO DO: Select from the assigned variables the one that violates the highest number of constraints
         	// Decide whether to keep all the classes, or just a randomly selected part of them 
-        	HashMap<Class,Integer> assignedClasses = currentSol.getAssignedClasses();
+        	List<Class> assignedClasses = currentSol.GetAssignedClasses();
         	int totalNrOfPPointsPerClass;
         	int maxNrOfPPointsPerClass = 0;
         	
-        	for(Class aClass : assignedClasses.keySet())
+        	for(Class aClass : assignedClasses)
         	{
         		totalNrOfPPointsPerClass = 0;
         		for(AbstractSoftConstraint softConstraint : _softConstraints)
         		{
         			totalNrOfPPointsPerClass += 
-        					softConstraint.GetPenaltyPointsForVariable(currentSol,  aClass);
+        					softConstraint.GetNrOfPenaltyPointsForVariable(currentSol,  aClass);
         		}
         		
         		if(totalNrOfPPointsPerClass > maxNrOfPPointsPerClass)
@@ -351,7 +357,7 @@ public class IFSSolver {
         if(worstClasses.size() >= 1)
         {
         	// There are multiple classes with the same value. Select one randomly
-        	int rIndex = this._rnd.nextInt(worstClasses.size());
+        	int rIndex = this.rnd.nextInt(worstClasses.size());
         	worstClass = worstClasses.get(rIndex);
         }else{
         	// There is only one class with. Select it
@@ -370,9 +376,9 @@ public class IFSSolver {
     private List<Class> RandomlySelectClasses(Solution currentSol)
     {
     	List<Class> selClasses = new ArrayList<Class>();
-    	for(Class uClass : currentSol.getUnassignedClasses())
+    	for(Class uClass : currentSol.GetUnassignedClasses())
     	{
-    		if(this._rnd.nextDouble() <= this._selectionProbability)
+    		if(this.rnd.nextDouble() <= this.selectionProbability)
     		{
     			selClasses.add(uClass);
     		}
@@ -390,8 +396,8 @@ public class IFSSolver {
      */
     private int CompareSolutions(Solution first, Solution second)
     {
-    	 return (second.getUnassignedClasses().size() - first.getUnassignedClasses().size()) * 
-    			this._minPPointsForAClass + 
+    	 return (second.GetUnassignedClasses().size() - first.GetUnassignedClasses().size()) * 
+    			this.minPPointsForAClass + 
     			(CheckSoftConstraints(first) - CheckSoftConstraints(second));
     }
 }

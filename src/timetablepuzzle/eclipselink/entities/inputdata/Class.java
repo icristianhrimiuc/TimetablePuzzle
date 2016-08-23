@@ -10,7 +10,7 @@ public class Class{
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int id;
+	private int id;
 	
 	@Column(name="course_title")
 	private String courseTitle;
@@ -33,9 +33,6 @@ public class Class{
 	@ManyToOne(cascade=CascadeType.ALL,optional=false)
     @JoinColumn(name="assigned_studentgroup_id", nullable=false, updatable=false)
 	private StudentGroup assignedParentStudentGroup;
-	
-	@Column(name="isFixed")
-	private boolean isFixed;
 	
 	@Transient
 	private List<StudentGroup> assignedStudentGroups;
@@ -125,14 +122,6 @@ public class Class{
 	public List<StudentGroup> getAssignedStudentGroups() {
 		return this.assignedStudentGroups;
 	}
-
-	public boolean isFixed() {
-		return this.isFixed;
-	}
-
-	public void setIsFixed(boolean isFixed) {
-		this.isFixed = isFixed;
-	}
 	
 	/**************Methods that model the class behavior***************/
 	public int getAssignedRoomId() {
@@ -165,5 +154,10 @@ public class Class{
 				ExtractChildStudentGroups(componentGroup);
 			}
 		}
+	}
+	
+	public int GetClassDuration()
+	{
+		return this.offering.getNrOfTimeSlots();
 	}
 }

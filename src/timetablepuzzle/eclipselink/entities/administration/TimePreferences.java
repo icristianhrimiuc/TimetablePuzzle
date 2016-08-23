@@ -5,14 +5,14 @@ import javax.persistence.*;
 @Entity
 @Table(name="time_preferences")
 public class TimePreferences{
-	public static enum DayOfTheWeek{MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY};	
+	public static enum DayOfTheWeek{MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY};	
 	public static enum TimePreference{PROHIBITED,STRONGLY_DISCOURAGED,DISCOURAGED,
 		NEUTRAL,PREFFERED,STRONGLY_PREFFERED,REQUIRED};
 
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int id;
+	private int id;
 	
 	@Column(name="timeslots_perday")
 	private int nrOfTimeSlotsPerDay;

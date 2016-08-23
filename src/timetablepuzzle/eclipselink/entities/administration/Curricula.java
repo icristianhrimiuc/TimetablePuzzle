@@ -14,7 +14,7 @@ public class Curricula{
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int id;
+	private int id;
 	
 	@Column(name="name")
 	private String name;

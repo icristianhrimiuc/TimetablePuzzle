@@ -11,7 +11,7 @@ public class InstructorMeetings{
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int id;
+	private int id;
 	
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="instructor_id",updatable = false,insertable = false,referencedColumnName="id")

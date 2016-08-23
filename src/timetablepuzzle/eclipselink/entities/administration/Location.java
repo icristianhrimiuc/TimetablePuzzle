@@ -9,7 +9,7 @@ public class Location{
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int id;
+	private int id;
 	
 	@Column(name="longitude")
     private double longitude;

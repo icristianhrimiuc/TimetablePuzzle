@@ -10,7 +10,7 @@ public class Room{
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int id;
+	private int id;
 		
 	@Column(name="code")
 	private String code;
@@ -95,11 +95,11 @@ public class Room{
 		this.preferences.setPreferencesByDay(dayOfTheWeek, _preferences);
 	}
 	
-	public TimePreference getPreferencesByTime(DayOfTheWeek dayOfTheWeek, int slotNr) {
+	public TimePreference getPreferencesByDayAndTime(DayOfTheWeek dayOfTheWeek, int slotNr) {
 		return this.preferences.getPreferencesByDayAndTime(dayOfTheWeek, slotNr);
 	}
 
-	public void setPreferencesByTime(DayOfTheWeek dayOfTheWeek, TimePreference _preferences, int slotNr) {
+	public void setPreferencesByDayAndTime(DayOfTheWeek dayOfTheWeek, TimePreference _preferences, int slotNr) {
 		this.preferences.setPreferencesByDayAndTime(dayOfTheWeek, _preferences, slotNr);
 	}
 
