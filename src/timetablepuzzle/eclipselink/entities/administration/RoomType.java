@@ -53,31 +53,31 @@ public class RoomType{
 		return name;
 	}
 
-	public void setName(String _name) {
-		this.name = _name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getMinCapacity() {
 		return minCapacity;
 	}
 
-	public void setMinCapacity(int _minCapacity) {
-		this.minCapacity = _minCapacity;
+	public void setMinCapacity(int minCapacity) {
+		this.minCapacity = minCapacity;
 	}
 
 	public int getMaxCapacity() {
 		return maxCapacity;
 	}
 
-	public void setMaxCapacity(int _maxCapacity) {
-		this.maxCapacity = _maxCapacity;
+	public void setMaxCapacity(int maxCapacity) {
+		this.maxCapacity = maxCapacity;
 	}
 
 	public List<RoomFeature> getRoomFeatures() {
 		return roomFeatures;
 	}
 
-	public void setRoomFeatures(List<RoomFeature> _roomFeatures) {
-		this.roomFeatures = _roomFeatures;
+	public void setRoomFeatures(List<RoomFeature> roomFeatures) {
+		this.roomFeatures = roomFeatures;
 	}
 }

@@ -23,18 +23,21 @@ public class JPADAO<E,K extends Serializable> implements DAO<E,K>{
                 .getActualTypeArguments()[0];
 	}
 
+	@Override
 	public void persist(E entity) {
 		entityManager.getTransaction().begin();
 		entityManager.persist(entity);
 		entityManager.getTransaction().commit();
 		}
 
+	@Override
 	public void remove(E entity) {
 		entityManager.getTransaction().begin();
 		entityManager.remove(entity);
 		entityManager.getTransaction().commit();
 		}
 
+	@Override
 	public E findById(K id) {  
 		entityManager.getTransaction().begin();
 		E entity = (E)entityManager.find(entityClass, id);

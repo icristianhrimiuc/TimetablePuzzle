@@ -19,6 +19,7 @@ public class User{
 	private String passwordToken;
 	
 	@Column(name="user_type")
+	@Enumerated(EnumType.STRING)
 	private UserType userType;
 
 	@Column(name="first_name")
@@ -52,6 +53,7 @@ public class User{
 		this.id = id;
 		this.setUsername(username);
 		this.setToken(passwordToken);
+		this.setUserType(userType);
 		this.setFirstName(firstName);
 		this.setLastName(lastName);
 		this.setLastViewedAcademicYear(lastViewedAcademicYear);

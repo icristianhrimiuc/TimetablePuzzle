@@ -13,8 +13,8 @@ public class Building{
 	@Column(name="name")
 	private String name;
 	
-	@Column(name="abreviation")
-	private String abreviation;
+	@Column(name="abbreviation")
+	private String abbreviation;
 
 	@OneToOne(cascade=CascadeType.ALL,optional=false)
 	@JoinColumn(name="location_id", unique=true, nullable=false, updatable=false)
@@ -25,11 +25,11 @@ public class Building{
 		this(0,"NoName","NoAbbreviation",new Location());
 	}
 	
-	public Building(int id, String name, String abreviation, Location location)
+	public Building(int id, String name, String abbreviation, Location location)
 	{
 		this.id = id;
 		setName(name);
-		setAbreviation(abreviation);
+		setAbbreviation(abbreviation);
 		setLocation(location);
 	}
 	
@@ -46,12 +46,12 @@ public class Building{
 		this.name = name;
 	}
 
-	public String getAbreviation() {
-		return abreviation;
+	public String getAbbreviation() {
+		return abbreviation;
 	}
 
-	public void setAbreviation(String abreviation) {
-		this.abreviation = abreviation;
+	public void setAbbreviation(String abbreviation) {
+		this.abbreviation = abbreviation;
 	}
 
 	public Location getLocation() {

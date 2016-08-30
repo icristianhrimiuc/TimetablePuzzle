@@ -1,46 +1,46 @@
 package timetablepuzzle.eclipselink.entities.administration;
 
-import java.util.HashMap;
 import javax.persistence.*;
 
+import timetablepuzzle.eclipselink.entities.administration.Curricula.Term;
+
 @Entity
-@Table(name="subject_areas")
-public class SubjectArea{
-	public static enum Term{FIRST,SECOND,THIRD,FOURTH,UNASSIGNED};
-	
+@Table(name = "subject_areas")
+public class SubjectArea {
 	@Id
-	@Column(name="id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(name="name")
+
+	@Column(name = "name")
 	private String name;
-	
-	@OneToMany(cascade=CascadeType.ALL,targetEntity=Curricula.class)
-	@JoinTable(name="subjectarea_curriculas",
-    joinColumns=
-         @JoinColumn(name="subjectarea_id"),
-    inverseJoinColumns=
-         @JoinColumn(name="curricula_id"))
-	private HashMap<Term,Curricula> curriculasToStudyByTerm;
-	
-	public SubjectArea()
-	{
-		this(0,"NoName",new HashMap<Term,Curricula>());
+
+	@OneToOne(cascade=CascadeType.ALL,optional=false)
+	@JoinColumn(name="firstterm_curricula_id", unique=true, nullable=false)
+	private Curricula firstTermCurricula;
+
+	@OneToOne(cascade=CascadeType.ALL,optional=false)
+	@JoinColumn(name="secondterm_curricula_id", unique=true, nullable=false)
+	private Curricula secondTermCurricula;
+
+	@OneToOne(cascade=CascadeType.ALL,optional=false)
+	@JoinColumn(name="thirdterm_curricula_id", unique=true, nullable=true)
+	private Curricula thirdTermCurricula;
+
+	public SubjectArea() {
+		this(0, "NoName", new Curricula(), new Curricula());
 	}
 
-	public SubjectArea(int id, String name, HashMap<Term,Curricula> curriculasToStudyByTerm)
-	{
+	public SubjectArea(int id, String name, Curricula firstTermCurricula, Curricula secondTermCurricula) {
 		this.id = id;
 		setName(name);
-		this.curriculasToStudyByTerm = curriculasToStudyByTerm;
 	}
-	
-	/********************Getters and setters****************/
+
+	/******************** Getters and setters ****************/
 	public int getId() {
 		return id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -50,13 +50,39 @@ public class SubjectArea{
 	}
 
 	public Curricula getCurriculaToStudyByTerm(Term term) {
-		return curriculasToStudyByTerm.get(term);
-	}	
-	
-	public void setCurriculaToStudyByTerm(Term term, Curricula curriculasToStudyByTerm)
-	{
-		this.curriculasToStudyByTerm.put(term, curriculasToStudyByTerm);
+		Curricula curriculaToStudy = new Curricula();
+		switch (term) {
+			case FIRST:
+				curriculaToStudy = this.firstTermCurricula;
+				break;
+			case SECOND:
+				curriculaToStudy = this.secondTermCurricula;
+				break;
+			case THIRD:
+				curriculaToStudy = this.thirdTermCurricula;
+				break;
+			default:
+				break;
+		}
+		
+		return curriculaToStudy;
 	}
-	
-	/*******************Methods that model the class behavior*******************/
+
+	public void setCurriculaToStudyByTerm(Term term, Curricula curriculaToStudy) {
+		switch (term) {
+			case FIRST:
+				this.firstTermCurricula = curriculaToStudy;
+				break;
+			case SECOND:
+				this.secondTermCurricula = curriculaToStudy;
+				break;
+			case THIRD:
+				this.thirdTermCurricula = curriculaToStudy;
+				break;
+			default:
+				break;
+		}
+	}
+
+	/******************** Methods that model the class behavior*******************/
 }

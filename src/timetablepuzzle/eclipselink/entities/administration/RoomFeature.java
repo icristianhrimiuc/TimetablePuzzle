@@ -35,4 +35,9 @@ public class RoomFeature{
 	public void setFeature(String feature) {
 		this.feature = feature;
 	}	
+	
+	@Override
+	public String toString() {
+		return this.feature.substring(0, 1).toUpperCase() + this.feature.substring(1);
+	}
 }

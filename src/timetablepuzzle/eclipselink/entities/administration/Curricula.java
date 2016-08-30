@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.administration.SubjectArea.Term;
 import timetablepuzzle.eclipselink.entities.administration.YearOfStudy.CollegeYear;
 import timetablepuzzle.eclipselink.entities.inputdata.CourseOffering;
 
 @Entity
 @Table(name="curriculas")
 public class Curricula{
+	public static enum Term{FIRST,SECOND,THIRD,UNASSIGNED};
+	
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +24,7 @@ public class Curricula{
 	private CollegeYear year;
 	
 	@Column(name="term")
+	@Enumerated(EnumType.STRING)
 	private Term term;
 	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=CourseOffering.class)

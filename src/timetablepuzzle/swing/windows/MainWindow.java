@@ -23,17 +23,23 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import timetablepuzzle.eclipselink.entities.administration.*;
 import timetablepuzzle.eclipselink.entities.administration.User.UserType;
 import timetablepuzzle.eclipselink.entities.inputdata.Solution;
 import timetablepuzzle.swing.windows.cards.HomeCard;
 import timetablepuzzle.swing.windows.cards.TimetableCard;
+import timetablepuzzle.swing.windows.cards.other.BuildingCard;
+import timetablepuzzle.swing.windows.cards.other.RoomTypeCard;
 
 public class MainWindow implements ActionListener {
 	/***************** Static properties ****************/
-	final static String HOMECARD = "HomeCard";
-	final static String TIMETABLECARD = "TimetableCard";
+	final static String HOME_CARD = "Home";
+	final static String TIMETABLE_CARD = "Timetable";
+	final static String BUILDING_CARD = "Buildings";
+	final static String ROOM_TYPE_CARD = "Room Types";
 	/****************** Regular properties *************/
 	// Main window fields
 	private LoginDialog loginDialog;
@@ -80,8 +86,10 @@ public class MainWindow implements ActionListener {
 
 			// Create all the cards
 			cards = new HashMap<String, JPanel>();
-			cards.put(HOMECARD, new HomeCard("src\\resources\\homeBackground.png", "src\\resources\\homeText.txt"));
-			cards.put(TIMETABLECARD, new TimetableCard(loggedUser, bgColor));
+			cards.put(HOME_CARD, new HomeCard("src\\resources\\homeBackground.png", "src\\resources\\homeText.txt"));
+			cards.put(TIMETABLE_CARD, new TimetableCard(loggedUser, bgColor));
+			cards.put(BUILDING_CARD, new BuildingCard(bgColor));
+			cards.put(ROOM_TYPE_CARD, new RoomTypeCard(bgColor));
 
 			// Add components to the content pane
 			this.AddComponentToPane(frame.getContentPane());
@@ -107,8 +115,17 @@ public class MainWindow implements ActionListener {
 		JMenuBar jMenuBar = new JMenuBar();
 
 		// Home menu
-		JMenu mnHome = new JMenu("Home");
-		mnHome.addActionListener(this);
+		JMenu mnHome = new JMenu(HOME_CARD);
+		mnHome.addMenuListener(new MenuListener() {
+			@Override
+			public void menuSelected(MenuEvent e) { 
+				cardLayout.show(cardsPanel, HOME_CARD);
+			}
+			@Override
+			public void menuDeselected(MenuEvent e) {}
+			@Override
+			public void menuCanceled(MenuEvent e) {}
+		});
 		jMenuBar.add(mnHome);
 
 		// Input Data menu
@@ -181,7 +198,7 @@ public class MainWindow implements ActionListener {
 		JMenu mnCourseTimetabling = new JMenu("Course Timetabling");
 		// Course timetabling menu items
 		JMenuItem mntmSavedTimetables = new JMenuItem("Saved Timetables");
-		JMenuItem mntmTimetable = new JMenuItem("Timetable");
+		JMenuItem mntmTimetable = new JMenuItem(TIMETABLE_CARD);
 		mntmTimetable.addActionListener(this);
 		JMenuItem mntmAssignedClasses = new JMenuItem("Assigned Classes");
 		JMenuItem mntmUnassignedClasses = new JMenuItem("Unassigned Classes");
@@ -204,7 +221,8 @@ public class MainWindow implements ActionListener {
 		JMenuItem mntmCurriculas = new JMenuItem("Curriculas");
 		JMenuItem mntmAcademicYears = new JMenuItem("Academic Years");
 		JMenuItem mntmAcademicSessions = new JMenuItem("Academic Sessions");
-		JMenuItem mntmBuildings = new JMenuItem("Buildings");
+		JMenuItem mntmBuildings = new JMenuItem(BUILDING_CARD);
+		mntmBuildings.addActionListener(this);
 		// Add menu items
 		mnAdministration.add(mntmFaculties);
 		mnAdministration.add(mntmDepartments);
@@ -225,15 +243,14 @@ public class MainWindow implements ActionListener {
 		JMenuItem menuItem = new JMenuItem("Time Preferences");
 		JMenuItem mntmDatePatterns = new JMenuItem("Date Patterns");
 		JMenuItem mntmInstructorMeetings = new JMenuItem("Instructor Meetings");
-		JMenuItem mntmRoomtypes = new JMenuItem("RoomTypes");
-		JMenuItem mntmRoomfeatures = new JMenuItem("RoomFeatures");
+		JMenuItem mntmRoomtypes = new JMenuItem(ROOM_TYPE_CARD);
+		mntmRoomtypes.addActionListener(this);
 		// Add menu items
 		mnOther.add(mntmLocations);
 		mnOther.add(menuItem);
 		mnOther.add(mntmDatePatterns);
 		mnOther.add(mntmInstructorMeetings);
 		mnOther.add(mntmRoomtypes);
-		mnOther.add(mntmRoomfeatures);
 		return mnOther;
 	}
 
@@ -265,11 +282,7 @@ public class MainWindow implements ActionListener {
 		// ...Get information from the action event...
 		// ...Display it in the text area...
 		String action = e.getActionCommand();
-		if ("Timetable".equals(action)) {
-			cardLayout.show(cardsPanel, TIMETABLECARD);
-		} else {
-			cardLayout.show(cardsPanel, HOMECARD);
-		}
+		cardLayout.show(cardsPanel, action);
 	}
 
 	public void AddComponentToPane(Container pane) {
@@ -285,7 +298,7 @@ public class MainWindow implements ActionListener {
 			cardsPanel.add(cards.get(cardName), cardName);
 		}
 		cardLayout = (CardLayout) cardsPanel.getLayout();
-		cardLayout.show(cardsPanel, HOMECARD);
+		cardLayout.show(cardsPanel, ROOM_TYPE_CARD);
 
 		mainPanel.add(cardsPanel, BorderLayout.CENTER);
 

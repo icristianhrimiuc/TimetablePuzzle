@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.administration.SubjectArea.Term;
+import timetablepuzzle.eclipselink.entities.administration.Curricula.Term;
 import timetablepuzzle.eclipselink.entities.inputdata.CourseOffering;
 import timetablepuzzle.eclipselink.entities.inputdata.StudentGroup;
 
@@ -20,6 +20,7 @@ public class YearOfStudy{
 	private int id;
 		
 	@Column(name="college_year")
+	@Enumerated(EnumType.STRING)
 	private CollegeYear collegeYear;
 	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=SubjectArea.class)
@@ -80,7 +81,8 @@ public class YearOfStudy{
 	/*******************Methods that model the class behavior*******************/
 	public void setSubjectAreas(List<SubjectArea> areas) {
 		this.subjectAreas = areas;
-		for(Term term : SubjectArea.Term.values())
+		this.commonCoursesByTerm = new HashMap<Term,List<CourseOffering>>();
+		for(Term term : Curricula.Term.values())
 		{
 			this.commonCoursesByTerm.put(term, determineCommonCoursesByTerm(term));
 		}

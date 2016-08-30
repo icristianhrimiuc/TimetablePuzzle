@@ -11,7 +11,7 @@ public class UserJPADAOService  extends JPADAO<User,Integer> implements UserDAO{
 	public User findByUsername(String username)
 	{
 		TypedQuery<User> query =
-			      entityManager.createQuery("SELECT u FROM User u WHERE u._username = :username", User.class);
+			      entityManager.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
 			query.setParameter("username", username);
 			  List<User> results = query.getResultList();
 			  

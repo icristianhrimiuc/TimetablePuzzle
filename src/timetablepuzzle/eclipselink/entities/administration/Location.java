@@ -11,6 +11,9 @@ public class Location{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Column(name="address")
+	private String address;
+	
 	@Column(name="longitude")
     private double longitude;
 	
@@ -19,11 +22,12 @@ public class Location{
    
     public Location()
     {
-    	this(0,0,0);
+    	this(0,"No Address",0,0);
     }
 
-    public Location(int id, double latitude, double longitude) {
+    public Location(int id, String address, double latitude, double longitude) {
     	this.id = id;
+    	this.address = address;
         this.setLatitude(latitude);
         this.setLongitude(longitude);
     }
@@ -32,6 +36,14 @@ public class Location{
 
 	public int getId() {
 		return this.id;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
 	public double getLongitude() {
