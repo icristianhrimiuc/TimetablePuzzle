@@ -62,7 +62,8 @@ public class MainWindow implements ActionListener {
 	public MainWindow(Color bgColor) {
 		// Initialize the main frame
 		frame = new JFrame();
-		frame.setSize(800, 600);
+		frame.setSize(900, 600);
+		frame.setMinimumSize(new Dimension(900,600));
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("TimetablePuzzle - University Timetabling Application");

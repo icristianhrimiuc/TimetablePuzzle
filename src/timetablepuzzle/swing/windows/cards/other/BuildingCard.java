@@ -3,9 +3,12 @@ package timetablepuzzle.swing.windows.cards.other;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -64,7 +68,7 @@ public class BuildingCard extends JPanel {
 	private int idOfTheBuildingToUpdate;
 
 	public BuildingCard(Color backgroundColor) {
-		this.setBackground(backgroundColor);
+		SetupBuildingCard(backgroundColor);
 		this.staticMapUrlBuilder = new GoogleStaticMapsURLBuilder();
 		this.buildingsTableModel = new BuildingsTableModel();
 		RefreshTable();
@@ -73,15 +77,29 @@ public class BuildingCard extends JPanel {
 		this.labelMap = new JLabel();
 		this.notificationLabel = new JLabel("  ");
 		this.notificationLabel.setForeground(Color.RED);
-		this.textFieldName = new JTextField(50);
+		this.textFieldName = new JTextField(30);
 		this.textFieldAbbreviation = new JTextField(10);
-		this.textFieldAddress = new JTextField(50);
+		this.textFieldAddress = new JTextField(30);
 		this.textFieldLatitude = new JTextField(20);
 		AddDocumentListener(this.textFieldLatitude);
 		this.textFieldLongitude = new JTextField(20);
 		AddDocumentListener(textFieldLongitude);
 		this.idOfTheBuildingToUpdate = 0;
 		SetBuildingCardComponents();
+	}
+	
+	private void SetupBuildingCard(Color backgroundColor){
+		this.setBackground(backgroundColor);
+		this.addComponentListener(new ComponentAdapter(){
+			@Override
+			public void componentResized(ComponentEvent e){
+				String height = Integer.toString(e.getComponent().getHeight()/2 - 40);
+				String width = Integer.toString(e.getComponent().getWidth()/2 - 60);
+				String size =  width + "x" + height;
+				staticMapUrlBuilder.setSize(size);
+				RefreshMap();
+			}			
+		});
 	}
 
 	private void RefreshTable() {
@@ -133,14 +151,13 @@ public class BuildingCard extends JPanel {
 	}
 
 	private void SetBuildingCardComponents() {
-		this.setLayout(new BorderLayout());
-		this.add(CreateCreateNewBuildingPanel(), BorderLayout.NORTH);
-		this.add(CreateViewAllBuildingsPanel(), BorderLayout.CENTER);
+		this.setLayout(new GridLayout(2,1));
+		this.add(CreateCreateNewBuildingPanel());
+		this.add(CreateViewAllBuildingsPanel());
 	}
 
 	private JPanel CreateCreateNewBuildingPanel() {
-		JPanel createNewBuildingPanel = new JPanel();
-		createNewBuildingPanel.setLayout(new BoxLayout(createNewBuildingPanel, BoxLayout.X_AXIS));
+		JPanel createNewBuildingPanel = new JPanel(new GridLayout(1, 2));
 		createNewBuildingPanel.add(CreatePropertiesPanel());
 		createNewBuildingPanel.add(CreateStaticGoogleMapPanel());
 
@@ -148,19 +165,22 @@ public class BuildingCard extends JPanel {
 	}
 
 	private JPanel CreatePropertiesPanel() {
-		JPanel buildingPropertiesPanel = new JPanel();
-		buildingPropertiesPanel.setLayout(new BoxLayout(buildingPropertiesPanel, BoxLayout.Y_AXIS));
-		buildingPropertiesPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update building"));
+		JPanel propertiesPanel = new JPanel();
+		propertiesPanel.setLayout(new BoxLayout(propertiesPanel, BoxLayout.Y_AXIS));
 
-		buildingPropertiesPanel.add(CreatePropertyPanel("Name", this.textFieldName));
-		buildingPropertiesPanel.add(CreatePropertyPanel("Abbreviation", this.textFieldAbbreviation));
-		buildingPropertiesPanel.add(CreatePropertyPanel("Address", this.textFieldAddress));
-		buildingPropertiesPanel.add(CreatePropertyPanel("Latitude", this.textFieldLatitude));
-		buildingPropertiesPanel.add(CreatePropertyPanel("Longitude", this.textFieldLongitude));
-		buildingPropertiesPanel.add(this.notificationLabel);
-		buildingPropertiesPanel.add(CreateCrudButtonsPanel());
-
-		return buildingPropertiesPanel;
+		propertiesPanel.add(CreatePropertyPanel("Name", this.textFieldName));
+		propertiesPanel.add(CreatePropertyPanel("Abbreviation", this.textFieldAbbreviation));
+		propertiesPanel.add(CreatePropertyPanel("Address", this.textFieldAddress));
+		propertiesPanel.add(CreatePropertyPanel("Latitude", this.textFieldLatitude));
+		propertiesPanel.add(CreatePropertyPanel("Longitude", this.textFieldLongitude));
+		propertiesPanel.add(this.notificationLabel);
+		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
+		propertiesPanel.add(CreateCrudButtonsPanel());
+		
+		JPanel adjustmentPanel = CreateAdjustmentPanel(propertiesPanel);
+		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update room type"));
+		
+		return adjustmentPanel;
 	}
 
 	private JPanel CreatePropertyPanel(String propertyName, JTextField propertyTextField) {
@@ -309,16 +329,29 @@ public class BuildingCard extends JPanel {
 			}
 		}
 	}
+	
+	private JPanel CreateAdjustmentPanel(JPanel componentPanel){
+		JPanel adjustmentPanel = new JPanel();
+		adjustmentPanel.add(componentPanel);
+		SpringLayout layout = new SpringLayout();
+		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, componentPanel, 0, SpringLayout.HORIZONTAL_CENTER, adjustmentPanel);
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, componentPanel, 0, SpringLayout.VERTICAL_CENTER, adjustmentPanel);
+		adjustmentPanel.setLayout(layout);
+		
+		return adjustmentPanel;
+	}
 
 	private JPanel CreateStaticGoogleMapPanel() {
 		JPanel embededGoogleMapPanel = new JPanel();
 		embededGoogleMapPanel.setLayout(new BoxLayout(embededGoogleMapPanel, BoxLayout.X_AXIS));
-		embededGoogleMapPanel.setBorder(CreateRaisedBevelTitledBorder("Building's Location by coordinates"));
 		embededGoogleMapPanel.add(CreateMapZoomSlider());
 		embededGoogleMapPanel.add(this.labelMap);
 		RefreshMap();
+		
+		JPanel adjustmentPanel = CreateAdjustmentPanel(embededGoogleMapPanel);
+		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Building's Location by coordinates"));
 
-		return embededGoogleMapPanel;
+		return adjustmentPanel;
 	}
 
 	private JSlider CreateMapZoomSlider() {

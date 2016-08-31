@@ -80,4 +80,13 @@ public class RoomType{
 	public void setRoomFeatures(List<RoomFeature> roomFeatures) {
 		this.roomFeatures = roomFeatures;
 	}
+	/********************Methods that model the class behavior**************************/
+	public String GetFeatures(){
+		String features= "";
+		for(RoomFeature roomFeature : this.roomFeatures){
+			features += roomFeature.getFeature() + ";";
+		}
+		
+		return features;
+	}
 }

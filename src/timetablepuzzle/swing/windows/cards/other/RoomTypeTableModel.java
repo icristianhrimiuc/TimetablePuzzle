@@ -68,7 +68,7 @@ class RoomTypeTableModel extends AbstractTableModel {
             	colummnValue = roomType.getMaxCapacity();
                 break;
             case Column_Room_Features:
-            	colummnValue = roomType.getRoomFeatures();
+            	colummnValue = roomType.GetFeatures();
                 break;
             default:
             	break;

@@ -38,6 +38,6 @@ public class RoomFeature{
 	
 	@Override
 	public String toString() {
-		return this.feature.substring(0, 1).toUpperCase() + this.feature.substring(1);
+		return this.feature;
 	}
 }

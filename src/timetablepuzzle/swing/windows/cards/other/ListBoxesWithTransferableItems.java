@@ -1,14 +1,9 @@
-/*
- * GUI Component that has two list boxes with items that can be transferred between them.
- *
- * Author: Santosh Shanbhag
- */
 package timetablepuzzle.swing.windows.cards.other;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -17,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ListModel;
 
 public class ListBoxesWithTransferableItems extends JPanel {
 	/**
@@ -25,39 +19,53 @@ public class ListBoxesWithTransferableItems extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private JLabel labelForLeftListBox = new JLabel("Left List Box");
-	private JLabel labelForRightListBox = new JLabel("Right List Box");
+	private static final String DefaultLeftListBoxHeader = "Left List Box";
+	private static final String DefaultRightListBoxHeader = "Right List Box";
+	private static final String DefaultLeftToRightButtonText = ">>";
+	private static final String DefaultRightToLeftButtonText = "<<";
+	
+	private JLabel labelForLeftListBox;
+	private JLabel labelForRightListBox;
+	private JButton transferFromLeftToRightButton;
+	private JButton transferFromRightToLeftButton;
 	private JList<Object> leftListBox;
 	private JList<Object> rightListBox;
-	private JButton transferFromLeftToRightButton = new JButton(">>");
-	private JButton transferFromRightToLeftButton = new JButton("<<");
 
 	public ListBoxesWithTransferableItems(Object[] listDataForLeftList, Object[] listDataForRightList) {
-		init(listDataForLeftList, listDataForRightList);
+		this(listDataForLeftList, listDataForRightList, DefaultLeftListBoxHeader, DefaultRightListBoxHeader);
+	}
+	
+	public ListBoxesWithTransferableItems(Object[] listDataForLeftList, Object[] listDataForRightList,
+			String leftListBoxLabelTxt, String rightListBoxLabelTxt) {
+		this(listDataForLeftList, listDataForRightList, DefaultLeftListBoxHeader,
+				DefaultRightListBoxHeader, DefaultLeftToRightButtonText, DefaultRightToLeftButtonText);
 	}
 
 	public ListBoxesWithTransferableItems(Object[] listDataForLeftList, Object[] listDataForRightList,
-			String leftListBoxLabelTxt, String rightListBoxLabelTxt) {
-		labelForLeftListBox.setText(leftListBoxLabelTxt);
-		labelForRightListBox.setText(rightListBoxLabelTxt);
-		init(listDataForLeftList, listDataForRightList);
+			String leftListBoxLabelText, String rightListBoxLabelText, String leftToRightButtonText, String rightToLeftButtonText) {
+		// Labels
+		this.labelForLeftListBox = new JLabel(leftListBoxLabelText);
+		this.labelForRightListBox = new JLabel(rightListBoxLabelText);
+		// Buttons
+		this.transferFromLeftToRightButton = new JButton(leftToRightButtonText);
+		this.transferFromLeftToRightButton.addActionListener(new ButtonActionListener());
+		this.transferFromRightToLeftButton = new JButton(rightToLeftButtonText);
+		this.transferFromRightToLeftButton.addActionListener(new ButtonActionListener());
+		// JLists
+		
+		this.leftListBox = new JList<Object>(GetDefaultListModel(listDataForLeftList));
+		this.rightListBox = new JList<Object>(GetDefaultListModel(listDataForRightList));
+		
+		layoutComponents();
 	}
 	
-	public List<Object> getRightListBoxData(){
-		ListModel<Object> rightListModel = this.rightListBox.getModel();
-		
-		List<Object> dataList = new ArrayList<Object>();
-		for(int i=0; i < rightListModel.getSize(); i++){
-		     dataList.add(rightListModel.getElementAt(i));  
+	private DefaultListModel<Object> GetDefaultListModel(Object[] elements){
+		DefaultListModel<Object> model = new DefaultListModel<Object>();
+		for(Object element : elements){
+			model.addElement(element);
 		}
 		
-		return dataList;
-	}
-
-	private void init(Object[] listDataForLeftList, Object[] listDataForRightList) {
-		leftListBox = new JList<Object>(listDataForLeftList);
-		rightListBox = new JList<Object>(listDataForRightList);
-		layoutComponents();
+		return model;
 	}
 
 	private void layoutComponents() {
@@ -76,45 +84,39 @@ public class ListBoxesWithTransferableItems extends JPanel {
 		panel.add(scrollPaneForListBox, BorderLayout.CENTER);
 		return panel;
 	}
-
-	private void transferSelectedItemFromLeftListBoxToRight() {
-		if (isItemSelectedInLeftListBox()){
-			Object selectedItemFromLeftListBox = getSelectedItemFromLeftListBox();
-
-			DefaultListModel<Object> leftListModel = (DefaultListModel<Object>) this.leftListBox.getModel();
-			leftListModel.removeElement(selectedItemFromLeftListBox);
-
-			DefaultListModel<Object> rightListModel = (DefaultListModel<Object>) this.rightListBox.getModel();
-			rightListModel.addElement(selectedItemFromLeftListBox);
-		}
+	
+	public Enumeration<Object> getRightListElements(){
+		return ((DefaultListModel<Object>)this.rightListBox.getModel()).elements();
 	}
 
-	private boolean isItemSelectedInLeftListBox(){
-		return this.leftListBox.getSelectedIndex() != -1;
+	public Enumeration<Object> getLeftListElements(){
+		return ((DefaultListModel<Object>)this.leftListBox.getModel()).elements();
 	}
 	
-	private Object getSelectedItemFromLeftListBox(){
-		return this.leftListBox.getSelectedValue();
-	}
-
-	private void transferSelectedItemFromRightListBoxToLeft() {
-		if (isItemSelectedInRightListBox()){
-			Object selectedItemFromRightListBox = getSelectedItemFromRightListBox();
-
-			DefaultListModel<Object> rightListModel = (DefaultListModel<Object>) this.rightListBox.getModel();
-			rightListModel.removeElement(selectedItemFromRightListBox);
-
-			DefaultListModel<Object> leftListModel = (DefaultListModel<Object>) this.leftListBox.getModel();
-			leftListModel.addElement(selectedItemFromRightListBox);
+	public void MoveAllFromRightToLeft(){
+		DefaultListModel<Object> rightListModel = (DefaultListModel<Object>) this.rightListBox.getModel();
+		DefaultListModel<Object> leftListModel = (DefaultListModel<Object>)this.leftListBox.getModel();
+		Enumeration<Object> rightListElements = rightListModel.elements();
+		while(rightListElements.hasMoreElements()){
+			Object element = rightListElements.nextElement();
+			if(leftListModel.contains(element))
+			{
+				leftListModel.addElement(element);
+			}
+			rightListModel.removeElement(element);
 		}
 	}
-
-	private boolean isItemSelectedInRightListBox(){
-		return this.rightListBox.getSelectedIndex() != -1;
-	}
 	
-	private Object getSelectedItemFromRightListBox(){
-		return this.rightListBox.getSelectedValue();
+	public void SetRightListElements(Object[] rightListElements){
+		DefaultListModel<Object> rightListModel = (DefaultListModel<Object>) this.rightListBox.getModel();
+		DefaultListModel<Object> leftListModel = (DefaultListModel<Object>)this.leftListBox.getModel();
+
+		MoveAllFromRightToLeft();
+		for(Object element : rightListElements){
+			if(leftListModel.contains(element)){
+				rightListModel.addElement(element);
+			}
+		}
 	}
 
 	/**
@@ -124,9 +126,21 @@ public class ListBoxesWithTransferableItems extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			JButton sourceButton = (JButton) e.getSource();
 			if (sourceButton == transferFromLeftToRightButton) {
-				transferSelectedItemFromLeftListBoxToRight();
+				transferSelectedItemsFromFirstListToSecond(leftListBox, rightListBox);
 			} else if (sourceButton == transferFromRightToLeftButton) {
-				transferSelectedItemFromRightListBoxToLeft();
+				transferSelectedItemsFromFirstListToSecond(rightListBox, leftListBox);
+			}
+		}
+
+		private void transferSelectedItemsFromFirstListToSecond(JList<Object> firstList, JList<Object> secondList) {
+			if (!firstList.isSelectionEmpty()){
+				DefaultListModel<Object> fitstListModel = (DefaultListModel<Object>)firstList.getModel();
+				DefaultListModel<Object> secondListModel = (DefaultListModel<Object>)secondList.getModel();
+				List<Object> selectedItemsFromFirstList = firstList.getSelectedValuesList();
+				for(Object item : selectedItemsFromFirstList ){
+					fitstListModel.removeElement(item);
+					secondListModel.addElement(item);
+				}
 			}
 		}
 	}

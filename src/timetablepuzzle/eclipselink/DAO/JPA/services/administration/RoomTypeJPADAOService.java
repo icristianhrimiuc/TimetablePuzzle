@@ -1,6 +1,7 @@
 package timetablepuzzle.eclipselink.DAO.JPA.services.administration;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.persistence.TypedQuery;
 
@@ -15,7 +16,7 @@ public class RoomTypeJPADAOService extends JPADAO<RoomType,Integer> implements R
 		TypedQuery<RoomType> query = entityManager.createQuery("SELECT b FROM RoomType b", RoomType.class);
 		List<RoomType> listRoomTypes = query.getResultList();
 	    if (listRoomTypes == null) {
-	        System.out.println("No room types found.");
+			LOGGER.log(Level.WARNING, "No {0} was found when calling GetAll(). ", new Object[]{this.entityClass});
 	    } 
 
 	    return listRoomTypes;
