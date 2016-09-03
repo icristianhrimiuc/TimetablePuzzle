@@ -101,6 +101,7 @@ class BuildingsTableModel extends AbstractTableModel {
         default:
         	break;
     	}
+    	this.data.set(rowIndex, building);
         fireTableCellUpdated(rowIndex, columnIndex);
     }
     

@@ -123,4 +123,34 @@ public class YearOfStudy{
 		
 		return commonCourses;
 	}
+	/*******************Methods that model the class behavior*******************/
+	@Override
+	public String toString() {
+		return String.format("College year %s", this.collegeYear.name().toLowerCase());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof YearOfStudy);
+		if (equals) {
+			YearOfStudy other = (YearOfStudy) o;
+			equals = (
+					(this.id == other.getId()) && 
+					(this.collegeYear.equals(other.getCollegeYear())) && 
+					(this.students.equals(other.getStudents()))
+					);
+			
+			for(SubjectArea subjectArea : other.getSubjectAreas()){
+				equals &= this.subjectAreas.contains(subjectArea);
+				if(!equals)break;
+			}
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("YearOfStudy:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
+	}
 }

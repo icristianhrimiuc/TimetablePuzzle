@@ -79,7 +79,28 @@ public class Location{
         return meanEarthRadiusInKm * c;
     }
 
+    @Override
     public String toString() {
-        return " (" + latitude + ", " + longitude + ")";
+        return String.format("%s( %.6f , %.6f )", this.address, this.latitude, this.longitude);
     }
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof Location);
+		if (equals) {
+			Location other = (Location) o;
+			equals = ((this.id == other.getId()) && 
+					(this.address.equals(other.getAddress())) && 
+					(this.latitude == other.getLatitude()) && 
+					(this.longitude == other.getLongitude())
+					);
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("Location:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
+	}
 }

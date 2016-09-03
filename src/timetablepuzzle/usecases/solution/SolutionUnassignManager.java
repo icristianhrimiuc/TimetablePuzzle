@@ -2,7 +2,6 @@ package timetablepuzzle.usecases.solution;
 
 import java.util.List;
 
-import timetablepuzzle.eclipselink.entities.administration.TimeslotPattern;
 import timetablepuzzle.eclipselink.entities.inputdata.Class;
 import timetablepuzzle.eclipselink.entities.inputdata.Solution;
 

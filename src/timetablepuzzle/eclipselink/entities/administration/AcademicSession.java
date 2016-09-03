@@ -1,6 +1,8 @@
 package timetablepuzzle.eclipselink.entities.administration;
 
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import javax.persistence.*;
 
 import timetablepuzzle.eclipselink.entities.inputdata.Solution;
@@ -21,20 +23,20 @@ public class AcademicSession{
 	// When the session starts, the classes also start
     @Temporal(TemporalType.DATE)
 	@Column(name="session_start_date")
-	private Date sessionStartDate;
+	private Calendar sessionStartDate;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name="classes_end_date")
-	private Date classesEndDate;
+	private Calendar classesEndDate;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name="exams_start_date")
-	private Date examsStartDate;
+	private Calendar examsStartDate;
 	
 	// When the session ends, the exams also end
 	@Temporal(TemporalType.DATE)
 	@Column(name="session_end_date")
-	private Date sessionEndDate;
+	private Calendar sessionEndDate;
 	
 	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="accepted_solution_id", unique=true)
@@ -42,11 +44,11 @@ public class AcademicSession{
 	
 	public AcademicSession()
 	{
-		this(0, "NoName", new Date(), new Date(), new Date(), new Date(), new Solution());
+		this(0, "NoName", new GregorianCalendar(), new GregorianCalendar(), new GregorianCalendar(), new GregorianCalendar(), new Solution());
 	}
 	
 	public AcademicSession(int id, String name,
-			Date sessionStartDate, Date classesEndDate, Date examsStartDate, Date sessionEndDate,
+			Calendar sessionStartDate, Calendar classesEndDate, Calendar examsStartDate, Calendar sessionEndDate,
 			Solution acceptedSolution)
 	{
 		this.id = id;
@@ -59,7 +61,10 @@ public class AcademicSession{
 	}
 	
 	/***********************Getters and setters*******************/
-
+	public int getId(){
+		return this.id;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -68,35 +73,35 @@ public class AcademicSession{
 		this.name = name;
 	}
 
-	public Date getSessionStartDate() {
+	public Calendar getSessionStartDate() {
 		return sessionStartDate;
 	}
 
-	public void setSessionStartDate(Date sessionStartDate) {
+	public void setSessionStartDate(Calendar sessionStartDate) {
 		this.sessionStartDate = sessionStartDate;
 	}
 
-	public Date getClassesEndDate() {
+	public Calendar getClassesEndDate() {
 		return classesEndDate;
 	}
 
-	public void setClassesEndDate(Date classesEndDate) {
+	public void setClassesEndDate(Calendar classesEndDate) {
 		this.classesEndDate = classesEndDate;
 	}
 
-	public Date getExamsStartDate() {
+	public Calendar getExamsStartDate() {
 		return examsStartDate;
 	}
 
-	public void setExamsStartDate(Date examsStartDate) {
+	public void setExamsStartDate(Calendar examsStartDate) {
 		this.examsStartDate = examsStartDate;
 	}
 
-	public Date getSessionEndDate() {
+	public Calendar getSessionEndDate() {
 		return sessionEndDate;
 	}
 
-	public void setSessionEndDate(Date sessionEndDate) {
+	public void setSessionEndDate(Calendar sessionEndDate) {
 		this.sessionEndDate = sessionEndDate;
 	}
 
@@ -113,4 +118,31 @@ public class AcademicSession{
 	}
 	
 	/*******************Methods that model the class behavior*******************/
+	@Override
+	public String toString() {
+		return String.format("%s %s", this.name, this.sessionStartDate.get(Calendar.YEAR));
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof AcademicSession);
+		if (equals) {
+			AcademicSession other = (AcademicSession) o;
+			equals = ((this.id == other.getId()) && 
+					(this.name.equals(other.getName())) && 
+					(this.sessionStartDate.equals(other.getSessionStartDate())) && 
+					(this.classesEndDate.equals(other.getClassesEndDate())) && 
+					(this.examsStartDate.equals(other.getExamsStartDate())) &&
+					(this.sessionEndDate.equals(other.getSessionEndDate())) &&
+					(this.acceptedSolution.equals(other.getAcceptedSolution()))
+					);
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("AcademicSession:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
+	}
 }

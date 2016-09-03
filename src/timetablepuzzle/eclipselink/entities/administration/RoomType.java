@@ -20,7 +20,7 @@ public class RoomType{
 	@Column(name="maxcapacity")
 	private int maxCapacity;
 	
-	@OneToMany(cascade=CascadeType.ALL,targetEntity=RoomFeature.class)
+	@OneToMany(targetEntity=RoomFeature.class)
 	@JoinTable(name="roomType_roomFeatures",
     joinColumns=
          @JoinColumn(name="roomType_id"),
@@ -30,10 +30,10 @@ public class RoomType{
 	
 	public RoomType()
 	{
-		this(0,"NoName",0,-1,0,null);
+		this(0,"NoName",0,0,null);
 	}
 
-	public RoomType(int id, String name, int minCapacity, int type,
+	public RoomType(int id, String name, int minCapacity,
 			int maxCapacity, List<RoomFeature> roomFeatures)
 	{
 		this.id = id;
@@ -88,5 +88,36 @@ public class RoomType{
 		}
 		
 		return features;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s", this.name);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof RoomType);
+		if (equals) {
+			RoomType other = (RoomType) o;
+			equals = (
+					(this.id == other.getId()) && 
+					(this.name.equals(other.getName())) &&
+					(this.minCapacity == other.getMinCapacity()) && 
+					(this.maxCapacity == other.getMaxCapacity()) 
+					);
+			
+			for(RoomFeature roomFeature : other.getRoomFeatures()){
+				equals &= this.roomFeatures.contains(roomFeature);
+				if(!equals)break;
+			}
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("RoomType:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
 	}
 }

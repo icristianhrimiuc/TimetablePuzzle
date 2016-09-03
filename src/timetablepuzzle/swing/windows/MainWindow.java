@@ -31,8 +31,9 @@ import timetablepuzzle.eclipselink.entities.administration.User.UserType;
 import timetablepuzzle.eclipselink.entities.inputdata.Solution;
 import timetablepuzzle.swing.windows.cards.HomeCard;
 import timetablepuzzle.swing.windows.cards.TimetableCard;
-import timetablepuzzle.swing.windows.cards.other.BuildingCard;
-import timetablepuzzle.swing.windows.cards.other.RoomTypeCard;
+import timetablepuzzle.swing.windows.cards.other.BuildingsCard;
+import timetablepuzzle.swing.windows.cards.other.RoomTypesCard;
+import timetablepuzzle.swing.windows.cards.other.TimePreferencesCard;
 
 public class MainWindow implements ActionListener {
 	/***************** Static properties ****************/
@@ -40,6 +41,7 @@ public class MainWindow implements ActionListener {
 	final static String TIMETABLE_CARD = "Timetable";
 	final static String BUILDING_CARD = "Buildings";
 	final static String ROOM_TYPE_CARD = "Room Types";
+	final static String TIME_PREFERENCES_CARD = "Time Preferences";
 	/****************** Regular properties *************/
 	// Main window fields
 	private LoginDialog loginDialog;
@@ -62,8 +64,8 @@ public class MainWindow implements ActionListener {
 	public MainWindow(Color bgColor) {
 		// Initialize the main frame
 		frame = new JFrame();
-		frame.setSize(900, 600);
-		frame.setMinimumSize(new Dimension(900,600));
+		frame.setSize(1000, 700);
+		frame.setMinimumSize(new Dimension(1000,700));
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("TimetablePuzzle - University Timetabling Application");
@@ -89,8 +91,9 @@ public class MainWindow implements ActionListener {
 			cards = new HashMap<String, JPanel>();
 			cards.put(HOME_CARD, new HomeCard("src\\resources\\homeBackground.png", "src\\resources\\homeText.txt"));
 			cards.put(TIMETABLE_CARD, new TimetableCard(loggedUser, bgColor));
-			cards.put(BUILDING_CARD, new BuildingCard(bgColor));
-			cards.put(ROOM_TYPE_CARD, new RoomTypeCard(bgColor));
+			cards.put(BUILDING_CARD, new BuildingsCard(bgColor));
+			cards.put(ROOM_TYPE_CARD, new RoomTypesCard(bgColor));
+			cards.put(TIME_PREFERENCES_CARD, new TimePreferencesCard(bgColor));
 
 			// Add components to the content pane
 			this.AddComponentToPane(frame.getContentPane());
@@ -240,18 +243,17 @@ public class MainWindow implements ActionListener {
 	private JMenu CreateJMenuOther() {
 		JMenu mnOther = new JMenu("Other");
 		// Other menu items
-		JMenuItem mntmLocations = new JMenuItem("Locations");
-		JMenuItem menuItem = new JMenuItem("Time Preferences");
 		JMenuItem mntmDatePatterns = new JMenuItem("Date Patterns");
 		JMenuItem mntmInstructorMeetings = new JMenuItem("Instructor Meetings");
 		JMenuItem mntmRoomtypes = new JMenuItem(ROOM_TYPE_CARD);
 		mntmRoomtypes.addActionListener(this);
+		JMenuItem menuTimePreferences = new JMenuItem(TIME_PREFERENCES_CARD);
+		menuTimePreferences.addActionListener(this);
 		// Add menu items
-		mnOther.add(mntmLocations);
-		mnOther.add(menuItem);
 		mnOther.add(mntmDatePatterns);
 		mnOther.add(mntmInstructorMeetings);
 		mnOther.add(mntmRoomtypes);
+		mnOther.add(menuTimePreferences);
 		return mnOther;
 	}
 
@@ -299,7 +301,7 @@ public class MainWindow implements ActionListener {
 			cardsPanel.add(cards.get(cardName), cardName);
 		}
 		cardLayout = (CardLayout) cardsPanel.getLayout();
-		cardLayout.show(cardsPanel, ROOM_TYPE_CARD);
+		cardLayout.show(cardsPanel, TIME_PREFERENCES_CARD);
 
 		mainPanel.add(cardsPanel, BorderLayout.CENTER);
 

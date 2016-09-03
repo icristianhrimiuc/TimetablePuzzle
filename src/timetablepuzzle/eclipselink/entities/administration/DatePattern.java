@@ -56,4 +56,28 @@ public class DatePattern{
 	{
 		return this.dates.split(";");
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%s", this.name);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof DatePattern);
+		if (equals) {
+			DatePattern other = (DatePattern) o;
+			equals = ((this.id == other.getId()) && 
+					(this.name.equals(other.getName())) && 
+					(this.dates.equals(other.getDates()))
+					);
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("DatePattern:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
+	}
 }

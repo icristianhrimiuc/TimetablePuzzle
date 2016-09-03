@@ -2,6 +2,8 @@ package timetablepuzzle.eclipselink.entities.administration;
 
 import javax.persistence.*;
 
+import timetablepuzzle.usecases.solution.TimeslotPattern;
+
 @Entity
 @Table(name="time_preferences")
 public class TimePreferences{
@@ -13,9 +15,6 @@ public class TimePreferences{
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(name="timeslots_perday")
-	private int nrOfTimeSlotsPerDay;
 	
 	@Column(name="monday")
 	private String monPreferences;
@@ -49,70 +48,68 @@ public class TimePreferences{
 
 	public TimePreferences()
 	{
-		this(0, 12, "3,3,3,3,3,3,3,3,3,3,3,3", "3,3,3,3,3,3,3,3,3,3,3,3",
-				"3,3,3,3,3,3,3,3,3,3,3,3", "3,3,3,3,3,3,3,3,3,3,3,3", 
-				"3,3,3,3,3,3,3,3,3,3,3,3");
+		this(0, TimeslotPattern.GenerateFreeDay(), TimeslotPattern.GenerateFreeDay(), TimeslotPattern.GenerateFreeDay(),
+				TimeslotPattern.GenerateFreeDay(), TimeslotPattern.GenerateFreeDay());
 	}
 
-	public TimePreferences(int id, int nrOfTimeSlotsPerDay, String monPrefences, String tuePrefences,
-			String wedPrefences, String thuPrefences, String friPrefences)
+	public TimePreferences(int id, String monPreferences, String tuePreferences,
+			String wedPreferences, String thuPreferences, String friPreferences)
 	{
 		this.id = id;
-		setNrOfTimeSlotsPerDay(nrOfTimeSlotsPerDay);
-		setMonPrefences(monPrefences);
-		setTuePrefences(tuePrefences);
-		setWedPrefences(wedPrefences);
-		setThuPrefences(thuPrefences);
-		setFriPrefences(friPrefences);
+		setMonPreferences(monPreferences);
+		setTuePreferences(tuePreferences);
+		setWedPreferences(wedPreferences);
+		setThuPreferences(thuPreferences);
+		setFriPreferences(friPreferences);
 	}
 	
 	/*********Getters and setters*********/
 	public int getId() {
-		return id;
+		return this.id;
 	}
 	
-	public String getMonPrefences()
+	public String getMonPreferences()
 	{
 		return this.monPreferences;
 	}
 	
-	public void setMonPrefences(String monPreferences)
+	public void setMonPreferences(String monPreferences)
 	{
 		this.monPreferences = monPreferences;
 		setPreferencesByDay(DayOfTheWeek.MONDAY,monPreferences);
 	}
 
-	public String getTuePrefences()
+	public String getTuePreferences()
 	{
 		return this.tuePreferences;
 	}
 	
-	public void setTuePrefences(String tuePrefences)
+	public void setTuePreferences(String tuePreferences)
 	{
-		this.tuePreferences = tuePrefences;
-		setPreferencesByDay(DayOfTheWeek.TUESDAY,tuePrefences);
+		this.tuePreferences = tuePreferences;
+		setPreferencesByDay(DayOfTheWeek.TUESDAY,tuePreferences);
 	}
 
-	public String getWedPref()
+	public String getWedPreferences()
 	{
 		return this.wedPreferences;
 	}
 	
-	public void setWedPrefences(String wedPrefences)
+	public void setWedPreferences(String wedPreferences)
 	{
-		this.wedPreferences = wedPrefences;
-		setPreferencesByDay(DayOfTheWeek.WEDNESDAY,wedPrefences);
+		this.wedPreferences = wedPreferences;
+		setPreferencesByDay(DayOfTheWeek.WEDNESDAY,wedPreferences);
 	}
 
-	public String getThuPrefences()
+	public String getThuPreferences()
 	{
 		return this.thuPreferences;
 	}
 	
-	public void setThuPrefences(String thuPrefences)
+	public void setThuPreferences(String thuPreferences)
 	{
-		this.thuPreferences = thuPrefences;
-		setPreferencesByDay(DayOfTheWeek.THURSDAY,thuPrefences);
+		this.thuPreferences = thuPreferences;
+		setPreferencesByDay(DayOfTheWeek.THURSDAY,thuPreferences);
 	}
 
 	public String getFriPreferences()
@@ -120,18 +117,10 @@ public class TimePreferences{
 		return this.friPreferences;
 	}
 	
-	public void setFriPrefences(String friPreferences)
+	public void setFriPreferences(String friPreferences)
 	{
 		this.friPreferences = friPreferences;
 		setPreferencesByDay(DayOfTheWeek.FRIDAY,friPreferences);
-	}
-	
-	public int getNrOfTimeSlotsPerDay() {
-		return nrOfTimeSlotsPerDay;
-	}
-
-	public void setNrOfTimeSlotsPerDay(int nrOfTimeSlotsPerDay) {
-		this.nrOfTimeSlotsPerDay = nrOfTimeSlotsPerDay;
 	}
 
 	/***************Methods that model the class behavior*******************/
@@ -163,12 +152,13 @@ public class TimePreferences{
 	}
 
 	public void setPreferencesByDay(DayOfTheWeek dayOfTheWeek, String dayPreferences) {
-		setPreferencesByDay(dayOfTheWeek, DecodeDayPreferences(dayPreferences.split(",")));
+		String[] preferences = dayPreferences.split(TimeslotPattern.TimeSlotsSeparator);
+		setPreferencesByDay(dayOfTheWeek, DecodeDayPreferences(preferences));
 	}
 	
 	private TimePreference[] DecodeDayPreferences(String[] preferences)
 	{
-		TimePreference[] timePreferences = new TimePreference[this.nrOfTimeSlotsPerDay];
+		TimePreference[] timePreferences = new TimePreference[TimeslotPattern.NrOfTimeSlotsPerDay];
 		for(int i=0; i<preferences.length; i++)
 		{
 			timePreferences[i] = getTimePreferenceFromString(preferences[i]);
@@ -183,7 +173,7 @@ public class TimePreferences{
 	
 	public void setPreferencesByDay(DayOfTheWeek dayOfTheWeek, TimePreference[] timePreferences)
 	{
-		if(timePreferences.length == this.nrOfTimeSlotsPerDay)
+		if(timePreferences.length == TimeslotPattern.NrOfTimeSlotsPerDay)
 		{
 			switch(dayOfTheWeek)
 			{
@@ -217,5 +207,33 @@ public class TimePreferences{
 	{
 		TimePreference[] timePrefs = getPreferencesByDay(dayOfTheWeek);
 		timePrefs[slotNr] = timePref;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s-%s-%s-%s-%s", this.monPreferences, this.tuePreferences,
+				this.wedPreferences, this.thuPreferences, this.friPreferences);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof TimePreferences);
+		if (equals) {
+			TimePreferences other = (TimePreferences) o;
+			equals = ((this.id == other.getId()) && 
+					(this.monPreferences.equals(other.getMonPreferences())) && 
+					(this.tuePreferences.equals(other.getTuePreferences())) && 
+					(this.wedPreferences.equals(other.getWedPreferences())) && 
+					(this.thuPreferences.equals(other.getThuPreferences())) &&
+					(this.friPreferences.equals(other.getFriPreferences())) 
+					);
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("TimePreferences:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
 	}
 }

@@ -61,4 +61,29 @@ public class Building{
 	public void setLocation(Location location) {
 		this.location = location;
 	}
+	/**********************Methods that model the class behavior*****************************/
+	@Override
+	public String toString() {
+		return String.format("%s(%s)", this.name, this.abbreviation);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof Building);
+		if (equals) {
+			Building other = (Building) o;
+			equals = ((this.id == other.getId()) && 
+					(this.name.equals(other.getName())) && 
+					(this.abbreviation.equals(other.getAbbreviation())) && 
+					(this.location.equals(other.getLocation()))
+					);
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("Building:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
+	}	
 }

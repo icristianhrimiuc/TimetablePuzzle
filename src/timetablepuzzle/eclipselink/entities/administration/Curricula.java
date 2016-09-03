@@ -21,6 +21,7 @@ public class Curricula{
 	private String name;
 	
 	@Column(name="year")
+	@Enumerated(EnumType.STRING)
 	private CollegeYear year;
 	
 	@Column(name="term")
@@ -83,5 +84,38 @@ public class Curricula{
 	public List<CourseOffering> getCourses() {
 		return courses;
 	}
+
+	
 	/*******************Methods that model the class behavior*******************/
+	@Override
+	public String toString() {
+		String yearName = String.format("%s year", this.year);
+		String termName = String.format("%s term", this.term.name().toLowerCase());
+		return String.format("%s(%s-%s)", this.name, yearName, termName);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof Curricula);
+		if (equals) {
+			Curricula other = (Curricula) o;
+			equals = ((this.id == other.getId()) && 
+					(this.name.equals(other.getName())) && 
+					(this.year.equals(other.getYear())) && 
+					(this.term.equals(other.getTerm()))
+					);
+			
+			for(CourseOffering course : other.courses){
+				equals &= this.courses.contains(course);
+				if(!equals) break;
+			}
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("Curricula:%s:%s", (Integer.toString(this.id)), this.toString()).hashCode();
+	}
 }

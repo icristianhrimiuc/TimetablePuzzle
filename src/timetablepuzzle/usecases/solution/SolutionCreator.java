@@ -3,21 +3,17 @@ package timetablepuzzle.usecases.solution;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import timetablepuzzle.eclipselink.entities.administration.TimeslotPattern;
 import timetablepuzzle.eclipselink.entities.inputdata.Class;
 import timetablepuzzle.eclipselink.entities.inputdata.Solution;
 
 public class SolutionCreator {
 	private List<Class> classes;
-	private TimeslotPattern timeslotPattern;
 	private Solution solution;
 	
-	public SolutionCreator(List<Class> classes, TimeslotPattern timeslotPattern)
+	public SolutionCreator(List<Class> classes)
 	{
 		this.classes = classes;
-		this.timeslotPattern = timeslotPattern;
-		this.solution = new Solution(this.classes, timeslotPattern);
+		this.solution = new Solution(this.classes);
 		InitializeRoomAssignments();
 		InitializeInstructorAssignments();
 		InitializeStudentGroupsAssignments();
@@ -40,7 +36,7 @@ public class SolutionCreator {
 		}
 		for(Integer roomId : roomsIds)
 		{
-			this.solution.AssignWeekToRoom(roomId, timeslotPattern.GenerateFreeWeek());
+			this.solution.AssignWeekToRoom(roomId, TimeslotPattern.GenerateFreeWeek());
 		}
 	}
 	
@@ -54,7 +50,7 @@ public class SolutionCreator {
 		}
 		for(Integer instructorId : instructorsIds)
 		{
-			this.solution.AssignWeekToInstructor(instructorId, timeslotPattern.GenerateFreeWeek());
+			this.solution.AssignWeekToInstructor(instructorId, TimeslotPattern.GenerateFreeWeek());
 		}
 	}
 	
@@ -66,7 +62,7 @@ public class SolutionCreator {
 		
 		for(Integer studentGroupId : studentGroupsIds)
 		{
-			this.solution.AssignWeekToStudentGroup(studentGroupId, timeslotPattern.GenerateFreeWeek());
+			this.solution.AssignWeekToStudentGroup(studentGroupId, TimeslotPattern.GenerateFreeWeek());
 		}
 	}
 

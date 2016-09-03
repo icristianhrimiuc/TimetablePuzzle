@@ -130,5 +130,35 @@ public class User{
 		this.lastViewedFaculty = lastViewedFaculty;
 	}
 	
-	/***********Properties that model the class behavior***************/
+	/***********Methods that model the class behavior***************/
+
+	@Override
+	public String toString() {
+		return String.format("%s(%s)", this.username, this.userType.name());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof User);
+		if (equals) {
+			User other = (User) o;
+			equals = ((this.id == other.getId()) && 
+					(this.username.equals(other.getUsername())) && 
+					(this.passwordToken.equals(other.getPasswordToken())) && 
+					(this.userType.equals(other.getUserType())) && 
+					(this.firstName.equals(other.getFirstName())) &&
+					(this.lastName.equals(other.getLastName())) && 
+					(this.lastViewedAcademicYear.equals(other.getLastViewedAcademicYear())) && 
+					(this.lastViewedAcademicSession.equals(other.getLastViewedAcademicSession())) &&
+					(this.lastViewedFaculty.equals(other.getLastViewedFaculty()))
+					);
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("User:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
+	}
 }

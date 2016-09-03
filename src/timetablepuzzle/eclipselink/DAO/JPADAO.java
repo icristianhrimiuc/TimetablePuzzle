@@ -8,10 +8,10 @@ import java.util.logging.Logger;
 import javax.persistence.*;
 
 import timetablepuzzle.eclipselink.DAO.interfaces.DAO;
-import timetablepuzzle.swing.windows.cards.other.BuildingCard;
+import timetablepuzzle.swing.windows.cards.other.BuildingsCard;
 
 public class JPADAO<E,K extends Serializable> implements DAO<E,K>{
-	protected final static Logger LOGGER = Logger.getLogger(BuildingCard.class.getName());
+	protected final static Logger LOGGER = Logger.getLogger(BuildingsCard.class.getName());
 	
 	protected Class<? extends E> entityClass;	
 	protected String persistenceUnitName;
@@ -33,6 +33,14 @@ public class JPADAO<E,K extends Serializable> implements DAO<E,K>{
 		entityManager.persist(entity);
 		entityManager.getTransaction().commit();
 		LOGGER.log(Level.FINE, "A new entity type {0} has been created. ", new Object[]{this.entityClass});
+		}
+
+	@Override
+	public void merge(E entity) {
+		entityManager.getTransaction().begin();
+		entityManager.merge(entity);
+		entityManager.getTransaction().commit();
+		LOGGER.log(Level.FINE, "A new entity type {0} has been merged. ", new Object[]{this.entityClass});
 		}
 
 	@Override

@@ -15,8 +15,7 @@ public class SolutionChecker {
 
 	public boolean IsValidAssignment(Class aClass, int startDayAndTimeSlot) {
 		int endDayAndTimeSlot = startDayAndTimeSlot + aClass.GetClassDuration();
-		int nrOfTimeSlotsPerDay = this.solution.getTimeslotPattern().getNrOfTimeSlotsPerDay();
-		boolean isValidAssignment = (endDayAndTimeSlot <= nrOfTimeSlotsPerDay);
+		boolean isValidAssignment = (endDayAndTimeSlot <= TimeslotPattern.NrOfTimeSlotsPerDay);
 		
 		if (isValidAssignment) {
 			for (int dayAndTimeSlot = startDayAndTimeSlot; dayAndTimeSlot < endDayAndTimeSlot; dayAndTimeSlot++) {

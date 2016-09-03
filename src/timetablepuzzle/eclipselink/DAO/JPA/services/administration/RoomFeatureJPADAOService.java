@@ -12,7 +12,7 @@ import timetablepuzzle.eclipselink.entities.administration.RoomFeature;
 public class RoomFeatureJPADAOService extends JPADAO<RoomFeature,Integer> implements RoomFeatureDAO{
 	@Override
 	public List<RoomFeature> GetAll(){
-		TypedQuery<RoomFeature> query = entityManager.createQuery("SELECT b FROM RoomFeature b", RoomFeature.class);
+		TypedQuery<RoomFeature> query = entityManager.createQuery("SELECT f FROM RoomFeature f", RoomFeature.class);
 		List<RoomFeature> listRoomFeature = query.getResultList();
 	    if (listRoomFeature == null) {
 			LOGGER.log(Level.FINE, "No {0} was found when calling GetAll(). ", new Object[]{this.entityClass});

@@ -1,5 +1,6 @@
 package timetablepuzzle.swing.windows.cards.other;
 
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -7,7 +8,7 @@ import javax.swing.table.AbstractTableModel;
 import timetablepuzzle.eclipselink.entities.administration.RoomFeature;
 import timetablepuzzle.eclipselink.entities.administration.RoomType;
 
-class RoomTypeTableModel extends AbstractTableModel {
+class RoomTypesTableModel extends AbstractTableModel {
     /**
 	 * Generated field
 	 */
@@ -22,7 +23,7 @@ class RoomTypeTableModel extends AbstractTableModel {
 	private String[] columnNames = {"Id","Name","Min Capacity","Max Capacity","Room Features"};
     private List<RoomType> data;
     
-    public RoomTypeTableModel(){}
+    public RoomTypesTableModel(){}
     
     public void setData(List<RoomType> data)
     {
@@ -68,7 +69,9 @@ class RoomTypeTableModel extends AbstractTableModel {
             	colummnValue = roomType.getMaxCapacity();
                 break;
             case Column_Room_Features:
-            	colummnValue = roomType.GetFeatures();
+            	List<RoomFeature> roomFeatures = roomType.getRoomFeatures();
+            	roomFeatures.sort(Comparator.comparing(RoomFeature::toString));
+            	colummnValue = GetFeatures(roomFeatures);
                 break;
             default:
             	break;
@@ -76,6 +79,15 @@ class RoomTypeTableModel extends AbstractTableModel {
         
         return colummnValue;
     }
+    
+	public String GetFeatures(List<RoomFeature> roomFeatures){
+		String features= "";
+		for(RoomFeature roomFeature : roomFeatures){
+			features += roomFeature.getFeature() + ";";
+		}
+		
+		return features;
+	}
 
 	@SuppressWarnings("unchecked")
 	public void setValueAt(Object value, int rowIndex, int columnIndex) {
@@ -96,6 +108,7 @@ class RoomTypeTableModel extends AbstractTableModel {
 	        default:
 	        	break;
     	}
+    	this.data.set(rowIndex, roomType);
         fireTableCellUpdated(rowIndex, columnIndex);
     }
     

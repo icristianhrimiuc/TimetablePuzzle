@@ -1,11 +1,13 @@
 package timetablepuzzle.swing.windows.cards.other;
 
-import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -30,15 +32,19 @@ public class ListBoxesWithTransferableItems extends JPanel {
 	private JButton transferFromRightToLeftButton;
 	private JList<Object> leftListBox;
 	private JList<Object> rightListBox;
-
+	
+	public ListBoxesWithTransferableItems() {
+		this(new Object[]{}, new Object[]{}, DefaultLeftListBoxHeader, DefaultRightListBoxHeader);
+	}
+	
 	public ListBoxesWithTransferableItems(Object[] listDataForLeftList, Object[] listDataForRightList) {
 		this(listDataForLeftList, listDataForRightList, DefaultLeftListBoxHeader, DefaultRightListBoxHeader);
 	}
 	
 	public ListBoxesWithTransferableItems(Object[] listDataForLeftList, Object[] listDataForRightList,
 			String leftListBoxLabelTxt, String rightListBoxLabelTxt) {
-		this(listDataForLeftList, listDataForRightList, DefaultLeftListBoxHeader,
-				DefaultRightListBoxHeader, DefaultLeftToRightButtonText, DefaultRightToLeftButtonText);
+		this(listDataForLeftList, listDataForRightList, leftListBoxLabelTxt,
+				rightListBoxLabelTxt, DefaultLeftToRightButtonText, DefaultRightToLeftButtonText);
 	}
 
 	public ListBoxesWithTransferableItems(Object[] listDataForLeftList, Object[] listDataForRightList,
@@ -56,7 +62,7 @@ public class ListBoxesWithTransferableItems extends JPanel {
 		this.leftListBox = new JList<Object>(GetDefaultListModel(listDataForLeftList));
 		this.rightListBox = new JList<Object>(GetDefaultListModel(listDataForRightList));
 		
-		layoutComponents();
+		LayoutComponents();
 	}
 	
 	private DefaultListModel<Object> GetDefaultListModel(Object[] elements){
@@ -68,55 +74,66 @@ public class ListBoxesWithTransferableItems extends JPanel {
 		return model;
 	}
 
-	private void layoutComponents() {
-		add(createPanelForListBoxWithLabel(leftListBox, labelForLeftListBox));
-		JPanel buttonPanel = new JPanel(new BorderLayout());
-		buttonPanel.add(transferFromLeftToRightButton, BorderLayout.NORTH);
-		buttonPanel.add(transferFromRightToLeftButton, BorderLayout.SOUTH);
-		add(buttonPanel);
-		add(createPanelForListBoxWithLabel(rightListBox, labelForRightListBox));
+	private void LayoutComponents() {
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		this.add(CreatePanelForListBoxWithLabel(leftListBox, labelForLeftListBox));
+		JPanel buttonsPanel = new JPanel();
+		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
+		buttonsPanel.add(transferFromLeftToRightButton);
+		buttonsPanel.add(transferFromRightToLeftButton);
+		this.add(buttonsPanel);
+		this.add(CreatePanelForListBoxWithLabel(rightListBox, labelForRightListBox));
 	}
 	
-	private JPanel createPanelForListBoxWithLabel(JList<Object> listBox, JLabel label) {
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(label, BorderLayout.NORTH);
+	private JPanel CreatePanelForListBoxWithLabel(JList<Object> listBox, JLabel label) {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(label);
 		JScrollPane scrollPaneForListBox = new JScrollPane(listBox);
-		panel.add(scrollPaneForListBox, BorderLayout.CENTER);
+		double preferedHeight = scrollPaneForListBox.getPreferredSize().getHeight();
+		scrollPaneForListBox.setPreferredSize(new Dimension((int)preferedHeight, 150));
+		panel.add(scrollPaneForListBox);
 		return panel;
 	}
-	
-	public Enumeration<Object> getRightListElements(){
-		return ((DefaultListModel<Object>)this.rightListBox.getModel()).elements();
-	}
 
-	public Enumeration<Object> getLeftListElements(){
-		return ((DefaultListModel<Object>)this.leftListBox.getModel()).elements();
-	}
-	
-	public void MoveAllFromRightToLeft(){
-		DefaultListModel<Object> rightListModel = (DefaultListModel<Object>) this.rightListBox.getModel();
+	public void ReInitializeLists(Object[] listDataForLeftList, Object[] listDataForRightList) {
 		DefaultListModel<Object> leftListModel = (DefaultListModel<Object>)this.leftListBox.getModel();
-		Enumeration<Object> rightListElements = rightListModel.elements();
-		while(rightListElements.hasMoreElements()){
-			Object element = rightListElements.nextElement();
-			if(leftListModel.contains(element))
-			{
-				leftListModel.addElement(element);
-			}
-			rightListModel.removeElement(element);
+		DefaultListModel<Object> rightListModel = (DefaultListModel<Object>) this.rightListBox.getModel();
+		leftListModel.removeAllElements();
+		rightListModel.removeAllElements();
+		for(Object element : listDataForLeftList){
+			leftListModel.addElement(element);
+		}
+		for(Object element : listDataForRightList){
+			rightListModel.addElement(element);
 		}
 	}
 	
-	public void SetRightListElements(Object[] rightListElements){
-		DefaultListModel<Object> rightListModel = (DefaultListModel<Object>) this.rightListBox.getModel();
-		DefaultListModel<Object> leftListModel = (DefaultListModel<Object>)this.leftListBox.getModel();
+	public List<Object> GetLeftListSelectedElements(){
+		return this.leftListBox.getSelectedValuesList();
+	}
 
-		MoveAllFromRightToLeft();
-		for(Object element : rightListElements){
-			if(leftListModel.contains(element)){
-				rightListModel.addElement(element);
-			}
+	public List<Object> GetRightListSelectedElements(){
+		return this.rightListBox.getSelectedValuesList();
+	}
+
+	public List<Object> GetLeftListElements(){
+		return GetListElements(this.leftListBox);
+	}
+
+	public List<Object> GetRightListElements(){
+		return GetListElements(this.rightListBox);
+	}
+	
+	private List<Object> GetListElements(JList<Object> list){
+		List<Object> elements = new ArrayList<Object>();
+		Enumeration<Object> elementsData = ((DefaultListModel<Object>)list.getModel()).elements();
+		
+		while(elementsData.hasMoreElements()){
+			elements.add(elementsData.nextElement());
 		}
+		
+		return elements;
 	}
 
 	/**
@@ -126,19 +143,19 @@ public class ListBoxesWithTransferableItems extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			JButton sourceButton = (JButton) e.getSource();
 			if (sourceButton == transferFromLeftToRightButton) {
-				transferSelectedItemsFromFirstListToSecond(leftListBox, rightListBox);
+				TransferSelectedItemsFromFirstListToSecond(leftListBox, rightListBox);
 			} else if (sourceButton == transferFromRightToLeftButton) {
-				transferSelectedItemsFromFirstListToSecond(rightListBox, leftListBox);
+				TransferSelectedItemsFromFirstListToSecond(rightListBox, leftListBox);
 			}
 		}
 
-		private void transferSelectedItemsFromFirstListToSecond(JList<Object> firstList, JList<Object> secondList) {
+		private void TransferSelectedItemsFromFirstListToSecond(JList<Object> firstList, JList<Object> secondList) {
 			if (!firstList.isSelectionEmpty()){
-				DefaultListModel<Object> fitstListModel = (DefaultListModel<Object>)firstList.getModel();
+				DefaultListModel<Object> firstListModel = (DefaultListModel<Object>)firstList.getModel();
 				DefaultListModel<Object> secondListModel = (DefaultListModel<Object>)secondList.getModel();
 				List<Object> selectedItemsFromFirstList = firstList.getSelectedValuesList();
 				for(Object item : selectedItemsFromFirstList ){
-					fitstListModel.removeElement(item);
+					firstListModel.removeElement(item);
 					secondListModel.addElement(item);
 				}
 			}

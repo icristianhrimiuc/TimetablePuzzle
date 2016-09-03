@@ -54,4 +54,31 @@ public class Department{
 	}
 	
 	/*******************Methods that model the class behavior*******************/
+	@Override
+	public String toString() {
+		return String.format("%s", this.name);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof Department);
+		if (equals) {
+			Department other = (Department) o;
+			equals = ((this.id == other.getId()) && 
+					(this.name.equals(other.getName()))
+					);
+			
+			for(YearOfStudy yearOfStudy : other.getYearsOfStudy()){
+				equals &= this.yearsOfStudy.contains(yearOfStudy);
+				if(equals)break;
+			}
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("Department:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
+	}
 }

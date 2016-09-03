@@ -69,4 +69,28 @@ public class InstructorMeetings{
 	}
 	
 	/*******************Methods that model the class behavior*******************/
+	@Override
+	public String toString() {
+		return String.format("%s %s %d", this.instructor, this.offering, this.nrOfMeetings);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof InstructorMeetings);
+		if (equals) {
+			InstructorMeetings other = (InstructorMeetings) o;
+			equals = ((this.id == other.getId()) && 
+					(this.instructor.equals(other.getInstructor())) && 
+					(this.offering.equals(other.getOffering())) && 
+					(this.nrOfMeetings == other.getNrOfMeetings())
+					);
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("InstructorMeetings:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
+	}
 }

@@ -13,7 +13,7 @@ public class RoomTypeJPADAOService extends JPADAO<RoomType,Integer> implements R
 
 	@Override
 	public List<RoomType> GetAll() {
-		TypedQuery<RoomType> query = entityManager.createQuery("SELECT b FROM RoomType b", RoomType.class);
+		TypedQuery<RoomType> query = entityManager.createQuery("SELECT r FROM RoomType r", RoomType.class);
 		List<RoomType> listRoomTypes = query.getResultList();
 	    if (listRoomTypes == null) {
 			LOGGER.log(Level.WARNING, "No {0} was found when calling GetAll(). ", new Object[]{this.entityClass});

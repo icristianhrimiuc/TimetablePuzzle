@@ -9,7 +9,6 @@
 		<class>timetablepuzzle.eclipselink.entities.administration.RoomType</class>
 		<class>timetablepuzzle.eclipselink.entities.administration.Location</class>
 		<class>timetablepuzzle.eclipselink.entities.administration.DatePattern</class>
-		<class>timetablepuzzle.eclipselink.entities.administration.TimeslotPattern</class>
 		<class>timetablepuzzle.eclipselink.entities.administration.TimePreferences</class>
 		<class>timetablepuzzle.eclipselink.entities.administration.Building</class>
 		<class>timetablepuzzle.eclipselink.entities.inputdata.Instructor</class>

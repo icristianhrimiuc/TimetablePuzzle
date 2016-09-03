@@ -18,8 +18,8 @@ public class DomainSizeCalculator {
 
 	public DomainSizeCalculator(Solution solution) {
 		this.solution = solution;
-		this.nrOfDays = this.solution.getTimeslotPattern().getNrOfDays();
-		this.nrOfTimeSlotsPerDay = this.solution.getTimeslotPattern().getNrOfTimeSlotsPerDay();
+		this.nrOfDays = TimeslotPattern.NrOfDays;
+		this.nrOfTimeSlotsPerDay = TimeslotPattern.NrOfTimeSlotsPerDay;
 	}
 
 	public int GetNonConflictingDomainSize(Class aClass) {

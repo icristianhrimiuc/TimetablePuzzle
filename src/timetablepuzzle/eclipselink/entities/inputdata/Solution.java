@@ -8,7 +8,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import timetablepuzzle.eclipselink.entities.administration.TimeslotPattern;
+import timetablepuzzle.usecases.solution.TimeslotPattern;
 
 @Entity
 @Table(name = "solutions")
@@ -56,10 +56,6 @@ public class Solution {
 	@CollectionTable(name = "solution_fixedClasses", joinColumns = @JoinColumn(name = "solution_id"))
 	private Map<Integer, Boolean> fixedClasses;
 	
-	@OneToOne(cascade=CascadeType.ALL,optional=false)
-	@JoinColumn(name="timeslotpattern_id", unique=true, nullable=false, updatable=false)
-	private TimeslotPattern timeslotPattern;
-	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=Class.class)
 	@JoinTable(name="solution_classes",
     joinColumns=
@@ -76,18 +72,13 @@ public class Solution {
 	}
 
 	public Solution(List<Class> classes) {
-		this(classes, new TimeslotPattern());
+		this(0, classes);
 	}
 
-	public Solution(List<Class> classes, TimeslotPattern timeslotPattern) {
-		this(0, classes, timeslotPattern);
-	}
-
-	public Solution(int id, List<Class> classes, TimeslotPattern timeslotPattern) {
+	public Solution(int id, List<Class> classes) {
 		this.id = id;
 		this.listOfClasses = classes;
 		this.classes = ConvertListToMapById(classes);
-		this.timeslotPattern = timeslotPattern;
 	}
 	
 	private Map<Integer, Class> ConvertListToMapById(List<Class> listOfClasses)
@@ -114,11 +105,6 @@ public class Solution {
 		return this.nrOfRemovals.get(classId);
 	}
 	
-	public TimeslotPattern getTimeslotPattern()
-	{
-		return this.timeslotPattern;
-	}
-	
 	/*********************** Methods that model the class behavior ********************/
 	/*************Room assignment methods**************/
 	public boolean IsRoomFree(int roomId, int dayAndTimeSlot)
@@ -128,7 +114,7 @@ public class Solution {
 	
 	public int GetRoomAssignment(int roomId, int dayAndTimeSlot)
 	{
-		if(IsRoomInSolution(roomId) && timeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
+		if(IsRoomInSolution(roomId) && TimeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
 		{
 			return Integer.parseInt(GetRoomAssignments(roomId)[dayAndTimeSlot]);
 		}
@@ -143,22 +129,22 @@ public class Solution {
 	
 	private String[] GetRoomAssignments(int roomId)
 	{
-		return this.timeslotPattern.ConvertToArrayAssignments(this.roomsAssignments.get(roomId));
+		return TimeslotPattern.ConvertToArrayAssignments(this.roomsAssignments.get(roomId));
 	}
 	
 	public void AssignClassToRoom(int roomId, int classId, int dayAndTimeSlot)
 	{
-		if(IsRoomInSolution(roomId) && IsClassInSolution(classId) && timeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
+		if(IsRoomInSolution(roomId) && IsClassInSolution(classId) && TimeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
 		{
 			String[] weekAssignments = GetRoomAssignments(roomId);
 			weekAssignments[dayAndTimeSlot] = Integer.toString(classId);
-			this.roomsAssignments.replace(roomId, timeslotPattern.ConvertToWeekAssignments(weekAssignments));
+			this.roomsAssignments.replace(roomId, TimeslotPattern.ConvertToStringAssignments(weekAssignments));
 		}
 	}
 	
 	public void AssignWeekToRoom(int roomId, String weekAssignments)
 	{
-		if(IsRoomInSolution(roomId) && timeslotPattern.IsValidWeek(weekAssignments))
+		if(IsRoomInSolution(roomId) && TimeslotPattern.IsValidWeek(weekAssignments))
 		{
 			this.roomsAssignments.replace(roomId, weekAssignments);
 		}
@@ -178,7 +164,7 @@ public class Solution {
 	
 	public int GetInstructorAssignment(int instructorId, int dayAndTimeSlot)
 	{
-		if(IsInstructorInSolution(instructorId) && timeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
+		if(IsInstructorInSolution(instructorId) && TimeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
 		{
 			return Integer.parseInt(GetInstructorAssignments(instructorId)[dayAndTimeSlot]);
 		}
@@ -193,22 +179,22 @@ public class Solution {
 	
 	private String[] GetInstructorAssignments(int instructorId)
 	{
-		return this.timeslotPattern.ConvertToArrayAssignments(this.instructorsAssignments.get(instructorId));
+		return TimeslotPattern.ConvertToArrayAssignments(this.instructorsAssignments.get(instructorId));
 	}
 	
 	public void AssignClassToInstructor(int instructorId, int classId, int dayAndTimeSlot)
 	{
-		if(IsInstructorInSolution(instructorId) && IsClassInSolution(classId) && timeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
+		if(IsInstructorInSolution(instructorId) && IsClassInSolution(classId) && TimeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
 		{
 			String[] weekAssignments = GetInstructorAssignments(instructorId);
 			weekAssignments[dayAndTimeSlot] = Integer.toString(classId);
-			this.instructorsAssignments.replace(instructorId, timeslotPattern.ConvertToWeekAssignments(weekAssignments));
+			this.instructorsAssignments.replace(instructorId, TimeslotPattern.ConvertToStringAssignments(weekAssignments));
 		}
 	}	
 	
 	public void AssignWeekToInstructor(int instructorId, String weekAssignments)
 	{
-		if(IsInstructorInSolution(instructorId) && timeslotPattern.IsValidWeek(weekAssignments))
+		if(IsInstructorInSolution(instructorId) && TimeslotPattern.IsValidWeek(weekAssignments))
 		{
 			this.instructorsAssignments.replace(instructorId, weekAssignments);
 		}
@@ -228,7 +214,7 @@ public class Solution {
 	
 	public int GetStudentGroupAssignment(int studentGroupId, int dayAndTimeSlot)
 	{
-		if(IsStudentGroupInSolution(studentGroupId) && timeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
+		if(IsStudentGroupInSolution(studentGroupId) && TimeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
 		{
 			return Integer.parseInt(GetStudentGroupAssignments(studentGroupId)[dayAndTimeSlot]);
 		}
@@ -243,22 +229,22 @@ public class Solution {
 	
 	private String[] GetStudentGroupAssignments(int studentGroupId)
 	{
-		return this.timeslotPattern.ConvertToArrayAssignments(this.studentGroupssAssignments.get(studentGroupId));
+		return TimeslotPattern.ConvertToArrayAssignments(this.studentGroupssAssignments.get(studentGroupId));
 	}
 	
 	public void AssignClassToStudentGroup(int studentGroupId, int classId, int dayAndTimeSlot)
 	{
-		if(IsStudentGroupInSolution(studentGroupId) && IsClassInSolution(classId) && timeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
+		if(IsStudentGroupInSolution(studentGroupId) && IsClassInSolution(classId) && TimeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
 		{
 			String[] weekAssignments = GetStudentGroupAssignments(studentGroupId);
 			weekAssignments[dayAndTimeSlot] = Integer.toString(classId);
-			this.studentGroupssAssignments.replace(studentGroupId, timeslotPattern.ConvertToWeekAssignments(weekAssignments));
+			this.studentGroupssAssignments.replace(studentGroupId, TimeslotPattern.ConvertToStringAssignments(weekAssignments));
 		}
 	}	
 	
 	public void AssignWeekToStudentGroup(int studentGroupId, String weekAssignments)
 	{
-		if(IsStudentGroupInSolution(studentGroupId) && timeslotPattern.IsValidWeek(weekAssignments))
+		if(IsStudentGroupInSolution(studentGroupId) && TimeslotPattern.IsValidWeek(weekAssignments))
 		{
 			this.studentGroupssAssignments.replace(studentGroupId, weekAssignments);
 		}
@@ -283,7 +269,7 @@ public class Solution {
 	
 	public void SetAssignedDayAndTimeSlot(int classId, int dayAndTimeSlot)
 	{
-		if(IsClassInSolution(classId) && timeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
+		if(IsClassInSolution(classId) && TimeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot))
 		{
 			this.assignedDayAndTimeSlot.replace(classId, dayAndTimeSlot);
 		}

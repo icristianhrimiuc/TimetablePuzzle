@@ -46,13 +46,13 @@ import timetablepuzzle.eclipselink.DAO.interfaces.administration.BuildingDAO;
 import timetablepuzzle.eclipselink.entities.administration.Building;
 import timetablepuzzle.eclipselink.entities.administration.Location;
 
-public class BuildingCard extends JPanel {
+public class BuildingsCard extends JPanel {
 	/**
 	 * Generated field
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final static Logger LOGGER = Logger.getLogger(BuildingCard.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(BuildingsCard.class.getName());
 	private static BuildingDAO buildingsDAOService = new BuildingJPADAOService();
 
 	private GoogleStaticMapsURLBuilder staticMapUrlBuilder;
@@ -67,7 +67,7 @@ public class BuildingCard extends JPanel {
 	private JTextField textFieldLongitude;
 	private int idOfTheBuildingToUpdate;
 
-	public BuildingCard(Color backgroundColor) {
+	public BuildingsCard(Color backgroundColor) {
 		SetupBuildingCard(backgroundColor);
 		this.staticMapUrlBuilder = new GoogleStaticMapsURLBuilder();
 		this.buildingsTableModel = new BuildingsTableModel();
@@ -178,7 +178,7 @@ public class BuildingCard extends JPanel {
 		propertiesPanel.add(CreateCrudButtonsPanel());
 		
 		JPanel adjustmentPanel = CreateAdjustmentPanel(propertiesPanel);
-		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update room type"));
+		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update building"));
 		
 		return adjustmentPanel;
 	}
@@ -198,8 +198,8 @@ public class BuildingCard extends JPanel {
 
 	private JPanel CreateCrudButtonsPanel() {
 		JPanel crudButtonsPanel = new JPanel();
-		JButton buttonSaveNewBuilding = new JButton("Save");
-		buttonSaveNewBuilding.addActionListener(new ActionListener() {
+		JButton buttonSave = new JButton("Save");
+		buttonSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				CreateAndSaveNewBuilding();
@@ -222,10 +222,19 @@ public class BuildingCard extends JPanel {
 			}
 		});
 		;
+		JButton buttonEmptyFields = new JButton("Empty Fields");
+		buttonEmptyFields.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ClearAllFields();
+			}
+		});
+		;
 
-		crudButtonsPanel.add(buttonSaveNewBuilding);
+		crudButtonsPanel.add(buttonSave);
 		crudButtonsPanel.add(buttonEditSelectedRow);
 		crudButtonsPanel.add(buttonDeleteSelectedRow);
+		crudButtonsPanel.add(buttonEmptyFields);
 
 		return crudButtonsPanel;
 	}
@@ -295,7 +304,7 @@ public class BuildingCard extends JPanel {
 	private void LoadSelectedRowDetailsForEdit() {
 		int selecteRow = this.buildingsTable.getSelectedRow();
 		if (selecteRow == -1) {
-			this.notificationLabel.setText("Please select a row first.");
+			this.notificationLabel.setText("Please select a row from the table first.");
 			LOGGER.log(Level.WARNING, "An attempt was made to edit a building while no row was selected.");
 		} else {
 			Building existingBuilding = this.buildingsTableModel.elementAt(selecteRow);
@@ -312,7 +321,7 @@ public class BuildingCard extends JPanel {
 	private void DeleteSelectedRow() {
 		int selecteRow = this.buildingsTable.getSelectedRow();
 		if (selecteRow == -1) {
-			this.notificationLabel.setText("Please select a row first.");
+			this.notificationLabel.setText("Please select a row from the table first.");
 			LOGGER.log(Level.WARNING, "An attempt was made to delete a building while no row was selected.");
 		} else {
 			try {
@@ -324,8 +333,10 @@ public class BuildingCard extends JPanel {
 				LOGGER.log(Level.FINE, "Delete performed on building with id {0} and named {1}. ",
 						new Object[] { existingBuilding.getId(), existingBuilding.getName() });
 			} catch (Exception e) {
-				this.notificationLabel.setText("An error occured. Please try again.");
-				LOGGER.log(Level.SEVERE, "Exception occured on deleting building. " + e.toString(), e);
+				this.notificationLabel.setText("An error occured. Please make sure that nothing else depends on this building."
+						+ " Check log files for more info.");
+				LOGGER.log(Level.SEVERE, "Exception occured on deleting building.  Please make sure that nothing else depends on this building."
+						+ e.toString(), e);
 			}
 		}
 	}

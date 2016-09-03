@@ -53,4 +53,31 @@ public class Faculty{
 	}
 	
 	/*******************Methods that model the class behavior*******************/
+	@Override
+	public String toString() {
+		return String.format("%s", this.name);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof Faculty);
+		if (equals) {
+			Faculty other = (Faculty) o;
+			equals = ((this.id == other.getId()) && 
+					(this.name.equals(other.getName()))
+					);
+			
+			for(Department department : other.getDepartments()){
+				equals &= this.departments.contains(department);
+				if(equals)break;
+			}
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("Faculty:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
+	}
 }

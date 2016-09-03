@@ -5,6 +5,7 @@ import java.util.List;
 import timetablepuzzle.eclipselink.entities.administration.Location;
 import timetablepuzzle.eclipselink.entities.inputdata.Class;
 import timetablepuzzle.eclipselink.entities.inputdata.Solution;
+import timetablepuzzle.usecases.solution.TimeslotPattern;
 
 public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 	public static final int DefaultMaxDistanceBetweenBuildings = 300;
@@ -40,7 +41,7 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 	}
 
 	private boolean IsValidInstructorTimeSlot(Location aClassLocation, int instructorId, int dayAndTimeSlot) {
-		return this.solution.getTimeslotPattern().IsFirstTimeslotOfTheDay(dayAndTimeSlot)
+		return TimeslotPattern.IsFirstTimeslotOfTheDay(dayAndTimeSlot)
 				|| this.solution.IsInstructorFree(instructorId, dayAndTimeSlot)
 				|| IsValidDistance(aClassLocation, GetInstructorClassLocation(instructorId, dayAndTimeSlot));
 	}
@@ -76,7 +77,7 @@ public class BuildingsDistanceConstraint extends AbstractHardConstraint {
 	}
 
 	private boolean IsValidStudentGroupTimeSlot(Location aClassLocation, int studentGroupId, int dayAndTimeSlot) {;
-		return this.solution.getTimeslotPattern().IsFirstTimeslotOfTheDay(dayAndTimeSlot)
+		return TimeslotPattern.IsFirstTimeslotOfTheDay(dayAndTimeSlot)
 				|| this.solution.IsStudentGroupFree(studentGroupId, dayAndTimeSlot)
 				|| IsValidDistance(aClassLocation, GetStudentGroupClassLocation(studentGroupId, dayAndTimeSlot));
 	}
