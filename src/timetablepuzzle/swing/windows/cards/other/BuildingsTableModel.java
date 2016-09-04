@@ -28,11 +28,13 @@ class BuildingsTableModel extends AbstractTableModel {
     {
     	this.data = data;
     }
-
+    
+    @Override
     public int getColumnCount() {
         return columnNames.length;
     }
-
+    
+    @Override
     public int getRowCount() {
     	int nrOfRows = 0;
     	if(data != null)
@@ -42,15 +44,18 @@ class BuildingsTableModel extends AbstractTableModel {
     	
         return nrOfRows;
     }
-
+    
+    @Override
     public String getColumnName(int col) {
         return columnNames[col];
     }
-
+    
+    @Override
     public Class<?> getColumnClass(int columnIndex) {
         return getValueAt(0, columnIndex).getClass();
     }
-
+    
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
     	Building building = data.get(rowIndex);
     	Object colummnValue = null;
@@ -79,7 +84,8 @@ class BuildingsTableModel extends AbstractTableModel {
         
         return colummnValue;
     }
-
+    
+    @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
     	Building building = data.get(rowIndex);
     	switch (columnIndex) {
