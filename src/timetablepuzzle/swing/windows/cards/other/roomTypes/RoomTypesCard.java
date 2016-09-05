@@ -36,7 +36,6 @@ import timetablepuzzle.eclipselink.DAO.interfaces.other.RoomTypeDAO;
 import timetablepuzzle.entities.other.RoomFeature;
 import timetablepuzzle.entities.other.RoomType;
 import timetablepuzzle.swing.windows.cards.common.ListBoxesWithTransferableItems;
-import timetablepuzzle.swing.windows.cards.other.buildings.BuildingsCard;
 
 public class RoomTypesCard extends JPanel {
 	/**
@@ -44,7 +43,7 @@ public class RoomTypesCard extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final static Logger LOGGER = Logger.getLogger(BuildingsCard.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(RoomTypesCard.class.getName());
 	private static RoomTypeDAO roomTypeDAOService = new RoomTypeJPADAOService();
 	private static RoomFeatureDAO roomFeatureDAOService = new RoomFeatureJPADAOService();
 
@@ -77,6 +76,7 @@ public class RoomTypesCard extends JPanel {
 				"Possible room features", "Added room features");
 		RefreshTransferableItemsControl(new ArrayList<RoomFeature>());
 		
+		this.idOfTheRoomTypeToUpdate = 0;
 		SetRoomTypeCardComponents();
 	}
 

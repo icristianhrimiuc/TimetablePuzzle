@@ -1,4 +1,4 @@
-package timetablepuzzle.swing.windows.cards.other.academicSessions;
+package timetablepuzzle.swing.windows.cards.other.academicYears;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,27 +8,24 @@ import javax.swing.table.AbstractTableModel;
 
 import timetablepuzzle.entities.Solution;
 import timetablepuzzle.entities.other.AcademicSession;
+import timetablepuzzle.entities.other.AcademicYear;
 
-class AcademicSessionsTableModel extends AbstractTableModel {
+class AcademicYearsTableModel extends AbstractTableModel {
     /**
 	 * Generated field
 	 */
 	private static final long serialVersionUID = 1L;
 	
 	private static final int Column_Id = 0;
-	private static final int Column_Name = 1;
-	private static final int Column_Session_Start_Date= 2;
-	private static final int Column_Classes_End_Date = 3;
-	private static final int Column_Exams_Start_Date = 4;
-	private static final int Column_Session_End_Date = 5;
-	private static final int Column_Accepted_Solution = 6;
+	private static final int Column_Year_Period = 1;
+	private static final int Column_Academic_Sessions = 2;
 
-	private String[] columnNames = {"Id","Name","Session Start Date","Classes End Date","Exams Start Date", "Session End Date","Accepted Solution"};
-    private List<AcademicSession> data;
+	private String[] columnNames = {"Id","Year Period","Academic Sessions"};
+    private List<AcademicYear> data;
     
-    public AcademicSessionsTableModel(){}
+    public AcademicYearsTableModel(){}
     
-    public void setData(List<AcademicSession> data)
+    public void setData(List<AcademicYear> data)
     {
     	this.data = data;
     	this.fireTableDataChanged();
@@ -62,30 +59,29 @@ class AcademicSessionsTableModel extends AbstractTableModel {
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-    	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-    	AcademicSession academicSession = data.get(rowIndex);
+    	AcademicYear academicYear = data.get(rowIndex);
     	Object colummnValue = null;
         switch (columnIndex) {
             case Column_Id:
-            	colummnValue = academicSession.getId();
+            	colummnValue = academicYear.getId();
                 break;
             case Column_Name:
-            	colummnValue = academicSession.getName();
+            	colummnValue = academicYear.getName();
                 break;
             case Column_Session_Start_Date:
-            	colummnValue = format.format(academicSession.getSessionStartDate().getTime());
+            	colummnValue = format.format(academicYear.getSessionStartDate().getTime());
                 break;
             case Column_Classes_End_Date:
-            	colummnValue = format.format(academicSession.getClassesEndDate().getTime());
+            	colummnValue = format.format(academicYear.getClassesEndDate().getTime());
                 break;
             case Column_Exams_Start_Date:
-            	colummnValue = format.format(academicSession.getExamsStartDate().getTime());
+            	colummnValue = format.format(academicYear.getExamsStartDate().getTime());
                 break;
             case Column_Session_End_Date:
-            	colummnValue = format.format(academicSession.getSessionEndDate().getTime());
+            	colummnValue = format.format(academicYear.getSessionEndDate().getTime());
                 break;
             case Column_Accepted_Solution:
-            	colummnValue = academicSession.getAcceptedSolution().toString();
+            	colummnValue = academicYear.getAcceptedSolution().toString();
                 break;
             default:
             	break;
@@ -96,34 +92,34 @@ class AcademicSessionsTableModel extends AbstractTableModel {
     
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
-    	AcademicSession academicSession = data.get(rowIndex);
+    	AcademicYear academicYear = data.get(rowIndex);
     	switch (columnIndex) {
         case Column_Name:
-        	academicSession.setName((String)value);
+        	academicYear.setName((String)value);
             break;
         case Column_Session_Start_Date:
-        	academicSession.setSessionStartDate((Calendar)value);
+        	academicYear.setSessionStartDate((Calendar)value);
             break;
         case Column_Classes_End_Date:
-        	academicSession.setClassesEndDate((Calendar)value);
+        	academicYear.setClassesEndDate((Calendar)value);
             break;
         case Column_Exams_Start_Date:
-        	academicSession.setExamsStartDate((Calendar)value);
+        	academicYear.setExamsStartDate((Calendar)value);
             break;
         case Column_Session_End_Date:
-        	academicSession.setSessionEndDate((Calendar)value);
+        	academicYear.setSessionEndDate((Calendar)value);
             break;
         case Column_Accepted_Solution:
-        	academicSession.setAcceptedSolution((Solution)value);
+        	academicYear.setAcceptedSolution((Solution)value);
             break;
         default:
         	break;
     	}
-    	this.data.set(rowIndex, academicSession);
+    	this.data.set(rowIndex, academicYear);
         fireTableCellUpdated(rowIndex, columnIndex);
     }
     
-    public AcademicSession elementAt(int row){
+    public AcademicYear elementAt(int row){
     	return this.data.get(row);
     }
 }

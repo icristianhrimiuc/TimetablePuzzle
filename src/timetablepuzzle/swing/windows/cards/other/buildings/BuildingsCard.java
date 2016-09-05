@@ -55,10 +55,10 @@ public class BuildingsCard extends JPanel {
 	private final static Logger LOGGER = Logger.getLogger(BuildingsCard.class.getName());
 	private static BuildingDAO buildingsDAOService = new BuildingJPADAOService();
 
-	private GoogleStaticMapsURLBuilder staticMapUrlBuilder;
 	private BuildingsTableModel buildingsTableModel;
 	private JTable buildingsTable;
 	private JLabel labelMap;
+	private GoogleStaticMapsURLBuilder staticMapUrlBuilder;
 	private JLabel notificationLabel;
 	private JTextField textFieldName;
 	private JTextField textFieldAbbreviation;
@@ -69,14 +69,23 @@ public class BuildingsCard extends JPanel {
 
 	public BuildingsCard(Color backgroundColor) {
 		SetupBuildingCard(backgroundColor);
-		this.staticMapUrlBuilder = new GoogleStaticMapsURLBuilder();
+		
+		// Buildings table
 		this.buildingsTableModel = new BuildingsTableModel();
 		RefreshTable();
 		this.buildingsTable = new JTable(this.buildingsTableModel);
 		SetColumnsMaxSizes();
+		
+		// Map 
+		this.staticMapUrlBuilder = new GoogleStaticMapsURLBuilder();
 		this.labelMap = new JLabel();
+		
+		// Notification label
 		this.notificationLabel = new JLabel("  ");
 		this.notificationLabel.setForeground(Color.RED);
+		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
+		
+		// Properties text fields
 		this.textFieldName = new JTextField(30);
 		this.textFieldAbbreviation = new JTextField(10);
 		this.textFieldAddress = new JTextField(30);
@@ -84,6 +93,7 @@ public class BuildingsCard extends JPanel {
 		AddDocumentListener(this.textFieldLatitude);
 		this.textFieldLongitude = new JTextField(20);
 		AddDocumentListener(textFieldLongitude);
+		
 		this.idOfTheBuildingToUpdate = 0;
 		SetBuildingCardComponents();
 	}
@@ -173,7 +183,6 @@ public class BuildingsCard extends JPanel {
 		propertiesPanel.add(CreatePropertyPanel("Latitude", this.textFieldLatitude));
 		propertiesPanel.add(CreatePropertyPanel("Longitude", this.textFieldLongitude));
 		propertiesPanel.add(this.notificationLabel);
-		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
 		propertiesPanel.add(CreateCrudButtonsPanel());
 		
 		JPanel adjustmentPanel = CreateAdjustmentPanel(propertiesPanel);

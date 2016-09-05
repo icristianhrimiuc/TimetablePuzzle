@@ -105,6 +105,14 @@ public class Solution {
 	public int getId() {
 		return this.id;
 	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public void setName(String name){
+		this.name = name;
+	}
 
 	public int getNrOfRemovals(Integer classId) {
 		return this.nrOfRemovals.get(classId);
@@ -401,5 +409,31 @@ public class Solution {
 	public int GetNrOfCLassesInSolution()
 	{
 		return this.listOfClasses.size();
+	}
+	
+	/**************************Override methods*****************************/
+
+	@Override
+	public String toString() {
+		return String.format("%s", this.name);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof Solution);
+		if (equals) {
+			Solution other = (Solution) o;
+			equals = ((this.id == other.getId()) && 
+					(this.name.equals(other.getName()))
+					);
+			// TODO Create a proper Equals function
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("Solution:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
 	}
 }

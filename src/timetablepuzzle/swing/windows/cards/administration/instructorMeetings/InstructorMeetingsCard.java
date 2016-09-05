@@ -38,7 +38,6 @@ import timetablepuzzle.entities.administration.InstructorMeetings;
 import timetablepuzzle.entities.administration.Offering;
 import timetablepuzzle.entities.inputData.Instructor;
 import timetablepuzzle.swing.windows.cards.common.CustomComboBoxModel;
-import timetablepuzzle.swing.windows.cards.other.buildings.BuildingsCard;
 
 public class InstructorMeetingsCard extends JPanel {
 	/**
@@ -46,7 +45,7 @@ public class InstructorMeetingsCard extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final static Logger LOGGER = Logger.getLogger(BuildingsCard.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(InstructorMeetingsCard.class.getName());
 	private static InstructorMeetingsDAO instructorMeetingsDAOService = new InstructorMeetingsJPADAOService();
 	private static InstructorDAO instructorDAOService = new InstructorJPADAOService();
 	private static OfferingDAO offeringDAOService = new OfferingJPADAOService();
@@ -79,12 +78,12 @@ public class InstructorMeetingsCard extends JPanel {
 		// Instructor combo box
 		this.comboBoxInstructorModel = new CustomComboBoxModel<Instructor>();
 		RefreshComboBoxInstructor();
-		this.comboBoxInstructor = new JComboBox<Instructor>(comboBoxInstructorModel);
+		this.comboBoxInstructor = new JComboBox<Instructor>(this.comboBoxInstructorModel);
 		
 		// Offering combo box
 		this.comboBoxOfferingModel = new CustomComboBoxModel<Offering>();
 		RefreshComboBoxOffering();
-		this.comboBoxOffering = new JComboBox<Offering>();
+		this.comboBoxOffering = new JComboBox<Offering>(this.comboBoxOfferingModel);
 		
 		this.textFieldNrOfMeetings = new JTextField(10);
 		this.textFieldNrOfMeetings.setHorizontalAlignment(JTextField.CENTER);

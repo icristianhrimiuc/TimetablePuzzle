@@ -11,7 +11,6 @@ import timetablepuzzle.entities.Solution;
 @Table(name="academic_sessions")
 public class AcademicSession{
 	/***********Regular properties*************/
-	// Empty abstract class to be inherited by all entities 
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

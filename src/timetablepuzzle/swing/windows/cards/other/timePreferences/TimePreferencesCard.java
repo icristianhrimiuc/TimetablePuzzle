@@ -31,7 +31,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import timetablepuzzle.eclipselink.DAO.JPA.services.other.TimePreferencesJPADAOService;
 import timetablepuzzle.eclipselink.DAO.interfaces.other.TimePreferencesDAO;
 import timetablepuzzle.entities.other.TimePreferences;
-import timetablepuzzle.swing.windows.cards.other.buildings.BuildingsCard;
 
 public class TimePreferencesCard extends JPanel {
 	/**
@@ -39,7 +38,7 @@ public class TimePreferencesCard extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final static Logger LOGGER = Logger.getLogger(BuildingsCard.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(TimePreferencesCard.class.getName());
 	private static TimePreferencesDAO timePreferencesDAOService = new TimePreferencesJPADAOService();
 
 	private TimePreferencesTableModel timePreferencesTableModel;
@@ -68,6 +67,7 @@ public class TimePreferencesCard extends JPanel {
 		this.weekPreferencesTable = new JTable(this.weekPreferencesTableModel);
 		ConfigureWeekPreferencesTable();
 
+		this.idOfTheTimePreferencesToUpdate = 0;
 		SetTimePreferencesCardComponents();
 	}
 
