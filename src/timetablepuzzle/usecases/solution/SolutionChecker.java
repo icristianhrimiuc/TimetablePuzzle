@@ -1,10 +1,9 @@
 package timetablepuzzle.usecases.solution;
 
-import timetablepuzzle.eclipselink.entities.inputdata.Solution;
-
 import java.util.List;
 
-import timetablepuzzle.eclipselink.entities.inputdata.Class;
+import timetablepuzzle.entities.Solution;
+import timetablepuzzle.entities.inputData.Class;
 
 public class SolutionChecker {
 	protected Solution solution;

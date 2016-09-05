@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.Component;
 
 import java.util.HashMap;
@@ -23,17 +25,20 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 
 import timetablepuzzle.eclipselink.entities.administration.*;
-import timetablepuzzle.eclipselink.entities.administration.User.UserType;
-import timetablepuzzle.eclipselink.entities.inputdata.Solution;
+import timetablepuzzle.entities.Solution;
+import timetablepuzzle.entities.administration.Faculty;
+import timetablepuzzle.entities.administration.User;
+import timetablepuzzle.entities.administration.User.UserType;
+import timetablepuzzle.entities.other.AcademicSession;
+import timetablepuzzle.entities.other.AcademicYear;
 import timetablepuzzle.swing.windows.cards.HomeCard;
 import timetablepuzzle.swing.windows.cards.TimetableCard;
-import timetablepuzzle.swing.windows.cards.other.BuildingsCard;
-import timetablepuzzle.swing.windows.cards.other.RoomTypesCard;
-import timetablepuzzle.swing.windows.cards.other.DatePatternsCard;
+import timetablepuzzle.swing.windows.cards.administration.instructorMeetings.InstructorMeetingsCard;
+import timetablepuzzle.swing.windows.cards.other.buildings.BuildingsCard;
+import timetablepuzzle.swing.windows.cards.other.roomTypes.RoomTypesCard;
+import timetablepuzzle.swing.windows.cards.other.timePreferences.TimePreferencesCard;
 
 public class MainWindow implements ActionListener {
 	/***************** Static properties ****************/
@@ -42,6 +47,7 @@ public class MainWindow implements ActionListener {
 	final static String BUILDING_CARD = "Buildings";
 	final static String ROOM_TYPE_CARD = "Room Types";
 	final static String TIME_PREFERENCES_CARD = "Time Preferences";
+	final static String INSTRUCTOR_MEETINGS_CARD = "Instructor meetings";
 	/****************** Regular properties *************/
 	// Main window fields
 	private LoginDialog loginDialog;
@@ -65,7 +71,7 @@ public class MainWindow implements ActionListener {
 		// Initialize the main frame
 		frame = new JFrame();
 		frame.setSize(1000, 700);
-		frame.setMinimumSize(new Dimension(1000,700));
+		frame.setMinimumSize(new Dimension(1000, 700));
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("TimetablePuzzle - University Timetabling Application");
@@ -93,7 +99,8 @@ public class MainWindow implements ActionListener {
 			cards.put(TIMETABLE_CARD, new TimetableCard(loggedUser, bgColor));
 			cards.put(BUILDING_CARD, new BuildingsCard(bgColor));
 			cards.put(ROOM_TYPE_CARD, new RoomTypesCard(bgColor));
-			cards.put(TIME_PREFERENCES_CARD, new DatePatternsCard(bgColor));
+			cards.put(TIME_PREFERENCES_CARD, new TimePreferencesCard(bgColor));
+			cards.put(INSTRUCTOR_MEETINGS_CARD, new InstructorMeetingsCard(bgColor));
 
 			// Add components to the content pane
 			this.AddComponentToPane(frame.getContentPane());
@@ -120,27 +127,40 @@ public class MainWindow implements ActionListener {
 
 		// Home menu
 		JMenu mnHome = new JMenu(HOME_CARD);
-		mnHome.addMenuListener(new MenuListener() {
+		mnHome.addMouseListener(new MouseListener() {
 			@Override
-			public void menuSelected(MenuEvent e) { 
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				cardLayout = (CardLayout) cardsPanel.getLayout();
 				cardLayout.show(cardsPanel, HOME_CARD);
 			}
-			@Override
-			public void menuDeselected(MenuEvent e) {}
-			@Override
-			public void menuCanceled(MenuEvent e) {}
 		});
 		jMenuBar.add(mnHome);
-
-		// Input Data menu
-		JMenu mnInputData = CreateJMenuInputData();
-		jMenuBar.add(mnInputData);
 
 		// Course Timetabling menu
 		if (userType == UserType.ADMIN || userType == UserType.SECRETARY || userType == UserType.INSTRUCTOR) {
 			JMenu mnCourseTimetabling = CreateJMenuCourseTimeTabling();
 			jMenuBar.add(mnCourseTimetabling);
 		}
+
+		// Input Data menu
+		JMenu mnInputData = CreateJMenuInputData();
+		jMenuBar.add(mnInputData);
 
 		// Administration menu
 		if (userType == UserType.ADMIN || userType == UserType.SECRETARY || userType == UserType.INSTRUCTOR) {
@@ -174,21 +194,33 @@ public class MainWindow implements ActionListener {
 		return jMenuBar;
 	}
 
+	private JMenu CreateJMenuCourseTimeTabling() {
+		JMenu mnCourseTimetabling = new JMenu("Course Timetabling");
+		// Course timetabling menu items
+		JMenuItem mntmTimetable = new JMenuItem(TIMETABLE_CARD);
+		mntmTimetable.addActionListener(this);
+		JMenuItem mntmAssignedClasses = new JMenuItem("Assigned Classes");
+		JMenuItem mntmUnassignedClasses = new JMenuItem("Unassigned Classes");
+		JMenuItem mntmSavedTimetables = new JMenuItem("Saved Timetables");
+		// Add menu items
+		mnCourseTimetabling.add(mntmTimetable);
+		mnCourseTimetabling.add(mntmAssignedClasses);
+		mnCourseTimetabling.add(mntmUnassignedClasses);
+		mnCourseTimetabling.add(new JSeparator());
+		mnCourseTimetabling.add(mntmSavedTimetables);
+		return mnCourseTimetabling;
+	}
+
 	private JMenu CreateJMenuInputData() {
 		JMenu mnInputData = new JMenu("InputData");
 
 		// Input data menu items
-		JMenuItem mntmCourseOfferings = new JMenuItem("Course Offerings");
-		mntmCourseOfferings.addActionListener(this);
-		JMenuItem mntmOfferings = new JMenuItem("Offerings");
 		JMenuItem mntmClasses = new JMenuItem("Classes");
 		JMenuItem mntmInstructors = new JMenuItem("Instructors");
 		JMenuItem mntmRooms = new JMenuItem("Rooms");
 		JMenuItem mntmStudentgroups = new JMenuItem("StudentGroups");
 
 		// Add menu items
-		mnInputData.add(mntmCourseOfferings);
-		mnInputData.add(mntmOfferings);
 		mnInputData.add(new JSeparator());
 		mnInputData.add(mntmClasses);
 		mnInputData.add(mntmInstructors);
@@ -196,23 +228,6 @@ public class MainWindow implements ActionListener {
 		mnInputData.add(mntmStudentgroups);
 
 		return mnInputData;
-	}
-
-	private JMenu CreateJMenuCourseTimeTabling() {
-		JMenu mnCourseTimetabling = new JMenu("Course Timetabling");
-		// Course timetabling menu items
-		JMenuItem mntmSavedTimetables = new JMenuItem("Saved Timetables");
-		JMenuItem mntmTimetable = new JMenuItem(TIMETABLE_CARD);
-		mntmTimetable.addActionListener(this);
-		JMenuItem mntmAssignedClasses = new JMenuItem("Assigned Classes");
-		JMenuItem mntmUnassignedClasses = new JMenuItem("Unassigned Classes");
-		// Add menu items
-		mnCourseTimetabling.add(mntmSavedTimetables);
-		mnCourseTimetabling.add(new JSeparator());
-		mnCourseTimetabling.add(mntmTimetable);
-		mnCourseTimetabling.add(mntmAssignedClasses);
-		mnCourseTimetabling.add(mntmUnassignedClasses);
-		return mnCourseTimetabling;
 	}
 
 	private JMenu CreateJMenuAdministration() {
@@ -223,35 +238,41 @@ public class MainWindow implements ActionListener {
 		JMenuItem mntmYearsOfStudy = new JMenuItem("Years Of Study");
 		JMenuItem mntmSubjectAreas = new JMenuItem("Subject Areas");
 		JMenuItem mntmCurriculas = new JMenuItem("Curriculas");
-		JMenuItem mntmAcademicYears = new JMenuItem("Academic Years");
-		JMenuItem mntmAcademicSessions = new JMenuItem("Academic Sessions");
-		JMenuItem mntmBuildings = new JMenuItem(BUILDING_CARD);
-		mntmBuildings.addActionListener(this);
+		JMenuItem mntmCourseOfferings = new JMenuItem("Course Offerings");
+		JMenuItem mntmInstructorMeetings = new JMenuItem(INSTRUCTOR_MEETINGS_CARD);
+		mntmInstructorMeetings.addActionListener(this);
+		JMenuItem mntmOfferings = new JMenuItem("Offerings");
 		// Add menu items
 		mnAdministration.add(mntmFaculties);
 		mnAdministration.add(mntmDepartments);
 		mnAdministration.add(mntmYearsOfStudy);
 		mnAdministration.add(mntmSubjectAreas);
-		mnAdministration.add(mntmCurriculas);
 		mnAdministration.add(new JSeparator());
-		mnAdministration.add(mntmAcademicYears);
-		mnAdministration.add(mntmAcademicSessions);
-		mnAdministration.add(mntmBuildings);
+		mnAdministration.add(mntmCurriculas);
+		mnAdministration.add(mntmCourseOfferings);
+		mnAdministration.add(mntmInstructorMeetings);
+		mnAdministration.add(mntmOfferings);
 		return mnAdministration;
 	}
 
 	private JMenu CreateJMenuOther() {
 		JMenu mnOther = new JMenu("Other");
 		// Other menu items
+		JMenuItem mntmAcademicYears = new JMenuItem("Academic Years");
+		JMenuItem mntmAcademicSessions = new JMenuItem("Academic Sessions");
+		JMenuItem mntmBuildings = new JMenuItem(BUILDING_CARD);
+		mntmBuildings.addActionListener(this);
 		JMenuItem mntmDatePatterns = new JMenuItem("Date Patterns");
-		JMenuItem mntmInstructorMeetings = new JMenuItem("Instructor Meetings");
 		JMenuItem mntmRoomtypes = new JMenuItem(ROOM_TYPE_CARD);
 		mntmRoomtypes.addActionListener(this);
 		JMenuItem menuTimePreferences = new JMenuItem(TIME_PREFERENCES_CARD);
 		menuTimePreferences.addActionListener(this);
 		// Add menu items
+		mnOther.add(mntmAcademicYears);
+		mnOther.add(mntmAcademicSessions);
+		mnOther.add(new JSeparator());
+		mnOther.add(mntmBuildings);
 		mnOther.add(mntmDatePatterns);
-		mnOther.add(mntmInstructorMeetings);
 		mnOther.add(mntmRoomtypes);
 		mnOther.add(menuTimePreferences);
 		return mnOther;
@@ -301,7 +322,7 @@ public class MainWindow implements ActionListener {
 			cardsPanel.add(cards.get(cardName), cardName);
 		}
 		cardLayout = (CardLayout) cardsPanel.getLayout();
-		cardLayout.show(cardsPanel, TIME_PREFERENCES_CARD);
+		cardLayout.show(cardsPanel, INSTRUCTOR_MEETINGS_CARD);
 
 		mainPanel.add(cardsPanel, BorderLayout.CENTER);
 

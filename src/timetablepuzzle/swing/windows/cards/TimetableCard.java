@@ -24,15 +24,15 @@ import javax.swing.border.TitledBorder;
 
 import com.sun.xml.internal.ws.util.StringUtils;
 
-import timetablepuzzle.eclipselink.entities.administration.AcademicSession;
-import timetablepuzzle.eclipselink.entities.administration.AcademicYear;
-import timetablepuzzle.eclipselink.entities.administration.Department;
-import timetablepuzzle.eclipselink.entities.administration.Faculty;
-import timetablepuzzle.eclipselink.entities.administration.TimePreferences;
-import timetablepuzzle.eclipselink.entities.administration.User;
-import timetablepuzzle.eclipselink.entities.administration.YearOfStudy;
-import timetablepuzzle.eclipselink.entities.inputdata.Class;
-import timetablepuzzle.eclipselink.entities.inputdata.Solution;
+import timetablepuzzle.entities.Solution;
+import timetablepuzzle.entities.administration.Department;
+import timetablepuzzle.entities.administration.Faculty;
+import timetablepuzzle.entities.administration.User;
+import timetablepuzzle.entities.administration.YearOfStudy;
+import timetablepuzzle.entities.inputData.Class;
+import timetablepuzzle.entities.other.AcademicSession;
+import timetablepuzzle.entities.other.AcademicYear;
+import timetablepuzzle.entities.other.TimePreferences;
 
 public class TimetableCard extends JPanel{
 	private static final long serialVersionUID = 1L;

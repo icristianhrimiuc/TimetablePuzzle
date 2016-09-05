@@ -3,9 +3,9 @@ package timetablepuzzle.eclipselink.DAO.JPA.services.administration;
 import java.util.List;
 import javax.persistence.TypedQuery;
 
-import timetablepuzzle.eclipselink.DAO.JPADAO;
+import timetablepuzzle.eclipselink.DAO.JPA.services.JPADAO;
 import timetablepuzzle.eclipselink.DAO.interfaces.administration.UserDAO;
-import timetablepuzzle.eclipselink.entities.administration.User;
+import timetablepuzzle.entities.administration.User;
 
 public class UserJPADAOService  extends JPADAO<User,Integer> implements UserDAO{
 	public User findByUsername(String username)

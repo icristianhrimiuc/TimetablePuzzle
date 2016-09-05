@@ -3,12 +3,12 @@ package timetablepuzzle.usecases.solution;
 import java.util.ArrayList;
 import java.util.List;
 
-import timetablepuzzle.eclipselink.entities.administration.TimePreferences.DayOfTheWeek;
-import timetablepuzzle.eclipselink.entities.administration.TimePreferences.TimePreference;
-import timetablepuzzle.eclipselink.entities.inputdata.Class;
-import timetablepuzzle.eclipselink.entities.inputdata.Instructor;
-import timetablepuzzle.eclipselink.entities.inputdata.Room;
-import timetablepuzzle.eclipselink.entities.inputdata.Solution;
+import timetablepuzzle.entities.Solution;
+import timetablepuzzle.entities.inputData.Class;
+import timetablepuzzle.entities.inputData.Instructor;
+import timetablepuzzle.entities.inputData.Room;
+import timetablepuzzle.entities.other.TimePreferences.DayOfTheWeek;
+import timetablepuzzle.entities.other.TimePreferences.TimePreference;
 
 public class DomainSizeCalculator {
 

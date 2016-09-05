@@ -19,7 +19,7 @@ import javax.swing.SwingConstants;
 
 import timetablepuzzle.eclipselink.DAO.JPA.services.administration.UserJPADAOService;
 import timetablepuzzle.eclipselink.DAO.interfaces.administration.UserDAO;
-import timetablepuzzle.eclipselink.entities.administration.User;
+import timetablepuzzle.entities.administration.User;
 import timetablepuzzle.swing.PasswordAuthentication;
 
 @SuppressWarnings("serial")

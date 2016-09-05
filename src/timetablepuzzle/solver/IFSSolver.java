@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 import timetablepuzzle.eclipselink.entities.inputdata.*;
-import timetablepuzzle.eclipselink.entities.inputdata.Class;
+import timetablepuzzle.entities.Solution;
+import timetablepuzzle.entities.administration.Offering;
+import timetablepuzzle.entities.inputData.Class;
 import timetablepuzzle.solver.constraints.AbstractHardConstraint;
 import timetablepuzzle.solver.constraints.AbstractSoftConstraint;
 import timetablepuzzle.usecases.solution.DomainSizeCalculator;

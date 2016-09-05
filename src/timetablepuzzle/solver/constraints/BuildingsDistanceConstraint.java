@@ -2,9 +2,9 @@ package timetablepuzzle.solver.constraints;
 
 import java.util.List;
 
-import timetablepuzzle.eclipselink.entities.administration.Location;
-import timetablepuzzle.eclipselink.entities.inputdata.Class;
-import timetablepuzzle.eclipselink.entities.inputdata.Solution;
+import timetablepuzzle.entities.Solution;
+import timetablepuzzle.entities.inputData.Class;
+import timetablepuzzle.entities.other.Location;
 import timetablepuzzle.usecases.solution.TimeslotPattern;
 
 public class BuildingsDistanceConstraint extends AbstractHardConstraint {
