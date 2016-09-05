@@ -5,6 +5,8 @@ import javax.persistence.*;
 @Entity
 @Table(name="date_patterns")
 public class DatePattern{
+	private static final String DateSeparator = ";";
+	
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +43,11 @@ public class DatePattern{
 		this.name = name;
 	}
 	
+	public String getDates()
+	{
+		return this.dates;
+	}
+	
 	public void setDates(String dates)
 	{
 		this.dates = dates;
@@ -49,13 +56,10 @@ public class DatePattern{
 	/************Methods that model the class behavior**************/
 	public void addDateInterval(String dateInterval)
 	{
-		this.dates = this.dates + dateInterval + ";";
+		this.dates = this.dates + dateInterval + DateSeparator;
 	}
 	
-	public String[] getDates()
-	{
-		return this.dates.split(";");
-	}
+	public void 
 
 	@Override
 	public String toString() {

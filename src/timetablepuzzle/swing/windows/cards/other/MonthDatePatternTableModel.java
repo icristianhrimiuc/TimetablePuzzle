@@ -1,28 +1,39 @@
 package timetablepuzzle.swing.windows.cards.other;
 
+import java.util.Calendar;
+
 import javax.swing.table.AbstractTableModel;
 
-import timetablepuzzle.eclipselink.entities.administration.TimePreferences;
-import timetablepuzzle.eclipselink.entities.administration.TimePreferences.TimePreference;
+import timetablepuzzle.eclipselink.entities.administration.DatePattern;
 
-class WeekPreferencesTableModel extends AbstractTableModel {
+class MonthDatePatternTableModel extends AbstractTableModel {
 	/**
 	 * Generated field
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private String[] columnNames = { "", "08-09", "09-10", "10-11", "11-12", "12-13", "13-14", "14-15",
-			"15-16", "16-17", "17-18", "18-19", "19-20", };
-	private String[] rowNames = { "", "Mon", "Tue", "Wed", "Thu", "Fri" };
-	private TimePreferences data;
-	private TimePreference[] nextPreferenceByColumn;
-	private TimePreference[] nextPreferenceByRow;
-	private TimePreference nextGlobalPreference;
 	
-	public WeekPreferencesTableModel() {
+	private static Calendar calendarInstance = Calendar.getInstance();
+
+	private String[] columnNames = { "", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+	private String[] rowNames = { "", "", "", "", "", "", "", "" };
+	private DatePattern data;
+	private boolean[] activeCells;
+	private boolean[] selectedDates;
+	private int firstDayOfMonthWeekIndex;
+	private int lastDayOfMonth;
+	private boolean[] nextSelectionByColumn;
+	private boolean[] nextSelectionByRow;
+	private boolean nextGlobalPreference;
+	
+	public MonthDatePatternTableModel(int year, int month) {
+		calendarInstance.set(year, month, 1);
+		this.firstDayOfMonthWeekIndex = calendarInstance.get(Calendar.DAY_OF_WEEK);
+		this.lastDayOfMonth = calendarInstance.getActualMaximum(Calendar.DAY_OF_MONTH);
+		int nrOfCells = columnNames.length*rowNames.length;
+		this.activeCells = new boolean[nrOfCells];
 	}
 
-	public void setData(TimePreferences data) {
+	public void setData(DatePattern data) {
 		this.data = data;
 		refreshNextPreferenceOnColumnsAndRows();
 		this.fireTableDataChanged();
@@ -31,22 +42,22 @@ class WeekPreferencesTableModel extends AbstractTableModel {
 	private void refreshNextPreferenceOnColumnsAndRows(){
 		// Set all column preferences to NEUTRAL
 		int nrOfColumns = columnNames.length;
-		this.nextPreferenceByColumn = new TimePreference[nrOfColumns];
+		this.nextSelectionByColumn = new TimePreference[nrOfColumns];
 		for(int i=0;i<nrOfColumns;i++){
-			this.nextPreferenceByColumn[i] = TimePreference.PREFFERED;
+			this.nextSelectionByColumn[i] = TimePreference.PREFFERED;
 		}
 		
 		// Set all row preferences to NEUTRAL
 		int nrOfRows = rowNames.length;
-		this.nextPreferenceByRow = new TimePreference[nrOfRows];
+		this.nextSelectionByRow = new TimePreference[nrOfRows];
 		for(int i=0;i<nrOfRows;i++){
-			this.nextPreferenceByRow[i] = TimePreference.PREFFERED;
+			this.nextSelectionByRow[i] = TimePreference.PREFFERED;
 		}
 		
 		this.nextGlobalPreference = TimePreference.PREFFERED;
 	}
 	
-	public TimePreferences getData(){
+	public DatePattern getData(){
 		return this.data;
 	}
 
@@ -99,15 +110,15 @@ class WeekPreferencesTableModel extends AbstractTableModel {
 		if ((rowIndex >= 0) && (rowIndex < getRowCount())) {
 			if (rowIndex == 0) {
 				if ((columnIndex > 0) && (columnIndex < getColumnCount())) {
-					cellPreference = this.nextPreferenceByColumn[columnIndex-1];
+					cellPreference = this.nextSelectionByColumn[columnIndex-1];
 				} else {
 					cellPreference = this.nextGlobalPreference;
 				}
 			} else {
 				if ((columnIndex > 0) && (columnIndex < getColumnCount())) {
-					cellPreference = this.data.getPreferencesByDayAndTime(TimePreferences.DayOfTheWeek.values()[rowIndex-1], columnIndex-1);
+					cellPreference = this.data.getPreferencesByDayAndTime(DatePattern.DayOfTheWeek.values()[rowIndex-1], columnIndex-1);
 				} else {
-					cellPreference = this.nextPreferenceByRow[rowIndex-1];
+					cellPreference = this.nextSelectionByRow[rowIndex-1];
 				}
 			}
 		}
@@ -119,15 +130,15 @@ class WeekPreferencesTableModel extends AbstractTableModel {
 		if ((rowIndex >= 0) && (rowIndex < getRowCount())) {
 			if (rowIndex == 0) {
 				if ((columnIndex > 0) && (columnIndex < getColumnCount())) {
-					this.nextPreferenceByColumn[columnIndex-1] = timePreference;
+					this.nextSelectionByColumn[columnIndex-1] = timePreference;
 				} else {
 					this.nextGlobalPreference = timePreference;
 				}
 			} else {
 				if ((columnIndex > 0) && (columnIndex < getColumnCount())) {
-					this.data.setPreferencesByDayAndTime(TimePreferences.DayOfTheWeek.values()[rowIndex-1], timePreference, columnIndex-1);
+					this.data.setPreferencesByDayAndTime(DatePattern.DayOfTheWeek.values()[rowIndex-1], timePreference, columnIndex-1);
 				} else {
-					this.nextPreferenceByRow[rowIndex-1] = timePreference;
+					this.nextSelectionByRow[rowIndex-1] = timePreference;
 				}
 			}
 		}
@@ -138,26 +149,26 @@ class WeekPreferencesTableModel extends AbstractTableModel {
 			if (rowIndex == 0) {
 				if ((columnIndex > 0) && (columnIndex < getColumnCount())) {
 					applyColumnPreferences(columnIndex);
-					TimePreference currentPreference = this.nextPreferenceByColumn[columnIndex-1];
-					this.nextPreferenceByColumn[columnIndex-1] = TimePreferences.getNextPreference(currentPreference);
+					TimePreference currentPreference = this.nextSelectionByColumn[columnIndex-1];
+					this.nextSelectionByColumn[columnIndex-1] = DatePattern.getNextPreference(currentPreference);
 				} else {
 					applyGlobalPreferenceToAllCells();
-					this.nextGlobalPreference = TimePreferences.getNextPreference(this.nextGlobalPreference);
+					this.nextGlobalPreference = DatePattern.getNextPreference(this.nextGlobalPreference);
 				}
 			} else {
 				if ((columnIndex > 0) && (columnIndex < getColumnCount())) {
-					this.data.incrementPreferenceByDayAndTime(TimePreferences.DayOfTheWeek.values()[rowIndex-1], columnIndex-1);
+					this.data.incrementPreferenceByDayAndTime(DatePattern.DayOfTheWeek.values()[rowIndex-1], columnIndex-1);
 				} else {
 					applyRowPreferences(rowIndex);
-					TimePreference currentPreference = this.nextPreferenceByRow[rowIndex-1];
-					this.nextPreferenceByRow[rowIndex-1] = TimePreferences.getNextPreference(currentPreference);
+					TimePreference currentPreference = this.nextSelectionByRow[rowIndex-1];
+					this.nextSelectionByRow[rowIndex-1] = DatePattern.getNextPreference(currentPreference);
 				}
 			}
 		}
 	}
 	
 	private void applyColumnPreferences(int columnIndex){
-		TimePreference columnPreference = this.nextPreferenceByColumn[columnIndex-1];
+		TimePreference columnPreference = this.nextSelectionByColumn[columnIndex-1];
 		
 		for(int rowIndex=1; rowIndex<rowNames.length; rowIndex++){
 			setCellPreference(rowIndex, columnIndex, columnPreference);
@@ -168,10 +179,10 @@ class WeekPreferencesTableModel extends AbstractTableModel {
 		// Apply to all cells
 		for(int columnIndex=0;columnIndex<this.columnNames.length;columnIndex++){
 			// Apply to column
-			this.nextPreferenceByColumn[columnIndex] = this.nextGlobalPreference;
+			this.nextSelectionByColumn[columnIndex] = this.nextGlobalPreference;
 			for(int rowIndex=0; rowIndex<this.rowNames.length; rowIndex++){
 				// Apply to row
-				this.nextPreferenceByRow[rowIndex] = this.nextGlobalPreference;
+				this.nextSelectionByRow[rowIndex] = this.nextGlobalPreference;
 				// Apply to cell
 				setCellPreference(rowIndex, columnIndex, this.nextGlobalPreference);
 			}
@@ -179,7 +190,7 @@ class WeekPreferencesTableModel extends AbstractTableModel {
 	}
 	
 	private void applyRowPreferences(int rowIndex){
-		TimePreference rowPreference = this.nextPreferenceByRow[rowIndex-1];
+		TimePreference rowPreference = this.nextSelectionByRow[rowIndex-1];
 		
 		for(int columnIndex=1; columnIndex<columnNames.length; columnIndex++){
 			setCellPreference(rowIndex, columnIndex, rowPreference);

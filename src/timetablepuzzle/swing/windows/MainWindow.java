@@ -33,7 +33,7 @@ import timetablepuzzle.swing.windows.cards.HomeCard;
 import timetablepuzzle.swing.windows.cards.TimetableCard;
 import timetablepuzzle.swing.windows.cards.other.BuildingsCard;
 import timetablepuzzle.swing.windows.cards.other.RoomTypesCard;
-import timetablepuzzle.swing.windows.cards.other.TimePreferencesCard;
+import timetablepuzzle.swing.windows.cards.other.DatePatternsCard;
 
 public class MainWindow implements ActionListener {
 	/***************** Static properties ****************/
@@ -93,7 +93,7 @@ public class MainWindow implements ActionListener {
 			cards.put(TIMETABLE_CARD, new TimetableCard(loggedUser, bgColor));
 			cards.put(BUILDING_CARD, new BuildingsCard(bgColor));
 			cards.put(ROOM_TYPE_CARD, new RoomTypesCard(bgColor));
-			cards.put(TIME_PREFERENCES_CARD, new TimePreferencesCard(bgColor));
+			cards.put(TIME_PREFERENCES_CARD, new DatePatternsCard(bgColor));
 
 			// Add components to the content pane
 			this.AddComponentToPane(frame.getContentPane());

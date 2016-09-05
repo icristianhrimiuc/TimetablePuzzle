@@ -27,6 +27,7 @@ class BuildingsTableModel extends AbstractTableModel {
     public void setData(List<Building> data)
     {
     	this.data = data;
+    	this.fireTableDataChanged();
     }
     
     @Override

@@ -19,6 +19,9 @@ public class Solution {
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@Column(name="name")
+	private String name;
 
 	@ElementCollection
 	@MapKeyColumn(name = "room_id")
@@ -72,11 +75,12 @@ public class Solution {
 	}
 
 	public Solution(List<Class> classes) {
-		this(0, classes);
+		this(0, "No Name", classes);
 	}
 
-	public Solution(int id, List<Class> classes) {
+	public Solution(int id, String name, List<Class> classes) {
 		this.id = id;
+		this.name = name;
 		this.listOfClasses = classes;
 		this.classes = ConvertListToMapById(classes);
 	}

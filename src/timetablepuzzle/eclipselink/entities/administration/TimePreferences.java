@@ -79,12 +79,19 @@ public class TimePreferences{
 	public void setMonPreferences(String monPreferences)
 	{
 		this.monPreferences = monPreferences;
+		this.monday = decodeDayPreferences(monPreferences);
 	}
 	
-	public void setMonday(TimePreference[] monday)
+	private void setMonday(TimePreference[] monday)
 	{
 		this.monday = monday;
-		this.monPreferences = codeDayPreferences(monday);
+		this.monPreferences = codeDayPreferences(this.monday);
+	}
+	
+	private void setMondayPreferenceByTime(TimePreference preference, int slotNr)
+	{
+		this.monday[slotNr] = preference;
+		this.monPreferences = codeDayPreferences(this.monday);
 	}
 
 	public String getTuePreferences()
@@ -95,7 +102,19 @@ public class TimePreferences{
 	public void setTuePreferences(String tuePreferences)
 	{
 		this.tuePreferences = tuePreferences;
-		setPreferencesByDay(DayOfTheWeek.TUESDAY,tuePreferences);
+		this.tuesday = decodeDayPreferences(tuePreferences);
+	}
+	
+	private void setTuesday(TimePreference[] tuesday)
+	{
+		this.tuesday = tuesday;
+		this.tuePreferences = codeDayPreferences(this.tuesday);
+	}
+	
+	private void setTuesdayPreferenceByTime(TimePreference preference, int slotNr)
+	{
+		this.tuesday[slotNr] = preference;
+		this.tuePreferences = codeDayPreferences(this.tuesday);
 	}
 
 	public String getWedPreferences()
@@ -108,6 +127,18 @@ public class TimePreferences{
 		this.wedPreferences = wedPreferences;
 		setPreferencesByDay(DayOfTheWeek.WEDNESDAY,wedPreferences);
 	}
+	
+	private void setWednesday(TimePreference[] wednesday)
+	{
+		this.wednesday = wednesday;
+		this.wedPreferences = codeDayPreferences(this.wednesday);
+	}
+	
+	private void setWednesdayPreferenceByTime(TimePreference preference, int slotNr)
+	{
+		this.wednesday[slotNr] = preference;
+		this.wedPreferences = codeDayPreferences(this.wednesday);
+	}
 
 	public String getThuPreferences()
 	{
@@ -119,6 +150,18 @@ public class TimePreferences{
 		this.thuPreferences = thuPreferences;
 		setPreferencesByDay(DayOfTheWeek.THURSDAY,thuPreferences);
 	}
+	
+	private void setThursday(TimePreference[] thursday)
+	{
+		this.thursday = thursday;
+		this.thuPreferences = codeDayPreferences(this.thursday);
+	}
+	
+	private void setThursdayPreferenceByTime(TimePreference preference, int slotNr)
+	{
+		this.thursday[slotNr] = preference;
+		this.thuPreferences = codeDayPreferences(this.thursday);
+	}
 
 	public String getFriPreferences()
 	{
@@ -129,6 +172,18 @@ public class TimePreferences{
 	{
 		this.friPreferences = friPreferences;
 		setPreferencesByDay(DayOfTheWeek.FRIDAY,friPreferences);
+	}
+	
+	private void setFriday(TimePreference[] friday)
+	{
+		this.friday = friday;
+		this.friPreferences = codeDayPreferences(this.friday);
+	}
+	
+	private void setFridayPreferenceByTime(TimePreference preference, int slotNr)
+	{
+		this.friday[slotNr] = preference;
+		this.friPreferences = codeDayPreferences(this.friday);
 	}
 
 	/***************Methods that model the class behavior*******************/	
@@ -178,7 +233,7 @@ public class TimePreferences{
 	private static String codeDayPreferences(TimePreference[] arrayPreferences) {
 		String stringPreferences = "";
 		for(TimePreference preference : arrayPreferences){
-			stringPreferences += Integer.toBinaryString(preference.ordinal());
+			stringPreferences += Integer.toString(preference.ordinal());
 			stringPreferences += TimeslotPattern.TimeSlotsSeparator;
 		}
 		
@@ -196,19 +251,19 @@ public class TimePreferences{
 			switch(dayOfTheWeek)
 			{
 			case MONDAY:
-				this.monday = timePreferences;
+				setMonday(timePreferences);
 				break;
 			case TUESDAY:
-				this.tuesday = timePreferences;
+				setTuesday(timePreferences);
 				break;
 			case WEDNESDAY:
-				this.wednesday = timePreferences;
+				setWednesday(timePreferences);
 				break;
 			case THURSDAY: 
-				this.thursday = timePreferences;
+				setThursday(timePreferences);
 				break;
 			case FRIDAY:
-				this.friday = timePreferences;
+				setFriday(timePreferences);
 				break;
 			default:
 				break;			
@@ -221,46 +276,28 @@ public class TimePreferences{
 		return getPreferencesByDay(dayOfTheWeek)[slotNr];
 	}
 	
-	public void setPreferencesByDayAndTime(DayOfTheWeek dayOfTheWeek, TimePreference timePref, int slotNr)
+	public void setPreferencesByDayAndTime(DayOfTheWeek dayOfTheWeek, TimePreference preference, int slotNr)
 	{
 		switch(dayOfTheWeek)
 		{
 			case MONDAY:
-				this.monday[slotNr] = timePref;
+				setMondayPreferenceByTime(preference, slotNr);
 				break;
 			case TUESDAY:
-				this.tuesday[slotNr] = timePref;
+				setTuesdayPreferenceByTime(preference, slotNr);
 				break;
 			case WEDNESDAY:
-				this.wednesday[slotNr] = timePref;
+				setWednesdayPreferenceByTime(preference, slotNr);
 				break;
 			case THURSDAY: 
-				this.thursday[slotNr] = timePref;
+				setThursdayPreferenceByTime(preference, slotNr);
 				break;
 			case FRIDAY:
-				this.friday[slotNr] = timePref;
+				setFridayPreferenceByTime(preference, slotNr);
 				break;
 			default:
 				break;			
 		}
-	}
-	
-	public static String generateSamePreferenceAllDay(TimePreference timePreference) {
-		String[] samePreferenceDay = new String[TimeslotPattern.NrOfTimeSlotsPerDay];
-		Arrays.fill(samePreferenceDay, Integer.toString(timePreference.ordinal()));
-
-		return convertToStringAssignments(samePreferenceDay);
-	}
-	
-	public static String convertToStringAssignments(String[] classesIds)
-	{
-		String week = "";
-		for(String classId : classesIds)
-		{
-			week += classId + TimeslotPattern.TimeSlotsSeparator;
-		}
-		
-		return week;
 	}
 	
 	public void incrementPreferenceByDayAndTime(DayOfTheWeek dayOfTheWeek,int slotNr){
@@ -281,9 +318,27 @@ public class TimePreferences{
 		return nextPreference;
 	}
 	
+	public static String generateSamePreferenceAllDay(TimePreference timePreference) {
+		String[] samePreferenceDay = new String[TimeslotPattern.NrOfTimeSlotsPerDay];
+		Arrays.fill(samePreferenceDay, Integer.toString(timePreference.ordinal()));
+
+		return convertToStringAssignments(samePreferenceDay);
+	}
+	
+	public static String convertToStringAssignments(String[] classesIds)
+	{
+		String week = "";
+		for(String classId : classesIds)
+		{
+			week += classId + TimeslotPattern.TimeSlotsSeparator;
+		}
+		
+		return week;
+	}
+	
 	public static String getTimePreferenceNameByIndex(int index){
 		String name = TimePreference.values()[index].name();
-		name.replace('_', ' ');
+		name = name.replace('_', ' ');
 		name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 		
 		return name;
@@ -291,7 +346,7 @@ public class TimePreferences{
 
 	@Override
 	public String toString() {
-		return String.format("%s-%s-%s-%s-%s", this.monPreferences, this.tuePreferences,
+		return String.format("(%s)/(%s)/(%s)/(%s)/(%s)", this.monPreferences, this.tuePreferences,
 				this.wedPreferences, this.thuPreferences, this.friPreferences);
 	}
 

@@ -104,7 +104,6 @@ public class BuildingsCard extends JPanel {
 
 	private void RefreshTable() {
 		this.buildingsTableModel.setData(buildingsDAOService.GetAll());
-		this.buildingsTableModel.fireTableDataChanged();
 	}
 
 	private void SetColumnsMaxSizes(){
@@ -266,7 +265,6 @@ public class BuildingsCard extends JPanel {
 				// Save the building to the database
 				if (this.idOfTheBuildingToUpdate != 0) {
 					buildingsDAOService.Update(this.idOfTheBuildingToUpdate, building);
-					this.idOfTheBuildingToUpdate = 0;
 					RefreshTable();
 					ClearAllFields();
 					JOptionPane.showMessageDialog(null, "Updated successfully!");
@@ -298,6 +296,7 @@ public class BuildingsCard extends JPanel {
 		this.textFieldAddress.setText("");
 		this.textFieldLatitude.setText("");
 		this.textFieldLongitude.setText("");
+		this.idOfTheBuildingToUpdate = 0;
 		this.notificationLabel.setText(" ");
 	}
 

@@ -28,6 +28,7 @@ class RoomTypesTableModel extends AbstractTableModel {
     public void setData(List<RoomType> data)
     {
     	this.data = data;
+		this.fireTableDataChanged();
     }
     
     @Override

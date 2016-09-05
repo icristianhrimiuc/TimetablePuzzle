@@ -28,6 +28,7 @@ class TimePreferencesTableModel extends AbstractTableModel {
     public void setData(List<TimePreferences> data)
     {
     	this.data = data;
+		this.fireTableDataChanged();
     }
     
     @Override

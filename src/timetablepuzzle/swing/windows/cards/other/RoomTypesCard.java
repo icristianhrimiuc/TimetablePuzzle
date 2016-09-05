@@ -80,7 +80,6 @@ public class RoomTypesCard extends JPanel {
 
 	private void RefreshTable() {
 		this.roomTypeTableModel.setData(roomTypeDAOService.GetAll());
-		this.roomTypeTableModel.fireTableDataChanged();
 	}
 
 	private void SetColumnsMaxSizes() {
@@ -256,15 +255,10 @@ public class RoomTypesCard extends JPanel {
 				
 				// Create new entity
 				RoomType roomType = new RoomType(this.idOfTheRoomTypeToUpdate, name, minCapacity, maxCapacity, roomFeatures);
-//				roomType.setName(name);
-//				roomType.setMinCapacity(minCapacity);
-//				roomType.setMaxCapacity(maxCapacity);
-//				roomType.setRoomFeatures(roomFeatures);
 
 				// Save the entity to the database
 				if (this.idOfTheRoomTypeToUpdate != 0) {
 					roomTypeDAOService.merge(roomType);
-					this.idOfTheRoomTypeToUpdate = 0;
 					RefreshTable();
 					ClearAllFields();
 					JOptionPane.showMessageDialog(null, "Updated successfully!");
@@ -305,6 +299,7 @@ public class RoomTypesCard extends JPanel {
 		this.textFieldMinCapacity.setText("");
 		this.textFieldMaxCapacity.setText("");
 		this.notificationLabel.setText(" ");
+		this.idOfTheRoomTypeToUpdate = 0;
 		RefreshTransferableItemsControl(new ArrayList<RoomFeature>());
 	}
 

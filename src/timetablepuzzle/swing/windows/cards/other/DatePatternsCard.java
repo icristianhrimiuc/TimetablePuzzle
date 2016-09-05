@@ -27,51 +27,53 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+import timetablepuzzle.eclipselink.DAO.JPA.services.administration.DatePatternJPADAOService;
 import timetablepuzzle.eclipselink.DAO.JPA.services.administration.TimePreferencesJPADAOService;
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.DatePatternDAO;
 import timetablepuzzle.eclipselink.DAO.interfaces.administration.TimePreferencesDAO;
 import timetablepuzzle.eclipselink.entities.administration.TimePreferences;
 
-public class TimePreferencesCard extends JPanel {
+public class DatePatternsCard extends JPanel {
 	/**
 	 * Generated field
 	 */
 	private static final long serialVersionUID = 1L;
 
 	private final static Logger LOGGER = Logger.getLogger(BuildingsCard.class.getName());
-	private static TimePreferencesDAO timePreferencesDAOService = new TimePreferencesJPADAOService();
+	private static DatePatternDAO datePatternDAOService = new DatePatternJPADAOService();
 
-	private TimePreferencesTableModel timePreferencesTableModel;
-	private JTable timePreferencesTable;
+	private DatePatternsTableModel datePatternsTableModel;
+	private JTable datePatternsTable;
 	private JLabel notificationLabel;
-	private WeekPreferencesTableModel weekPreferencesTableModel;
+	private MonthDatePatternTableModel weekPreferencesTableModel;
 	private JTable weekPreferencesTable;
 	private int idOfTheTimePreferencesToUpdate;
 
-	public TimePreferencesCard(Color backgroundColor) {
+	public DatePatternsCard(Color backgroundColor) {
 		this.setBackground(backgroundColor);
 
-		this.timePreferencesTableModel = new TimePreferencesTableModel();
+		this.datePatternsTableModel = new DatePatternsTableModel();
 		RefreshTable();
-		this.timePreferencesTable = new JTable(this.timePreferencesTableModel);
+		this.datePatternsTable = new JTable(this.datePatternsTableModel);
 		SetColumnsMaxSizes();
 
 		this.notificationLabel = new JLabel("  ");
 		this.notificationLabel.setForeground(Color.RED);
 
-		this.weekPreferencesTableModel = new WeekPreferencesTableModel();
+		this.weekPreferencesTableModel = new MonthDatePatternTableModel();
 		RefreshTableWeekPreferences();
 		this.weekPreferencesTable = new JTable(this.weekPreferencesTableModel);
 		ConfigureWeekPreferencesTable();
 
-		SetTimePreferencesCardComponents();
+		SetRoomTypeCardComponents();
 	}
 
 	private void RefreshTable() {
-		this.timePreferencesTableModel.setData(timePreferencesDAOService.GetAll());
+		this.datePatternsTableModel.setData(datePatternDAOService.GetAll());
 	}
 
 	private void SetColumnsMaxSizes() {
-		this.timePreferencesTable.getColumnModel().getColumn(0).setMaxWidth(60);
+		this.datePatternsTable.getColumnModel().getColumn(0).setMaxWidth(60);
 	}
 
 	private void RefreshTableWeekPreferences() {
@@ -119,7 +121,7 @@ public class TimePreferencesCard extends JPanel {
 		});
 	}
 
-	private void SetTimePreferencesCardComponents() {
+	private void SetRoomTypeCardComponents() {
 		this.setLayout(new GridLayout(2, 1));
 		this.add(CreateCreateNewTimePreferencesPanel());
 		this.add(CreateViewAllTimePreferencesPanel());
@@ -242,14 +244,14 @@ public class TimePreferencesCard extends JPanel {
 			TimePreferences timePreferences = this.weekPreferencesTableModel.getData();
 
 			if (this.idOfTheTimePreferencesToUpdate != 0) {
-				timePreferencesDAOService.Update(this.idOfTheTimePreferencesToUpdate, timePreferences);
+				datePatternDAOService.Update(this.idOfTheTimePreferencesToUpdate, timePreferences);
 				RefreshTable();
 				ClearAllFields();
 				JOptionPane.showMessageDialog(null, "Updated successfully!");
 				LOGGER.log(Level.FINE, "Update performed on timePreferences with id {0}.",
 						new Object[] { timePreferences.getId() });
 			} else {
-				timePreferencesDAOService.persist(timePreferences);
+				datePatternDAOService.persist(timePreferences);
 				RefreshTable();
 				ClearAllFields();
 				JOptionPane.showMessageDialog(null, "Saved successfully!");
@@ -263,26 +265,26 @@ public class TimePreferencesCard extends JPanel {
 	}
 
 	private void LoadSelectedRowDetailsForEdit() {
-		int selecteRow = this.timePreferencesTable.getSelectedRow();
+		int selecteRow = this.datePatternsTable.getSelectedRow();
 		if (selecteRow == -1) {
 			this.notificationLabel.setText("Please select a row from the table first.");
 			LOGGER.log(Level.WARNING, "An attempt was made to edit a timePreferences while no row was selected.");
 		} else {
-			TimePreferences existingTimePreferences = this.timePreferencesTableModel.elementAt(selecteRow);
+			TimePreferences existingTimePreferences = this.datePatternsTableModel.elementAt(selecteRow);
 			this.idOfTheTimePreferencesToUpdate = existingTimePreferences.getId();
 			this.weekPreferencesTableModel.setData(existingTimePreferences);
 		}
 	}
 
 	private void DeleteSelectedRow() {
-		int selecteRow = this.timePreferencesTable.getSelectedRow();
+		int selecteRow = this.datePatternsTable.getSelectedRow();
 		if (selecteRow == -1) {
 			this.notificationLabel.setText("Please select a row from the table first.");
 			LOGGER.log(Level.WARNING, "An attempt was made to delete a timePreferences while no row was selected.");
 		} else {
 			try {
-				TimePreferences existingTimePreferences = this.timePreferencesTableModel.elementAt(selecteRow);
-				timePreferencesDAOService.remove(existingTimePreferences);
+				TimePreferences existingTimePreferences = this.datePatternsTableModel.elementAt(selecteRow);
+				datePatternDAOService.remove(existingTimePreferences);
 				RefreshTable();
 				this.notificationLabel.setText("  ");
 				JOptionPane.showMessageDialog(null, "Deleted successfully!");
@@ -311,10 +313,10 @@ public class TimePreferencesCard extends JPanel {
 		viewAllTimePreferencesPanel.setBorder(CreateRaisedBevelTitledBorder("View All Time Preferences"));
 
 		JScrollPane scrollPane = new JScrollPane();
-		this.timePreferencesTable.setShowVerticalLines(true);
-		this.timePreferencesTable.setShowHorizontalLines(true);
-		this.timePreferencesTable.setFillsViewportHeight(true);
-		scrollPane.setViewportView(this.timePreferencesTable);
+		this.datePatternsTable.setShowVerticalLines(true);
+		this.datePatternsTable.setShowHorizontalLines(true);
+		this.datePatternsTable.setFillsViewportHeight(true);
+		scrollPane.setViewportView(this.datePatternsTable);
 
 		viewAllTimePreferencesPanel.add(scrollPane, BorderLayout.CENTER);
 
