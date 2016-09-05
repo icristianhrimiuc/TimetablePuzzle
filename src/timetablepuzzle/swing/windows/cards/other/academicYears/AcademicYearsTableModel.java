@@ -1,12 +1,9 @@
 package timetablepuzzle.swing.windows.cards.other.academicYears;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import timetablepuzzle.entities.Solution;
 import timetablepuzzle.entities.other.AcademicSession;
 import timetablepuzzle.entities.other.AcademicYear;
 
@@ -17,10 +14,12 @@ class AcademicYearsTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final int Column_Id = 0;
-	private static final int Column_Year_Period = 1;
-	private static final int Column_Academic_Sessions = 2;
+	private static final int Column_Name = 1;
+	private static final int Column_First_Academic_Session = 2;
+	private static final int Column_Second_Academic_Session = 3;
+	private static final int Column_Third_Academic_Session = 4;
 
-	private String[] columnNames = {"Id","Year Period","Academic Sessions"};
+	private String[] columnNames = {"Id","Name","First Academic Session","Second Academic Session","Third Academic Session"};
     private List<AcademicYear> data;
     
     public AcademicYearsTableModel(){}
@@ -60,34 +59,33 @@ class AcademicYearsTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
     	AcademicYear academicYear = data.get(rowIndex);
-    	Object colummnValue = null;
+    	Object columnValue = null;
         switch (columnIndex) {
             case Column_Id:
-            	colummnValue = academicYear.getId();
+            	columnValue = academicYear.getId();
                 break;
             case Column_Name:
-            	colummnValue = academicYear.getName();
+            	columnValue = academicYear.getName();
                 break;
-            case Column_Session_Start_Date:
-            	colummnValue = format.format(academicYear.getSessionStartDate().getTime());
+            case Column_First_Academic_Session:
+            	columnValue = academicYear.getFirstAcademicSession().toString();
                 break;
-            case Column_Classes_End_Date:
-            	colummnValue = format.format(academicYear.getClassesEndDate().getTime());
+            case Column_Second_Academic_Session:
+            	columnValue = academicYear.getSecondAcademicSession().toString();
                 break;
-            case Column_Exams_Start_Date:
-            	colummnValue = format.format(academicYear.getExamsStartDate().getTime());
-                break;
-            case Column_Session_End_Date:
-            	colummnValue = format.format(academicYear.getSessionEndDate().getTime());
-                break;
-            case Column_Accepted_Solution:
-            	colummnValue = academicYear.getAcceptedSolution().toString();
-                break;
+            case Column_Third_Academic_Session:
+            	AcademicSession third = academicYear.getThirdAcademicSession();
+            	if(third != null){
+            		columnValue = third.toString();
+            	}else{
+            		columnValue = "";
+            	}
+            	break;
             default:
             	break;
         }
         
-        return colummnValue;
+        return columnValue;
     }
     
     @Override
@@ -97,20 +95,14 @@ class AcademicYearsTableModel extends AbstractTableModel {
         case Column_Name:
         	academicYear.setName((String)value);
             break;
-        case Column_Session_Start_Date:
-        	academicYear.setSessionStartDate((Calendar)value);
+        case Column_First_Academic_Session:
+        	academicYear.setFirstAcademicSession((AcademicSession)value);
             break;
-        case Column_Classes_End_Date:
-        	academicYear.setClassesEndDate((Calendar)value);
+        case Column_Second_Academic_Session:
+        	academicYear.setSecondAcademicSession((AcademicSession)value);
             break;
-        case Column_Exams_Start_Date:
-        	academicYear.setExamsStartDate((Calendar)value);
-            break;
-        case Column_Session_End_Date:
-        	academicYear.setSessionEndDate((Calendar)value);
-            break;
-        case Column_Accepted_Solution:
-        	academicYear.setAcceptedSolution((Solution)value);
+        case Column_Third_Academic_Session:
+        	academicYear.setThirdAcademicSession((AcademicSession)value);
             break;
         default:
         	break;

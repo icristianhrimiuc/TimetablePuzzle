@@ -26,8 +26,10 @@ public class AcademicYearJPADAOService extends JPADAO<AcademicYear,Integer> impl
 		if(existingAcademicYear != null)
 		{
 			this.entityManager.getTransaction().begin();
-			existingAcademicYear.setYearPeriod(newAcademicYear.getYearPeriod());
-			existingAcademicYear.setAcademicSessions(newAcademicYear.getAcademicSessions());
+			existingAcademicYear.setName(newAcademicYear.getName());
+			existingAcademicYear.setFirstAcademicSession(newAcademicYear.getFirstAcademicSession());
+			existingAcademicYear.setSecondAcademicSession(newAcademicYear.getSecondAcademicSession());
+			existingAcademicYear.setThirdAcademicSession(newAcademicYear.getThirdAcademicSession());
 			this.entityManager.getTransaction().commit();
 		}
 	}

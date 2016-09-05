@@ -36,6 +36,7 @@ import timetablepuzzle.swing.windows.cards.HomeCard;
 import timetablepuzzle.swing.windows.cards.TimetableCard;
 import timetablepuzzle.swing.windows.cards.administration.instructorMeetings.InstructorMeetingsCard;
 import timetablepuzzle.swing.windows.cards.other.academicSessions.AcademicSessionsCard;
+import timetablepuzzle.swing.windows.cards.other.academicYears.AcademicYearsCard;
 import timetablepuzzle.swing.windows.cards.other.buildings.BuildingsCard;
 import timetablepuzzle.swing.windows.cards.other.roomTypes.RoomTypesCard;
 import timetablepuzzle.swing.windows.cards.other.timePreferences.TimePreferencesCard;
@@ -49,6 +50,7 @@ public class MainWindow implements ActionListener {
 	final static String TIME_PREFERENCES_CARD = "Time Preferences";
 	final static String INSTRUCTOR_MEETINGS_CARD = "Instructor Meetings";
 	final static String ACADEMIC_SESSIONS_CARD = "Academic Sessions";
+	final static String ACADEMIC_YEARS_CARD = "Academic Years";
 	/****************** Regular properties *************/
 	// Main window fields
 	private LoginDialog loginDialog;
@@ -103,6 +105,7 @@ public class MainWindow implements ActionListener {
 			cards.put(TIME_PREFERENCES_CARD, new TimePreferencesCard(bgColor));
 			cards.put(INSTRUCTOR_MEETINGS_CARD, new InstructorMeetingsCard(bgColor));
 			cards.put(ACADEMIC_SESSIONS_CARD, new AcademicSessionsCard(bgColor));
+			cards.put(ACADEMIC_YEARS_CARD, new AcademicYearsCard(bgColor));
 
 			// Add components to the content pane
 			this.AddComponentToPane(frame.getContentPane());
@@ -260,7 +263,7 @@ public class MainWindow implements ActionListener {
 	private JMenu CreateJMenuOther() {
 		JMenu mnOther = new JMenu("Other");
 		// Other menu items
-		JMenuItem mntmAcademicYears = new JMenuItem("Academic Years");
+		JMenuItem mntmAcademicYears = new JMenuItem(ACADEMIC_YEARS_CARD);
 		JMenuItem mntmAcademicSessions = new JMenuItem(ACADEMIC_SESSIONS_CARD);
 		JMenuItem mntmBuildings = new JMenuItem(BUILDING_CARD);
 		JMenuItem mntmDatePatterns = new JMenuItem("Date Patterns");
@@ -268,6 +271,7 @@ public class MainWindow implements ActionListener {
 		JMenuItem menuTimePreferences = new JMenuItem(TIME_PREFERENCES_CARD);
 		
 		// Add action listeners
+		mntmAcademicYears.addActionListener(this);
 		mntmAcademicSessions.addActionListener(this);
 		mntmBuildings.addActionListener(this);
 		mntmRoomtypes.addActionListener(this);
@@ -328,7 +332,7 @@ public class MainWindow implements ActionListener {
 			cardsPanel.add(cards.get(cardName), cardName);
 		}
 		cardLayout = (CardLayout) cardsPanel.getLayout();
-		cardLayout.show(cardsPanel, ACADEMIC_SESSIONS_CARD);
+		cardLayout.show(cardsPanel, ACADEMIC_YEARS_CARD);
 
 		mainPanel.add(cardsPanel, BorderLayout.CENTER);
 
@@ -348,7 +352,7 @@ public class MainWindow implements ActionListener {
 				"Show all users");
 
 		// Create the academic year section
-		String lastViewedAcadYear = viewedAcadYear.getYearPeriod();
+		String lastViewedAcadYear = viewedAcadYear.getName();
 		JPanel hViewedAcademicYear = CreateHeaderSection("Academic year:", lastViewedAcadYear, "Change year");
 
 		// Create the academic session section
