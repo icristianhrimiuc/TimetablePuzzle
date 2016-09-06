@@ -29,7 +29,7 @@ import timetablepuzzle.entities.administration.Department;
 import timetablepuzzle.entities.administration.Faculty;
 import timetablepuzzle.entities.administration.User;
 import timetablepuzzle.entities.administration.YearOfStudy;
-import timetablepuzzle.entities.inputData.Class;
+import timetablepuzzle.entities.inputdata.Class;
 import timetablepuzzle.entities.other.AcademicSession;
 import timetablepuzzle.entities.other.AcademicYear;
 import timetablepuzzle.entities.other.TimePreferences;

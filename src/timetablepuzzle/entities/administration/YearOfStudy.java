@@ -6,7 +6,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import timetablepuzzle.entities.administration.Curricula.Term;
-import timetablepuzzle.entities.inputData.StudentGroup;
+import timetablepuzzle.entities.inputdata.StudentGroup;
 
 @Entity
 @Table(name="years_of_study")

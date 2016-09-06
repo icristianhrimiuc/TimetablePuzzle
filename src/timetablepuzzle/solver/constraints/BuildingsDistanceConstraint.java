@@ -3,7 +3,7 @@ package timetablepuzzle.solver.constraints;
 import java.util.List;
 
 import timetablepuzzle.entities.Solution;
-import timetablepuzzle.entities.inputData.Class;
+import timetablepuzzle.entities.inputdata.Class;
 import timetablepuzzle.entities.other.Location;
 import timetablepuzzle.usecases.solution.TimeslotPattern;
 

@@ -1,11 +1,10 @@
-package timetablepuzzle.entities.administration;
+package timetablepuzzle.entities.inputdata;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.entities.inputData.Instructor;
-import timetablepuzzle.entities.inputData.Room;
+import timetablepuzzle.entities.administration.InstructorMeetings;
 
 @Entity
 @Table(name="offerings")
@@ -21,9 +20,20 @@ public class Offering{
 	@Column(name="name")
 	private String name;
 	
+	@Column(name="nroftimeslots")
+	private int nrOfTimeSlots;
+	
+	@Column(name="nrofgroupslots")
+	private int nrOfGroupSlots;
+	
 	@Column(name="type")
 	@Enumerated(EnumType.STRING)
 	private OfferingType type;
+	
+	@JoinColumn(name="date_pattern", nullable=false, updatable=false)
+	@Column(name="date_pattern", nullable=false)
+	@Enumerated(EnumType.STRING)
+	private DatePattern datePattern;
 	
 	@OneToMany(cascade=CascadeType.ALL,targetEntity=Room.class)
 	@JoinTable(name="offering_rooms",
@@ -40,17 +50,6 @@ public class Offering{
     inverseJoinColumns=
          @JoinColumn(name="instructormeetings_id"))
 	private List<InstructorMeetings> nrOfMeetingsPerInstructor;
-	
-	@JoinColumn(name="date_pattern", nullable=false, updatable=false)
-	@Column(name="date_pattern", nullable=false)
-	@Enumerated(EnumType.STRING)
-	private DatePattern datePattern;
-	
-	@Column(name="nroftimeslots")
-	private int nrOfTimeSlots;
-	
-	@Column(name="nrofgroupslots")
-	private int nrOfGroupSlots;
 
 	public Offering()
 	{

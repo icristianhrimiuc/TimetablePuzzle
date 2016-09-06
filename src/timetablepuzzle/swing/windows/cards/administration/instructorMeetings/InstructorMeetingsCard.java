@@ -29,14 +29,14 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import timetablepuzzle.eclipselink.DAO.JPA.services.administration.InstructorMeetingsJPADAOService;
-import timetablepuzzle.eclipselink.DAO.JPA.services.administration.OfferingJPADAOService;
 import timetablepuzzle.eclipselink.DAO.JPA.services.inputdata.InstructorJPADAOService;
+import timetablepuzzle.eclipselink.DAO.JPA.services.inputdata.OfferingJPADAOService;
 import timetablepuzzle.eclipselink.DAO.interfaces.administration.InstructorMeetingsDAO;
-import timetablepuzzle.eclipselink.DAO.interfaces.administration.OfferingDAO;
 import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.InstructorDAO;
+import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.OfferingDAO;
 import timetablepuzzle.entities.administration.InstructorMeetings;
-import timetablepuzzle.entities.administration.Offering;
-import timetablepuzzle.entities.inputData.Instructor;
+import timetablepuzzle.entities.inputdata.Instructor;
+import timetablepuzzle.entities.inputdata.Offering;
 import timetablepuzzle.swing.windows.cards.common.CustomComboBoxModel;
 
 public class InstructorMeetingsCard extends JPanel {
@@ -49,7 +49,6 @@ public class InstructorMeetingsCard extends JPanel {
 	private static InstructorMeetingsDAO instructorMeetingsDAOService = new InstructorMeetingsJPADAOService();
 	private static InstructorDAO instructorDAOService = new InstructorJPADAOService();
 	private static OfferingDAO offeringDAOService = new OfferingJPADAOService();
-	
 
 	private InstructorMeetingsTableModel instructorMeetingsTableModel;
 	private JTable instructorsMeetingsTable;
@@ -63,39 +62,39 @@ public class InstructorMeetingsCard extends JPanel {
 
 	public InstructorMeetingsCard(Color backgroundColor) {
 		this.setBackground(backgroundColor);
-		
+
 		// Instructor Meetings table
 		this.instructorMeetingsTableModel = new InstructorMeetingsTableModel();
 		RefreshTable();
 		this.instructorsMeetingsTable = new JTable(this.instructorMeetingsTableModel);
 		SetColumnsMaxSizes();
-		
+
 		// Notification label
 		this.notificationLabel = new JLabel("  ");
 		this.notificationLabel.setForeground(Color.RED);
 		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
-		
+
 		// Instructor combo box
 		this.comboBoxInstructorModel = new CustomComboBoxModel<Instructor>();
 		RefreshComboBoxInstructor();
 		this.comboBoxInstructor = new JComboBox<Instructor>(this.comboBoxInstructorModel);
-		
+
 		// Offering combo box
 		this.comboBoxOfferingModel = new CustomComboBoxModel<Offering>();
 		RefreshComboBoxOffering();
 		this.comboBoxOffering = new JComboBox<Offering>(this.comboBoxOfferingModel);
-		
+
 		this.textFieldNrOfMeetings = new JTextField(10);
 		this.textFieldNrOfMeetings.setHorizontalAlignment(JTextField.CENTER);
 		this.textFieldNrOfMeetings.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				CreateAndSaveNew();
 			}
 		});
 		AddDocumentListener(this.textFieldNrOfMeetings);
-		
+
 		SetInstructorMeetingsCardComponents();
 	}
 
@@ -107,12 +106,12 @@ public class InstructorMeetingsCard extends JPanel {
 		this.instructorsMeetingsTable.getColumnModel().getColumn(0).setMaxWidth(60);
 		this.instructorsMeetingsTable.getColumnModel().getColumn(3).setMaxWidth(60);
 	}
-	
-	private void RefreshComboBoxInstructor(){
+
+	private void RefreshComboBoxInstructor() {
 		this.comboBoxInstructorModel.setData(instructorDAOService.GetAll());
 	}
-	
-	private void RefreshComboBoxOffering(){
+
+	private void RefreshComboBoxOffering() {
 		this.comboBoxOfferingModel.setData(offeringDAOService.GetAll());
 	}
 
@@ -150,13 +149,13 @@ public class InstructorMeetingsCard extends JPanel {
 	}
 
 	private void SetInstructorMeetingsCardComponents() {
-		this.setLayout(new GridLayout(2,1));
+		this.setLayout(new GridLayout(2, 1));
 		this.add(CreateCreateNewInstructorMeetingsPanel());
 		this.add(CreateViewAllInstructorMeetingsPanel());
 	}
 
 	private JPanel CreateCreateNewInstructorMeetingsPanel() {
-		JPanel createNewInstructorMeetingsPanel = new JPanel(new GridLayout(1,1));
+		JPanel createNewInstructorMeetingsPanel = new JPanel(new GridLayout(1, 1));
 		createNewInstructorMeetingsPanel.add(CreatePropertiesPanel());
 
 		return createNewInstructorMeetingsPanel;
@@ -173,19 +172,8 @@ public class InstructorMeetingsCard extends JPanel {
 
 		// Adjust properties on center
 		JPanel adjustmentPanel = CreateAdjustmentPanel(propertiesPanel);
-		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update room type"));
-		
-		return adjustmentPanel;
-	}
-	
-	private JPanel CreateAdjustmentPanel(JPanel componentPanel){
-		JPanel adjustmentPanel = new JPanel();
-		adjustmentPanel.add(componentPanel);
-		SpringLayout layout = new SpringLayout();
-		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, componentPanel, 0, SpringLayout.HORIZONTAL_CENTER, adjustmentPanel);
-		layout.putConstraint(SpringLayout.VERTICAL_CENTER, componentPanel, 0, SpringLayout.VERTICAL_CENTER, adjustmentPanel);
-		adjustmentPanel.setLayout(layout);
-		
+		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update Instructor Meetings"));
+
 		return adjustmentPanel;
 	}
 
@@ -210,7 +198,6 @@ public class InstructorMeetingsCard extends JPanel {
 				CreateAndSaveNew();
 			}
 		});
-		;
 		JButton buttonEditSelectedRow = new JButton("Edit selected");
 		buttonEditSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -218,7 +205,6 @@ public class InstructorMeetingsCard extends JPanel {
 				LoadSelectedRowDetailsForEdit();
 			}
 		});
-		;
 		JButton buttonDeleteSelectedRow = new JButton("Delete selected");
 		buttonDeleteSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -226,27 +212,25 @@ public class InstructorMeetingsCard extends JPanel {
 				DeleteSelectedRow();
 			}
 		});
-		;
-		JButton buttonEmptyFields = new JButton("Empty Fields");
-		buttonEmptyFields.addActionListener(new ActionListener() {
+		JButton buttonRefreshAllFields = new JButton("Refresh All Fields");
+		buttonRefreshAllFields.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ClearAllFields();
+				RefreshAllFields();
 			}
 		});
-		;
 
 		crudButtonsPanel.add(buttonSave);
 		crudButtonsPanel.add(buttonEditSelectedRow);
 		crudButtonsPanel.add(buttonDeleteSelectedRow);
-		crudButtonsPanel.add(buttonEmptyFields);
+		crudButtonsPanel.add(buttonRefreshAllFields);
 
 		return crudButtonsPanel;
 	}
 
 	private void CreateAndSaveNew() {
-		Instructor instructor = (Instructor)this.comboBoxInstructor.getSelectedItem();
-		Offering offering = (Offering)this.comboBoxOffering.getSelectedItem();
+		Instructor instructor = (Instructor) this.comboBoxInstructor.getSelectedItem();
+		Offering offering = (Offering) this.comboBoxOffering.getSelectedItem();
 		String nrOfMeetings = this.textFieldNrOfMeetings.getText();
 
 		if ((instructor == null) || (offering == null) || (nrOfMeetings.isEmpty())) {
@@ -256,28 +240,28 @@ public class InstructorMeetingsCard extends JPanel {
 			try {
 				// Get info
 				int nrOfMeetingsPerInstructor = Integer.parseInt(nrOfMeetings);
-				
+
 				// Create new entity
 				InstructorMeetings instructorMeetings = new InstructorMeetings(this.idOfTheInstructorMeetingsToUpdate,
-						instructor, offering, nrOfMeetingsPerInstructor);
+						nrOfMeetingsPerInstructor, instructor, offering);
 
 				// Save the entity to the database
 				if (this.idOfTheInstructorMeetingsToUpdate != 0) {
 					instructorMeetingsDAOService.merge(instructorMeetings);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Updated successfully!");
-					LOGGER.log(Level.FINE, "Update performed on instructorMeetings with id {0}, instructor {1}, and offering {2}.",
+					LOGGER.log(Level.FINE,
+							"Update performed on instructorMeetings with id {0}, instructor {1}, and offering {2}.",
 							new Object[] { instructorMeetings.getId(), instructor.toString(), offering.toString() });
 				} else {
 					instructorMeetingsDAOService.merge(instructorMeetings);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Saved successfully!");
-					LOGGER.log(Level.FINE, "Create performed on instructorMeetings with id {0}, instructor {1}, and offering {2}.",
+					LOGGER.log(Level.FINE,
+							"Create performed on instructorMeetings with id {0}, instructor {1}, and offering {2}.",
 							new Object[] { instructorMeetings.getId(), instructor.toString(), offering.toString() });
 				}
-			}catch (Exception e) {
+			} catch (Exception e) {
 				this.notificationLabel
 						.setText("A error occured while saving the instructorMeetings. Check log files for more info!");
 				LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -311,29 +295,48 @@ public class InstructorMeetingsCard extends JPanel {
 				RefreshTable();
 				this.notificationLabel.setText(" ");
 				JOptionPane.showMessageDialog(null, "Deleted successfully!");
-				LOGGER.log(Level.FINE, "Delete performed on instructorMeetings with id {0}, instructor {1}, and offering {2}.",
-						new Object[] { existingInstructorMeetings.getId(), existingInstructorMeetings.getInstructor().toString(),
-								existingInstructorMeetings.getOffering().toString()});
+				LOGGER.log(Level.FINE,
+						"Delete performed on instructorMeetings with id {0}, instructor {1}, and offering {2}.",
+						new Object[] { existingInstructorMeetings.getId(),
+								existingInstructorMeetings.getInstructor().toString(),
+								existingInstructorMeetings.getOffering().toString() });
 			} catch (Exception e) {
-				this.notificationLabel.setText("An error occured. Please make sure that nothing else depends on this instructorMeetings."
-						+ " Check log files for more info.");
-				LOGGER.log(Level.SEVERE, "Exception occured on deleting instructorMeetings. Please make sure that nothing else depends on this instructorMeetings."
-						+ e.toString(), e);
+				this.notificationLabel.setText(
+						"An error occured. Please make sure that nothing else depends on this instructorMeetings."
+								+ " Check log files for more info.");
+				LOGGER.log(Level.SEVERE,
+						"Exception occured on deleting instructorMeetings. Please make sure that nothing else depends on this instructorMeetings."
+								+ e.toString(),
+						e);
 			}
 		}
 	}
 
-	private void ClearAllFields() {
+	private void RefreshAllFields() {
 		this.comboBoxInstructor.setSelectedIndex(-1);
 		this.comboBoxOffering.setSelectedIndex(-1);
 		this.textFieldNrOfMeetings.setText("");
 		this.notificationLabel.setText("  ");
 		this.idOfTheInstructorMeetingsToUpdate = 0;
+		RefreshTable();
+	}
+
+	private JPanel CreateAdjustmentPanel(JPanel componentPanel) {
+		JPanel adjustmentPanel = new JPanel();
+		adjustmentPanel.add(componentPanel);
+		SpringLayout layout = new SpringLayout();
+		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, componentPanel, 0, SpringLayout.HORIZONTAL_CENTER,
+				adjustmentPanel);
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, componentPanel, 0, SpringLayout.VERTICAL_CENTER,
+				adjustmentPanel);
+		adjustmentPanel.setLayout(layout);
+
+		return adjustmentPanel;
 	}
 
 	private JPanel CreateViewAllInstructorMeetingsPanel() {
 		JPanel viewAllInstructorMeetingsPanel = new JPanel(new BorderLayout());
-		viewAllInstructorMeetingsPanel.setBorder(CreateRaisedBevelTitledBorder("All room types"));
+		viewAllInstructorMeetingsPanel.setBorder(CreateRaisedBevelTitledBorder("All Instructor Meetings"));
 
 		JScrollPane scrollPane = new JScrollPane();
 		this.instructorsMeetingsTable.setShowVerticalLines(true);

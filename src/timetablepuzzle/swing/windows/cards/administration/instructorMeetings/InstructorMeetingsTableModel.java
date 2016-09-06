@@ -5,8 +5,8 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import timetablepuzzle.entities.administration.InstructorMeetings;
-import timetablepuzzle.entities.administration.Offering;
-import timetablepuzzle.entities.inputData.Instructor;
+import timetablepuzzle.entities.inputdata.Instructor;
+import timetablepuzzle.entities.inputdata.Offering;
 
 class InstructorMeetingsTableModel extends AbstractTableModel {
     /**

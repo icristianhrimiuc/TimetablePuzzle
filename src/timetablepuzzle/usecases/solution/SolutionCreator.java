@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import timetablepuzzle.entities.Solution;
-import timetablepuzzle.entities.inputData.Class;
+import timetablepuzzle.entities.inputdata.Class;
 
 public class SolutionCreator {
 	private List<Class> classes;

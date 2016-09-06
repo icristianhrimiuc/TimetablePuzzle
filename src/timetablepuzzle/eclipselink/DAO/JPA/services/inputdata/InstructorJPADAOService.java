@@ -7,7 +7,7 @@ import javax.persistence.TypedQuery;
 
 import timetablepuzzle.eclipselink.DAO.JPA.services.JPADAO;
 import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.InstructorDAO;
-import timetablepuzzle.entities.inputData.Instructor;
+import timetablepuzzle.entities.inputdata.Instructor;
 
 public class InstructorJPADAOService extends JPADAO<Instructor,Integer> implements InstructorDAO{
 	@Override

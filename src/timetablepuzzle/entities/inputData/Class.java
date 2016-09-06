@@ -1,10 +1,8 @@
-package timetablepuzzle.entities.inputData;
+package timetablepuzzle.entities.inputdata;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-
-import timetablepuzzle.entities.administration.Offering;
 
 @Entity
 @Table(name="classes")
@@ -161,5 +159,34 @@ public class Class{
 	public int GetClassDuration()
 	{
 		return this.offering.getNrOfTimeSlots();
+	}
+	
+	/********************Overridden methods************************/
+	@Override
+	public String toString() {
+		return String.format("%s (%s)", this.courseTitle, this.courseAbbreviation);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof Class);
+		if (equals) {
+			Class other = (Class) o;
+			equals = ((this.id == other.getId()) && 
+					(this.courseTitle.equals(other.getCourseTitle())) && 
+					(this.courseAbbreviation.equals(other.getCourseAbbreviation())) && 
+					(this.offering.equals(other.getOffering())) && 
+					(this.assignedRoom.equals(other.getAssignedRoom())) && 
+					(this.assignedInstructor.equals(other.getAssignedInstructor())) && 
+					(this.assignedParentStudentGroup.equals(other.getAssignedParentStudentGroup()))
+					);
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("Room:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
 	}
 }

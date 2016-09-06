@@ -1,4 +1,4 @@
-package timetablepuzzle.entities.inputData;
+package timetablepuzzle.entities.inputdata;
 
 import javax.persistence.*;
 
@@ -99,5 +99,32 @@ public class Instructor{
 			int slotNr) 
 	{
 		this.timePreferences.setPreferencesByDayAndTime(dayOfTheWeek, timePref, slotNr);
+	}
+	
+	/********************Overridden methods************************/
+	@Override
+	public String toString() {
+		return String.format("%s %s %s", this.academicTitle, this.firstName, this.lastName);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof Instructor);
+		if (equals) {
+			Instructor other = (Instructor) o;
+			equals = ((this.id == other.getId()) && 
+					(this.firstName.equals(other.getFirstName())) && 
+					(this.lastName.equals(other.getLastName())) && 
+					(this.academicTitle.equals(other.getAcademicTitle())) && 
+					(this.timePreferences.equals(other.getTimePreferences()))
+					);
+		}
+		
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("Inctructor:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
 	}
 }

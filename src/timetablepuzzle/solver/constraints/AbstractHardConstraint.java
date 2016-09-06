@@ -2,7 +2,7 @@ package timetablepuzzle.solver.constraints;
 
 import timetablepuzzle.usecases.solution.SolutionChecker;
 import timetablepuzzle.entities.Solution;
-import timetablepuzzle.entities.inputData.Class;
+import timetablepuzzle.entities.inputdata.Class;
 
 
 public abstract class AbstractHardConstraint {

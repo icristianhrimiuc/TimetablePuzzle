@@ -35,6 +35,9 @@ import timetablepuzzle.entities.other.AcademicYear;
 import timetablepuzzle.swing.windows.cards.HomeCard;
 import timetablepuzzle.swing.windows.cards.TimetableCard;
 import timetablepuzzle.swing.windows.cards.administration.instructorMeetings.InstructorMeetingsCard;
+import timetablepuzzle.swing.windows.cards.inputdata.instructors.InstructorsCard;
+import timetablepuzzle.swing.windows.cards.inputdata.rooms.RoomsCard;
+import timetablepuzzle.swing.windows.cards.inputdata.studentGroups.StudentGroupsCard;
 import timetablepuzzle.swing.windows.cards.other.academicSessions.AcademicSessionsCard;
 import timetablepuzzle.swing.windows.cards.other.academicYears.AcademicYearsCard;
 import timetablepuzzle.swing.windows.cards.other.buildings.BuildingsCard;
@@ -45,12 +48,21 @@ public class MainWindow implements ActionListener {
 	/***************** Static properties ****************/
 	final static String HOME_CARD = "Home";
 	final static String TIMETABLE_CARD = "Timetable";
+	// Other menu
+	final static String ACADEMIC_SESSIONS_CARD = "Academic Sessions";
+	final static String ACADEMIC_YEARS_CARD = "Academic Years";
 	final static String BUILDING_CARD = "Buildings";
 	final static String ROOM_TYPE_CARD = "Room Types";
 	final static String TIME_PREFERENCES_CARD = "Time Preferences";
+	
+	// Input data menu
+	final static String INSTRUCTORS_CARD = "Instructors";
+	final static String ROOMS_CARD = "Rooms";
+	final static String STUDENT_GROUPS_CARD = "Student Groups";
+	
+	// Administration menu
 	final static String INSTRUCTOR_MEETINGS_CARD = "Instructor Meetings";
-	final static String ACADEMIC_SESSIONS_CARD = "Academic Sessions";
-	final static String ACADEMIC_YEARS_CARD = "Academic Years";
+	
 	/****************** Regular properties *************/
 	// Main window fields
 	private LoginDialog loginDialog;
@@ -73,8 +85,8 @@ public class MainWindow implements ActionListener {
 	public MainWindow(Color bgColor) {
 		// Initialize the main frame
 		frame = new JFrame();
-		frame.setSize(1000, 700);
-		frame.setMinimumSize(new Dimension(1000, 700));
+		frame.setSize(1050, 700);
+		frame.setMinimumSize(new Dimension(1050, 700));
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("TimetablePuzzle - University Timetabling Application");
@@ -100,13 +112,19 @@ public class MainWindow implements ActionListener {
 			cards = new HashMap<String, JPanel>();
 			cards.put(HOME_CARD, new HomeCard("src\\resources\\homeBackground.png", "src\\resources\\homeText.txt"));
 			cards.put(TIMETABLE_CARD, new TimetableCard(loggedUser, bgColor));
+			// Other menu
+			cards.put(ACADEMIC_SESSIONS_CARD, new AcademicSessionsCard(bgColor));
+			cards.put(ACADEMIC_YEARS_CARD, new AcademicYearsCard(bgColor));
 			cards.put(BUILDING_CARD, new BuildingsCard(bgColor));
 			cards.put(ROOM_TYPE_CARD, new RoomTypesCard(bgColor));
 			cards.put(TIME_PREFERENCES_CARD, new TimePreferencesCard(bgColor));
+			// Input data menu
+			cards.put(INSTRUCTORS_CARD, new InstructorsCard(bgColor));
+			cards.put(ROOMS_CARD, new RoomsCard(bgColor));
+			cards.put(STUDENT_GROUPS_CARD, new StudentGroupsCard(bgColor));
+			//Administration menu
 			cards.put(INSTRUCTOR_MEETINGS_CARD, new InstructorMeetingsCard(bgColor));
-			cards.put(ACADEMIC_SESSIONS_CARD, new AcademicSessionsCard(bgColor));
-			cards.put(ACADEMIC_YEARS_CARD, new AcademicYearsCard(bgColor));
-
+			
 			// Add components to the content pane
 			this.AddComponentToPane(frame.getContentPane());
 
@@ -219,7 +237,6 @@ public class MainWindow implements ActionListener {
 	private JMenu CreateJMenuAdministration() {
 		JMenu mnAdministration = new JMenu("Administration");
 		// Administration menu items
-		JMenuItem mntmOfferings = new JMenuItem("Offerings");
 		JMenuItem mntmInstructorMeetings = new JMenuItem(INSTRUCTOR_MEETINGS_CARD);
 		JMenuItem mntmCourseOfferings = new JMenuItem("Course Offerings");
 		JMenuItem mntmCurriculas = new JMenuItem("Curriculas");
@@ -232,7 +249,6 @@ public class MainWindow implements ActionListener {
 		mntmInstructorMeetings.addActionListener(this);
 		
 		// Add menu items
-		mnAdministration.add(mntmOfferings);
 		mnAdministration.add(mntmInstructorMeetings);
 		mnAdministration.add(mntmCourseOfferings);
 		mnAdministration.add(mntmCurriculas);
@@ -249,15 +265,23 @@ public class MainWindow implements ActionListener {
 		JMenu mnInputData = new JMenu("InputData");
 
 		// Input data menu items
-		JMenuItem mntmInstructors = new JMenuItem("Instructors");
-		JMenuItem mntmRooms = new JMenuItem("Rooms");
-		JMenuItem mntmStudentgroups = new JMenuItem("StudentGroups");
+		JMenuItem mntmInstructors = new JMenuItem(INSTRUCTORS_CARD);
+		JMenuItem mntmRooms = new JMenuItem(ROOMS_CARD);
+		JMenuItem mntmStudentgroups = new JMenuItem(STUDENT_GROUPS_CARD);
+		JMenuItem mntmOfferings = new JMenuItem("Offerings");
 		JMenuItem mntmClasses = new JMenuItem("Classes");
 
+		// Add action listeners
+		mntmInstructors.addActionListener(this);
+		mntmRooms.addActionListener(this);
+		mntmStudentgroups.addActionListener(this);
+		
 		// Add menu items
 		mnInputData.add(mntmInstructors);
 		mnInputData.add(mntmRooms);
 		mnInputData.add(mntmStudentgroups);
+		mnInputData.add(mntmOfferings);
+		mnInputData.add(new JSeparator());
 		mnInputData.add(mntmClasses);
 
 		return mnInputData;
@@ -334,7 +358,7 @@ public class MainWindow implements ActionListener {
 			cardsPanel.add(cards.get(cardName), cardName);
 		}
 		cardLayout = (CardLayout) cardsPanel.getLayout();
-		cardLayout.show(cardsPanel, ACADEMIC_YEARS_CARD);
+		cardLayout.show(cardsPanel, STUDENT_GROUPS_CARD);
 
 		mainPanel.add(cardsPanel, BorderLayout.CENTER);
 

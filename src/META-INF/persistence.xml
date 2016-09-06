@@ -12,7 +12,7 @@
 		<class>timetablepuzzle.entities.other.Location</class>
 		<class>timetablepuzzle.entities.other.Building</class>
 		<class>timetablepuzzle.entities.other.TimePreferences</class>
-		<class>timetablepuzzle.entities.administration.Offering</class>
+		<class>timetablepuzzle.entities.inputdata.Offering</class>
 		<class>timetablepuzzle.entities.administration.InstructorMeetings</class>
 		<class>timetablepuzzle.entities.administration.CourseOffering</class>
 		<class>timetablepuzzle.entities.administration.Curricula</class>
@@ -21,10 +21,10 @@
 		<class>timetablepuzzle.entities.administration.Department</class>
 		<class>timetablepuzzle.entities.administration.Faculty</class>
 		<class>timetablepuzzle.entities.administration.User</class>
-		<class>timetablepuzzle.entities.inputData.Instructor</class>
-		<class>timetablepuzzle.entities.inputData.Room</class>
-		<class>timetablepuzzle.entities.inputData.StudentGroup</class>
-		<class>timetablepuzzle.entities.inputData.Class</class>
+		<class>timetablepuzzle.entities.inputdata.Instructor</class>
+		<class>timetablepuzzle.entities.inputdata.Room</class>
+		<class>timetablepuzzle.entities.inputdata.StudentGroup</class>
+		<class>timetablepuzzle.entities.inputdata.Class</class>
 		<class>timetablepuzzle.entities.Solution</class>
 		
 		

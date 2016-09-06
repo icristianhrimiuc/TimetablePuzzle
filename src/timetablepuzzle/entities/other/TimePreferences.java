@@ -358,8 +358,7 @@ public class TimePreferences{
 
 	@Override
 	public String toString() {
-		return String.format("(%s)/(%s)/(%s)/(%s)/(%s)", this.monPreferences, this.tuePreferences,
-				this.wedPreferences, this.thuPreferences, this.friPreferences);
+		return String.format("%s", this.name);
 	}
 
 	@Override
@@ -368,6 +367,7 @@ public class TimePreferences{
 		if (equals) {
 			TimePreferences other = (TimePreferences) o;
 			equals = ((this.id == other.getId()) && 
+					(this.name.equals(other.getName())) &&
 					(this.monPreferences.equals(other.getMonPreferences())) && 
 					(this.tuePreferences.equals(other.getTuePreferences())) && 
 					(this.wedPreferences.equals(other.getWedPreferences())) && 

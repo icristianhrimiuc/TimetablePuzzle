@@ -2,6 +2,8 @@ package timetablepuzzle.entities.administration;
 
 import javax.persistence.*;
 
+import timetablepuzzle.entities.inputdata.Offering;
+
 @Entity
 @Table(name="course_offerings")
 public class CourseOffering{

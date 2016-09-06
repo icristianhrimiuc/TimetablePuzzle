@@ -214,7 +214,6 @@ public class AcademicSessionsCard extends JPanel {
 				CreateAndSaveNew();
 			}
 		});
-		;
 		JButton buttonEditSelectedRow = new JButton("Edit selected row");
 		buttonEditSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -222,7 +221,6 @@ public class AcademicSessionsCard extends JPanel {
 				LoadSelectedRowDetailsForEdit();
 			}
 		});
-		;
 		JButton buttonDeleteSelectedRow = new JButton("Delete selected row");
 		buttonDeleteSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -230,20 +228,18 @@ public class AcademicSessionsCard extends JPanel {
 				DeleteSelectedRow();
 			}
 		});
-		;
-		JButton buttonEmptyFields = new JButton("Empty Fields");
-		buttonEmptyFields.addActionListener(new ActionListener() {
+		JButton buttonRefreshAllFields = new JButton("Refresh All Fields");
+		buttonRefreshAllFields.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ClearAllFields();
+				RefreshAllFields();
 			}
 		});
-		;
 
 		crudButtonsPanel.add(buttonSave);
 		crudButtonsPanel.add(buttonEditSelectedRow);
 		crudButtonsPanel.add(buttonDeleteSelectedRow);
-		crudButtonsPanel.add(buttonEmptyFields);
+		crudButtonsPanel.add(buttonRefreshAllFields);
 
 		return crudButtonsPanel;
 	}
@@ -267,15 +263,13 @@ public class AcademicSessionsCard extends JPanel {
 				// Save the academicSession to the database
 				if (this.idOfTheAcademicSessionToUpdate != 0) {
 					academicSessionsDAOService.merge(academicSession);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Updated successfully!");
 					LOGGER.log(Level.FINE, "Update performed on academicSession with id {0} and named {1}.",
 							new Object[] { academicSession.getId(), academicSession.getName() });
 				} else {
 					academicSessionsDAOService.persist(academicSession);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Saved successfully!");
 					LOGGER.log(Level.FINE, "Create performed on academicSession with the following name: {0}. ",
 							new Object[] { academicSession.getName() });
@@ -343,7 +337,7 @@ public class AcademicSessionsCard extends JPanel {
 		}
 	}
 
-	private void ClearAllFields() {
+	private void RefreshAllFields() {
 		this.textFieldName.setText("");
 		this.datePickerSessionStartDateModel.setValue(new Date());
 		this.datePickerClassesEndDateModel.setValue(new Date());
@@ -352,6 +346,7 @@ public class AcademicSessionsCard extends JPanel {
 		this.comboBoxAcceptedSolution.setSelectedIndex(-1);
 		this.idOfTheAcademicSessionToUpdate = 0;
 		this.notificationLabel.setText(" ");
+		this.RefreshTable();
 		this.repaint();
 	}
 
@@ -370,7 +365,7 @@ public class AcademicSessionsCard extends JPanel {
 
 	private JPanel CreateViewAllAcademicSessionsPanel() {
 		JPanel viewAllAcademicSessionsPanel = new JPanel(new BorderLayout());
-		viewAllAcademicSessionsPanel.setBorder(CreateRaisedBevelTitledBorder("All academicSessions"));
+		viewAllAcademicSessionsPanel.setBorder(CreateRaisedBevelTitledBorder("All Academic Sessions"));
 
 		JScrollPane scrollPane = new JScrollPane();
 		this.academicSessionsTable.setShowVerticalLines(true);

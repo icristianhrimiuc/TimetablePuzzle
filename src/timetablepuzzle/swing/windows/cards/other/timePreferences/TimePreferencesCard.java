@@ -61,7 +61,7 @@ public class TimePreferencesCard extends JPanel {
 		this.timePreferencesTable.setDefaultRenderer(String.class, defaultRenderer);
 		SetColumnsMaxSizes();
 
-		this.textFieldName = new JTextField(20);
+		this.textFieldName = new JTextField(30);
 		this.textFieldName.setHorizontalAlignment(JTextField.CENTER);
 		this.textFieldName.addActionListener(new ActionListener() {
 
@@ -73,6 +73,7 @@ public class TimePreferencesCard extends JPanel {
 
 		this.notificationLabel = new JLabel("  ");
 		this.notificationLabel.setForeground(Color.RED);
+		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
 
 		this.weekPreferencesTableModel = new WeekPreferencesTableModel();
 		RefreshTableWeekPreferences();
@@ -89,6 +90,7 @@ public class TimePreferencesCard extends JPanel {
 
 	private void SetColumnsMaxSizes() {
 		this.timePreferencesTable.getColumnModel().getColumn(0).setMaxWidth(60);
+		this.timePreferencesTable.getColumnModel().getColumn(1).setMinWidth(150);
 	}
 
 	private void RefreshTableWeekPreferences() {
@@ -98,9 +100,11 @@ public class TimePreferencesCard extends JPanel {
 	private void ConfigureWeekPreferencesTable() {
 		this.weekPreferencesTable.setRowHeight(32);
 		for (int i = 0; i <= 12; i++) {
-			this.weekPreferencesTable.getColumnModel().getColumn(i).setMaxWidth(32);
+			this.weekPreferencesTable.getColumnModel().getColumn(i).setMaxWidth(36);
 		}
-		this.weekPreferencesTable.setDefaultRenderer(String.class, new WeekPreferencesCellRenderer());
+		WeekPreferencesCellRenderer cellRenderer =  new WeekPreferencesCellRenderer();
+		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+		this.weekPreferencesTable.setDefaultRenderer(String.class, cellRenderer);
 		this.weekPreferencesTable.setRowSelectionAllowed(false);
 		this.weekPreferencesTable.setColumnSelectionAllowed(false);
 		this.weekPreferencesTable.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 3));
@@ -142,8 +146,8 @@ public class TimePreferencesCard extends JPanel {
 
 	private JPanel CreateCreateNewTimePreferencesPanel() {
 		JPanel createNewTimePreferencesPanel = new JPanel(new GridLayout(1, 2));
-		createNewTimePreferencesPanel.add(CreateWeekPreferencesPanel());
 		createNewTimePreferencesPanel.add(CreateExplanatoryPanelPanel());
+		createNewTimePreferencesPanel.add(CreateWeekPreferencesPanel());
 
 		return createNewTimePreferencesPanel;
 	}
@@ -152,7 +156,6 @@ public class TimePreferencesCard extends JPanel {
 		JPanel weekPreferencesPanel = new JPanel();
 		weekPreferencesPanel.setLayout(new BoxLayout(weekPreferencesPanel, BoxLayout.Y_AXIS));
 		weekPreferencesPanel.add(this.weekPreferencesTable);
-		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
 		weekPreferencesPanel.add(CreatePropertyPanel("Name", this.textFieldName));
 		weekPreferencesPanel.add(this.notificationLabel);
 		weekPreferencesPanel.add(CreateCrudButtonsPanel());
@@ -187,7 +190,7 @@ public class TimePreferencesCard extends JPanel {
 
 		// Adjust panel on center
 		JPanel adjustmentPanel = CreateAdjustmentPanel(explanatoryPanel);
-		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Color/Preference relations"));
+		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Color-Preference Relations"));
 
 		return adjustmentPanel;
 	}
@@ -231,7 +234,6 @@ public class TimePreferencesCard extends JPanel {
 				CreateAndSaveNew();
 			}
 		});
-		;
 		JButton buttonEditSelectedRow = new JButton("Edit selected");
 		buttonEditSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -239,7 +241,6 @@ public class TimePreferencesCard extends JPanel {
 				LoadSelectedRowDetailsForEdit();
 			}
 		});
-		;
 		JButton buttonDeleteSelectedRow = new JButton("Delete selected");
 		buttonDeleteSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -247,20 +248,18 @@ public class TimePreferencesCard extends JPanel {
 				DeleteSelectedRow();
 			}
 		});
-		;
-		JButton buttonEmptyFields = new JButton("Empty Fields");
-		buttonEmptyFields.addActionListener(new ActionListener() {
+		JButton buttonRefreshAllFields = new JButton("Refresh All Fields");
+		buttonRefreshAllFields.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ClearAllFields();
+				RefreshAllFields();
 			}
 		});
-		;
 
 		crudButtonsPanel.add(buttonSave);
 		crudButtonsPanel.add(buttonEditSelectedRow);
 		crudButtonsPanel.add(buttonDeleteSelectedRow);
-		crudButtonsPanel.add(buttonEmptyFields);
+		crudButtonsPanel.add(buttonRefreshAllFields);
 
 		return crudButtonsPanel;
 	}
@@ -278,15 +277,13 @@ public class TimePreferencesCard extends JPanel {
 
 				if (this.idOfTheTimePreferencesToUpdate != 0) {
 					timePreferencesDAOService.Update(this.idOfTheTimePreferencesToUpdate, timePreferences);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Updated successfully!");
 					LOGGER.log(Level.FINE, "Update performed on timePreferences with id {0}.",
 							new Object[] { timePreferences.getId() });
 				} else {
 					timePreferencesDAOService.persist(timePreferences);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Saved successfully!");
 					LOGGER.log(Level.FINE, "Create performed on timePreferences. ");
 				}
@@ -339,18 +336,19 @@ public class TimePreferencesCard extends JPanel {
 						.setText("An error occured. Please make sure that nothing else depends on this timePreferences."
 								+ " Check log files for more info.");
 				LOGGER.log(Level.SEVERE,
-						"Exception occured on deleting roomType. Please make sure that nothing else depends on this timePreferences."
+						"Exception occured on deleting timePreferences. Please make sure that nothing else depends on this timePreferences."
 								+ e.toString(),
 						e);
 			}
 		}
 	}
 
-	private void ClearAllFields() {
+	private void RefreshAllFields() {
 		RefreshTableWeekPreferences();
 		this.textFieldName.setText("");
 		this.idOfTheTimePreferencesToUpdate = 0;
 		this.notificationLabel.setText("  ");
+		RefreshTable();
 	}
 
 	private JPanel CreateViewAllTimePreferencesPanel() {

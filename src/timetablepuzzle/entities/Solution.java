@@ -8,7 +8,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import timetablepuzzle.entities.inputData.Class;
+import timetablepuzzle.entities.inputdata.Class;
 import timetablepuzzle.usecases.solution.TimeslotPattern;
 
 @Entity

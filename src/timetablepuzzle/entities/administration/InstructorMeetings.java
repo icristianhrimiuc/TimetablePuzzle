@@ -2,7 +2,8 @@ package timetablepuzzle.entities.administration;
 
 import javax.persistence.*;
 
-import timetablepuzzle.entities.inputData.Instructor;
+import timetablepuzzle.entities.inputdata.Instructor;
+import timetablepuzzle.entities.inputdata.Offering;
 
 @Entity
 @Table(name="instructor_meeetings")
@@ -12,6 +13,9 @@ public class InstructorMeetings{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Column(name="nrOfMeetings")
+	private int nrOfMeetings;
+	
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="instructor_id",updatable = false,insertable = false,referencedColumnName="id")
 	private Instructor instructor;
@@ -19,26 +23,31 @@ public class InstructorMeetings{
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="offering_id",updatable = false,insertable = false,referencedColumnName="id")
 	private Offering offering;
-	
-	@Column(name="nrOfMeetings")
-	private int nrOfMeetings;
 
 	public InstructorMeetings()
 	{
-		this(0,new Instructor(),new Offering(),0);
+		this(0,0,new Instructor(),new Offering());
 	}
 
-	public InstructorMeetings(int id, Instructor instructor, Offering offering, int nrOfMeetings)
+	public InstructorMeetings(int id, int nrOfMeetings, Instructor instructor, Offering offering)
 	{
 		this.id = id;
+		this.setNrOfMeetings(nrOfMeetings);
 		this.setInstructor(instructor);
 		this.setOffering(offering);
-		this.setNrOfMeetings(nrOfMeetings);
 	}
 	
 	/***************Getters and setters****************/
 	public int getId() {
 		return this.id;
+	}
+
+	public int getNrOfMeetings() {
+		return this.nrOfMeetings;
+	}
+
+	public void setNrOfMeetings(int nrOfMeetings) {
+		this.nrOfMeetings = nrOfMeetings;
 	}
 	
 	public Instructor getInstructor() {
@@ -58,14 +67,6 @@ public class InstructorMeetings{
 	{
 		this.offering = offering;
 	}
-
-	public int getNrOfMeetings() {
-		return this.nrOfMeetings;
-	}
-
-	public void setNrOfMeetings(int nrOfMeetings) {
-		this.nrOfMeetings = nrOfMeetings;
-	}
 	
 	/*******************Methods that model the class behavior*******************/
 	@Override
@@ -79,9 +80,9 @@ public class InstructorMeetings{
 		if (equals) {
 			InstructorMeetings other = (InstructorMeetings) o;
 			equals = ((this.id == other.getId()) && 
+					(this.nrOfMeetings == other.getNrOfMeetings()) &&
 					(this.instructor.equals(other.getInstructor())) && 
-					(this.offering.equals(other.getOffering())) && 
-					(this.nrOfMeetings == other.getNrOfMeetings())
+					(this.offering.equals(other.getOffering())) 
 					);
 		}
 		

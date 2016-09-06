@@ -1,4 +1,4 @@
-package timetablepuzzle.eclipselink.DAO.JPA.services.administration;
+package timetablepuzzle.eclipselink.DAO.JPA.services.inputdata;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -6,8 +6,8 @@ import java.util.logging.Level;
 import javax.persistence.TypedQuery;
 
 import timetablepuzzle.eclipselink.DAO.JPA.services.JPADAO;
-import timetablepuzzle.eclipselink.DAO.interfaces.administration.OfferingDAO;
-import timetablepuzzle.entities.administration.Offering;
+import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.OfferingDAO;
+import timetablepuzzle.entities.inputdata.Offering;
 
 public class OfferingJPADAOService extends JPADAO<Offering,Integer> implements OfferingDAO{
 	@Override

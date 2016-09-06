@@ -28,6 +28,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import timetablepuzzle.eclipselink.DAO.JPA.services.other.RoomFeatureJPADAOService;
 import timetablepuzzle.eclipselink.DAO.JPA.services.other.RoomTypeJPADAOService;
@@ -59,19 +60,28 @@ public class RoomTypesCard extends JPanel {
 	public RoomTypesCard(Color backgroundColor) {
 		this.setBackground(backgroundColor);
 		
+		// Room Types table
 		this.roomTypeTableModel = new RoomTypesTableModel();
 		RefreshTable();
 		this.roomTypesTable = new JTable(this.roomTypeTableModel);
+		DefaultTableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
+		defaultRenderer.setHorizontalAlignment(JLabel.CENTER);
+		this.roomTypesTable.setDefaultRenderer(String.class, defaultRenderer);
 		SetColumnsMaxSizes();
 		
+		// Notification label
 		this.notificationLabel = new JLabel("  ");
 		this.notificationLabel.setForeground(Color.RED);
+		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
 		
-		this.textFieldName = new JTextField(30);
-		this.textFieldMinCapacity = new JTextField(10);
+		// Property text fields
+		this.textFieldName = CreatePropertyTextField(30);
+		this.textFieldMinCapacity = CreatePropertyTextField(10);
+		this.textFieldMaxCapacity = CreatePropertyTextField(10);
 		AddDocumentListener(this.textFieldMinCapacity);
-		this.textFieldMaxCapacity = new JTextField(10);
 		AddDocumentListener(this.textFieldMaxCapacity);
+		
+		// Transferable items control
 		this.transferableItemsControl = new ListBoxesWithTransferableItems(new Object[]{}, new Object[]{},
 				"Possible room features", "Added room features");
 		RefreshTransferableItemsControl(new ArrayList<RoomFeature>());
@@ -88,6 +98,20 @@ public class RoomTypesCard extends JPanel {
 		this.roomTypesTable.getColumnModel().getColumn(0).setMaxWidth(60);
 		this.roomTypesTable.getColumnModel().getColumn(2).setMaxWidth(120);
 		this.roomTypesTable.getColumnModel().getColumn(3).setMaxWidth(120);
+	}
+
+	private JTextField CreatePropertyTextField(int width) {
+		JTextField propertyTextField = new JTextField(width);
+		propertyTextField.setHorizontalAlignment(JTextField.CENTER);
+		propertyTextField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CreateAndSaveNew();
+			}
+		});
+
+		return propertyTextField;
 	}
 
 	private void AddDocumentListener(JTextField textField) {
@@ -155,7 +179,6 @@ public class RoomTypesCard extends JPanel {
 		propertiesPanel.add(CreatePropertyPanel("Name", this.textFieldName));
 		propertiesPanel.add(CreatePropertyPanel("Minimum capacity", this.textFieldMinCapacity));
 		propertiesPanel.add(CreatePropertyPanel("Maximum  capacity", this.textFieldMaxCapacity));
-		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
 		propertiesPanel.add(this.notificationLabel);
 		propertiesPanel.add(CreateCrudButtonsPanel());
 
@@ -176,7 +199,7 @@ public class RoomTypesCard extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CreateAndSaveNewRoomType();
+				CreateAndSaveNew();
 			}
 		});
 		propertyPanel.add(labelName);
@@ -192,10 +215,9 @@ public class RoomTypesCard extends JPanel {
 		buttonSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CreateAndSaveNewRoomType();
+				CreateAndSaveNew();
 			}
 		});
-		;
 		JButton buttonEditSelectedRow = new JButton("Edit selected");
 		buttonEditSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -203,7 +225,6 @@ public class RoomTypesCard extends JPanel {
 				LoadSelectedRowDetailsForEdit();
 			}
 		});
-		;
 		JButton buttonDeleteSelectedRow = new JButton("Delete selected");
 		buttonDeleteSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -211,25 +232,23 @@ public class RoomTypesCard extends JPanel {
 				DeleteSelectedRow();
 			}
 		});
-		;
-		JButton buttonEmptyFields = new JButton("Empty Fields");
-		buttonEmptyFields.addActionListener(new ActionListener() {
+		JButton buttonRefreshAllFields = new JButton("Refresh All Fields");
+		buttonRefreshAllFields.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ClearAllFields();
+				RefreshAllFields();
 			}
 		});
-		;
 
 		crudButtonsPanel.add(buttonSave);
 		crudButtonsPanel.add(buttonEditSelectedRow);
 		crudButtonsPanel.add(buttonDeleteSelectedRow);
-		crudButtonsPanel.add(buttonEmptyFields);
+		crudButtonsPanel.add(buttonRefreshAllFields);
 
 		return crudButtonsPanel;
 	}
 
-	private void CreateAndSaveNewRoomType() {
+	private void CreateAndSaveNew() {
 		String name = this.textFieldName.getText();
 		String min = this.textFieldMinCapacity.getText();
 		String max = this.textFieldMaxCapacity.getText();
@@ -250,15 +269,13 @@ public class RoomTypesCard extends JPanel {
 				// Save the entity to the database
 				if (this.idOfTheRoomTypeToUpdate != 0) {
 					roomTypeDAOService.merge(roomType);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Updated successfully!");
 					LOGGER.log(Level.FINE, "Update performed on roomType with id {0} and named {1}.",
 							new Object[] { roomType.getId(), roomType.getName() });
 				} else {
 					roomTypeDAOService.merge(roomType);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Saved successfully!");
 					LOGGER.log(Level.FINE, "Create performed on roomType with the following name: {0}. ",
 							new Object[] { roomType.getName() });
@@ -283,15 +300,6 @@ public class RoomTypesCard extends JPanel {
 		}
 		
 		return roomFeatures;
-	}
-
-	private void ClearAllFields() {
-		this.textFieldName.setText("");
-		this.textFieldMinCapacity.setText("");
-		this.textFieldMaxCapacity.setText("");
-		this.notificationLabel.setText(" ");
-		this.idOfTheRoomTypeToUpdate = 0;
-		RefreshTransferableItemsControl(new ArrayList<RoomFeature>());
 	}
 
 	private void LoadSelectedRowDetailsForEdit() {
@@ -432,6 +440,16 @@ public class RoomTypesCard extends JPanel {
 		}
 		RefreshTransferableItemsControl(new ArrayList<RoomFeature>());
 	}
+
+	private void RefreshAllFields() {
+		this.textFieldName.setText("");
+		this.textFieldMinCapacity.setText("");
+		this.textFieldMaxCapacity.setText("");
+		this.notificationLabel.setText(" ");
+		this.idOfTheRoomTypeToUpdate = 0;
+		RefreshTransferableItemsControl(new ArrayList<RoomFeature>());
+		RefreshTable();
+	}
 	
 	private JPanel CreateAdjustmentPanel(JPanel componentPanel){
 		JPanel adjustmentPanel = new JPanel();
@@ -446,7 +464,7 @@ public class RoomTypesCard extends JPanel {
 
 	private JPanel CreateViewAllRoomTypesPanel() {
 		JPanel viewAllBuildingsPanel = new JPanel(new BorderLayout());
-		viewAllBuildingsPanel.setBorder(CreateRaisedBevelTitledBorder("All room types"));
+		viewAllBuildingsPanel.setBorder(CreateRaisedBevelTitledBorder("All Room Types"));
 
 		JScrollPane scrollPane = new JScrollPane();
 		this.roomTypesTable.setShowVerticalLines(true);

@@ -188,7 +188,6 @@ public class AcademicYearsCard extends JPanel {
 				CreateAndSaveNew();
 			}
 		});
-		;
 		JButton buttonEditSelectedRow = new JButton("Edit selected");
 		buttonEditSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -196,7 +195,6 @@ public class AcademicYearsCard extends JPanel {
 				LoadSelectedRowDetailsForEdit();
 			}
 		});
-		;
 		JButton buttonDeleteSelectedRow = new JButton("Delete selected");
 		buttonDeleteSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -204,20 +202,18 @@ public class AcademicYearsCard extends JPanel {
 				DeleteSelectedRow();
 			}
 		});
-		;
-		JButton buttonEmptyFields = new JButton("Empty Fields");
-		buttonEmptyFields.addActionListener(new ActionListener() {
+		JButton buttonRefreshAllFields = new JButton("Refresh All Fields");
+		buttonRefreshAllFields.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ClearAllFields();
+				RefreshAllFields();
 			}
 		});
-		;
 
 		crudButtonsPanel.add(buttonSave);
 		crudButtonsPanel.add(buttonEditSelectedRow);
 		crudButtonsPanel.add(buttonDeleteSelectedRow);
-		crudButtonsPanel.add(buttonEmptyFields);
+		crudButtonsPanel.add(buttonRefreshAllFields);
 
 		return crudButtonsPanel;
 	}
@@ -243,15 +239,13 @@ public class AcademicYearsCard extends JPanel {
 				// Save the entity to the database
 				if (this.idOfTheAcademicYearToUpdate != 0) {
 					academicYearDAOService.merge(academicYear);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Updated successfully!");
 					LOGGER.log(Level.FINE, "Update performed on academicYear with id {0} and named {1}.",
 							new Object[] { academicYear.getId(), academicYear.getName() });
 				} else {
 					academicYearDAOService.merge(academicYear);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Saved successfully!");
 					LOGGER.log(Level.FINE, "Create performed on academicYears with id {0} and named {1}.",
 							new Object[] { academicYear.getId(), academicYear.getName()});
@@ -297,19 +291,20 @@ public class AcademicYearsCard extends JPanel {
 			} catch (Exception e) {
 				this.notificationLabel.setText("An error occured. Please make sure that nothing else depends on this academicYear."
 						+ " Check log files for more info.");
-				LOGGER.log(Level.SEVERE, "Exception occured on deleting academicYears. Please make sure that nothing else depends on this academicYear."
+				LOGGER.log(Level.SEVERE, "Exception occured on deleting academicYear. Please make sure that nothing else depends on this academicYear."
 						+ e.toString(), e);
 			}
 		}
 	}
 
-	private void ClearAllFields() {
+	private void RefreshAllFields() {
 		this.textFieldName.setText("");
 		this.comboBoxFirstAcademicSession.setSelectedItem(null);
 		this.comboBoxSecondAcademicSession.setSelectedItem(null);
 		this.comboBoxThirdAcademicSession.setSelectedItem(null);
 		this.notificationLabel.setText("  ");
 		this.idOfTheAcademicYearToUpdate = 0;
+		RefreshTable();
 		this.repaint();
 	}
 	

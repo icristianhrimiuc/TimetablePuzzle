@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import timetablepuzzle.entities.Solution;
-import timetablepuzzle.entities.inputData.Class;
-import timetablepuzzle.entities.inputData.Instructor;
-import timetablepuzzle.entities.inputData.Room;
+import timetablepuzzle.entities.inputdata.Class;
+import timetablepuzzle.entities.inputdata.Instructor;
+import timetablepuzzle.entities.inputdata.Room;
 import timetablepuzzle.entities.other.TimePreferences.DayOfTheWeek;
 import timetablepuzzle.entities.other.TimePreferences.TimePreference;
 

@@ -3,7 +3,7 @@ package timetablepuzzle.usecases.solution;
 import java.util.List;
 
 import timetablepuzzle.entities.Solution;
-import timetablepuzzle.entities.inputData.Class;
+import timetablepuzzle.entities.inputdata.Class;
 
 public class SolutionChecker {
 	protected Solution solution;

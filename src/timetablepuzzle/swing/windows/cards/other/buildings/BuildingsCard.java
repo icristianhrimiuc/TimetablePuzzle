@@ -220,7 +220,6 @@ public class BuildingsCard extends JPanel {
 				CreateAndSaveNew();
 			}
 		});
-		;
 		JButton buttonEditSelectedRow = new JButton("Edit selected row");
 		buttonEditSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -228,7 +227,6 @@ public class BuildingsCard extends JPanel {
 				LoadSelectedRowDetailsForEdit();
 			}
 		});
-		;
 		JButton buttonDeleteSelectedRow = new JButton("Delete selected row");
 		buttonDeleteSelectedRow.addActionListener(new ActionListener() {
 			@Override
@@ -236,20 +234,18 @@ public class BuildingsCard extends JPanel {
 				DeleteSelectedRow();
 			}
 		});
-		;
-		JButton buttonEmptyFields = new JButton("Empty Fields");
-		buttonEmptyFields.addActionListener(new ActionListener() {
+		JButton buttonRefreshAllFields = new JButton("Refresh All Fields");
+		buttonRefreshAllFields.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ClearAllFields();
+				RefreshAllFields();
 			}
 		});
-		;
 
 		crudButtonsPanel.add(buttonSave);
 		crudButtonsPanel.add(buttonEditSelectedRow);
 		crudButtonsPanel.add(buttonDeleteSelectedRow);
-		crudButtonsPanel.add(buttonEmptyFields);
+		crudButtonsPanel.add(buttonRefreshAllFields);
 
 		return crudButtonsPanel;
 	}
@@ -281,15 +277,13 @@ public class BuildingsCard extends JPanel {
 				// Save the building to the database
 				if (this.idOfTheBuildingToUpdate != 0) {
 					buildingsDAOService.Update(this.idOfTheBuildingToUpdate, building);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Updated successfully!");
 					LOGGER.log(Level.FINE, "Update performed on building with id {0} and named {1}.",
 							new Object[] { building.getId(), building.getName() });
 				} else {
 					buildingsDAOService.persist(building);
-					RefreshTable();
-					ClearAllFields();
+					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Saved successfully!");
 					LOGGER.log(Level.FINE, "Create performed on building with the following name: {0}. ",
 							new Object[] { building.getName() });
@@ -304,16 +298,6 @@ public class BuildingsCard extends JPanel {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 			}
 		}
-	}
-	
-	private void ClearAllFields(){
-		this.textFieldName.setText("");
-		this.textFieldAbbreviation.setText("");
-		this.textFieldAddress.setText("");
-		this.textFieldLatitude.setText("");
-		this.textFieldLongitude.setText("");
-		this.idOfTheBuildingToUpdate = 0;
-		this.notificationLabel.setText(" ");
 	}
 
 	private void LoadSelectedRowDetailsForEdit() {
@@ -354,6 +338,17 @@ public class BuildingsCard extends JPanel {
 						+ e.toString(), e);
 			}
 		}
+	}
+	
+	private void RefreshAllFields(){
+		this.textFieldName.setText("");
+		this.textFieldAbbreviation.setText("");
+		this.textFieldAddress.setText("");
+		this.textFieldLatitude.setText("");
+		this.textFieldLongitude.setText("");
+		this.idOfTheBuildingToUpdate = 0;
+		this.notificationLabel.setText(" ");
+		RefreshTable();
 	}
 	
 	private JPanel CreateAdjustmentPanel(JPanel componentPanel){

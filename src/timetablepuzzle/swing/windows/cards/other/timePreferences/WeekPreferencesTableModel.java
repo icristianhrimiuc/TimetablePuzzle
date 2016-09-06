@@ -5,7 +5,7 @@ import javax.swing.table.AbstractTableModel;
 import timetablepuzzle.entities.other.TimePreferences;
 import timetablepuzzle.entities.other.TimePreferences.TimePreference;
 
-class WeekPreferencesTableModel extends AbstractTableModel {
+public class WeekPreferencesTableModel extends AbstractTableModel {
 	/**
 	 * Generated field
 	 */
