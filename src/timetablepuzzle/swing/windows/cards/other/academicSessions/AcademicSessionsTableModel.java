@@ -85,7 +85,12 @@ class AcademicSessionsTableModel extends AbstractTableModel {
             	colummnValue = format.format(academicSession.getSessionEndDate().getTime());
                 break;
             case Column_Accepted_Solution:
-            	colummnValue = academicSession.getAcceptedSolution().toString();
+            	Solution acceptedSolution = academicSession.getAcceptedSolution();
+            	if(acceptedSolution != null){
+            		colummnValue = acceptedSolution.toString();
+            	}else{
+            		colummnValue = "";
+            	}
                 break;
             default:
             	break;

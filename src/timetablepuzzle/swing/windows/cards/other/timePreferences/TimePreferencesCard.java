@@ -143,7 +143,7 @@ public class TimePreferencesCard extends JPanel {
 		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
 		weekPreferencesPanel.add(this.notificationLabel);
 		weekPreferencesPanel.add(CreateCrudButtonsPanel());
-		
+
 		// Adjust panel on center
 		JPanel adjustmentPanel = CreateAdjustmentPanel(weekPreferencesPanel);
 		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update Time Preferences"));
@@ -154,12 +154,12 @@ public class TimePreferencesCard extends JPanel {
 	private JPanel CreateExplanatoryPanelPanel() {
 		JPanel explanatoryPanel = new JPanel();
 		explanatoryPanel.setLayout(new BoxLayout(explanatoryPanel, BoxLayout.Y_AXIS));
-		for (int i = TimePreferences.TimePreference.values().length -1; i >= 0; i--) {
+		for (int i = TimePreferences.TimePreference.values().length - 1; i >= 0; i--) {
 			Color color = WeekPreferencesCellRenderer.ColorsForPreference[i];
-			String text = TimePreferences.getTimePreferenceNameByIndex(i);
-			explanatoryPanel.add(CreateColorPanel(text ,color));
+			String text = String.format("%s (%d)", TimePreferences.getTimePreferenceNameByIndex(i), i);
+			explanatoryPanel.add(CreateColorPanel(text, color));
 		}
-		
+
 		// Adjust panel on center
 		JPanel adjustmentPanel = CreateAdjustmentPanel(explanatoryPanel);
 		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Color/Preference relations"));
@@ -171,7 +171,7 @@ public class TimePreferencesCard extends JPanel {
 		JTextField colorTextField = new JTextField(10);
 		colorTextField.setBackground(color);
 		colorTextField.setEditable(false);
-		
+
 		JLabel colorLabel = new JLabel(text, JLabel.TRAILING);
 		colorLabel.setLabelFor(colorTextField);
 		colorLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -203,7 +203,7 @@ public class TimePreferencesCard extends JPanel {
 		buttonSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CreateAndSaveNewTimePreferences();
+				CreateAndSaveNew();
 			}
 		});
 		;
@@ -240,7 +240,7 @@ public class TimePreferencesCard extends JPanel {
 		return crudButtonsPanel;
 	}
 
-	private void CreateAndSaveNewTimePreferences() {
+	private void CreateAndSaveNew() {
 		try {
 			TimePreferences timePreferences = this.weekPreferencesTableModel.getData();
 
@@ -273,8 +273,17 @@ public class TimePreferencesCard extends JPanel {
 		} else {
 			TimePreferences existingTimePreferences = this.timePreferencesTableModel.elementAt(selecteRow);
 			this.idOfTheTimePreferencesToUpdate = existingTimePreferences.getId();
-			this.weekPreferencesTableModel.setData(existingTimePreferences);
+			this.weekPreferencesTableModel.setData(DeepCopyTimePreferences(existingTimePreferences));
+			this.repaint();
 		}
+	}
+
+	private TimePreferences DeepCopyTimePreferences(TimePreferences original) {
+		TimePreferences copy = new TimePreferences(original.getId(), original.getMonPreferences(),
+				original.getTuePreferences(), original.getWedPreferences(), original.getThuPreferences(),
+				original.getFriPreferences());
+
+		return copy;
 	}
 
 	private void DeleteSelectedRow() {

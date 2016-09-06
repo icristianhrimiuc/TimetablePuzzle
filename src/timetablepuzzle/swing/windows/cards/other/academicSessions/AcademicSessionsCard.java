@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,6 +90,13 @@ public class AcademicSessionsCard extends JPanel {
 
 		this.textFieldName = new JTextField(30);
 		this.textFieldName.setHorizontalAlignment(JTextField.CENTER);
+		this.textFieldName.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CreateAndSaveNew();
+			}
+		});
 
 		// Date pickers
 		this.datePickerSessionStartDateModel = CreateUtilDateModel();
@@ -102,7 +110,7 @@ public class AcademicSessionsCard extends JPanel {
 
 		// Accepted solution combo box
 		this.comboBoxAcceptedSolutionModel = new CustomComboBoxModel<Solution>();
-		this.comboBoxAcceptedSolutionModel.setData(solutionDAOService.GetAll());
+		RefreshComboBoxAcceptedSolution();
 		this.comboBoxAcceptedSolution = new JComboBox<Solution>(this.comboBoxAcceptedSolutionModel);
 
 		this.idOfTheAcademicSessionToUpdate = 0;
@@ -137,6 +145,12 @@ public class AcademicSessionsCard extends JPanel {
 		
 		return jDatePicker;
 	}
+	
+	private void RefreshComboBoxAcceptedSolution(){
+		List<Solution> solutions = solutionDAOService.GetAll();
+		solutions.add(null);
+		this.comboBoxAcceptedSolutionModel.setData(solutions);
+	}
 
 	private void SetAcademicSessionCardComponents() {
 		this.setLayout(new GridLayout(2, 1));
@@ -151,16 +165,16 @@ public class AcademicSessionsCard extends JPanel {
 		return createNewAcademicSessionPanel;
 	}
 
-	private JPanel CreatePropertiesPanel() {
+	private JPanel CreatePropertiesPanel() {		
 		JPanel propertiesPanel = new JPanel();
 		propertiesPanel.setLayout(new BoxLayout(propertiesPanel, BoxLayout.Y_AXIS));
-
+		
 		propertiesPanel.add(CreatePropertyPanel("Name", this.textFieldName));
 		propertiesPanel.add(CreatePropertyPanel("Session Start Date", this.datePickerSessionStartDate));
 		propertiesPanel.add(CreatePropertyPanel("Classes End Date  ", this.datePickerClassesEndDate));
 		propertiesPanel.add(CreatePropertyPanel("Exams Start Date  ", this.datePickerExamsStartDate));
 		propertiesPanel.add(CreatePropertyPanel("Session End Date  ", this.datePickerSessionEndDate));
-		propertiesPanel.add(CreatePropertyPanel("AcceptedSolution  ", this.comboBoxAcceptedSolution));
+		propertiesPanel.add(AddOptionalLabel(CreatePropertyPanel("AcceptedSolution  ", this.comboBoxAcceptedSolution)));
 		propertiesPanel.add(this.notificationLabel);
 		propertiesPanel.add(CreateCrudButtonsPanel());
 
@@ -181,6 +195,15 @@ public class AcademicSessionsCard extends JPanel {
 
 		return propertyPanel;
 	}
+	
+	private JPanel AddOptionalLabel(JPanel propertyPanel){
+		JLabel optionalLabel = new JLabel("Optional*");
+		optionalLabel.setForeground(Color.LIGHT_GRAY);
+		propertyPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+		propertyPanel.add(optionalLabel);
+		
+		return propertyPanel;
+	}
 
 	private JPanel CreateCrudButtonsPanel() {
 		JPanel crudButtonsPanel = new JPanel();
@@ -188,7 +211,7 @@ public class AcademicSessionsCard extends JPanel {
 		buttonSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CreateAndSaveNewAcademicSession();
+				CreateAndSaveNew();
 			}
 		});
 		;
@@ -225,7 +248,7 @@ public class AcademicSessionsCard extends JPanel {
 		return crudButtonsPanel;
 	}
 
-	private void CreateAndSaveNewAcademicSession() {
+	private void CreateAndSaveNew() {
 		String name = this.textFieldName.getText();
 		Calendar sessionStartDate = DateToCalendar((Date)this.datePickerSessionStartDate.getModel().getValue());
 		Calendar classesEndDate = DateToCalendar((Date)this.datePickerClassesEndDate.getModel().getValue());
@@ -233,22 +256,17 @@ public class AcademicSessionsCard extends JPanel {
 		Calendar sessionEndDate = DateToCalendar((Date)this.datePickerSessionEndDate.getModel().getValue());
 		Solution acceptedSolution = (Solution) this.comboBoxAcceptedSolution.getSelectedItem();
 
-		if (name.isEmpty() || acceptedSolution == null) {
+		if (name.isEmpty()) {
 			this.notificationLabel.setText("Please make sure that all the property fields are filled!");
 			LOGGER.log(Level.WARNING, "Attempt to create a new academicSession with empty property field.");
 		} else {
 			try {
-				AcademicSession academicSession = new AcademicSession();
-				academicSession.setName(name);
-				academicSession.setSessionStartDate(sessionStartDate);
-				academicSession.setClassesEndDate(classesEndDate);
-				academicSession.setExamsStartDate(examsStartDate);
-				academicSession.setSessionEndDate(sessionEndDate);
-				academicSession.setAcceptedSolution(acceptedSolution);
+				AcademicSession academicSession = new AcademicSession(this.idOfTheAcademicSessionToUpdate, name, sessionStartDate,
+						classesEndDate, examsStartDate, sessionEndDate, acceptedSolution);
 				
 				// Save the academicSession to the database
 				if (this.idOfTheAcademicSessionToUpdate != 0) {
-					academicSessionsDAOService.Update(this.idOfTheAcademicSessionToUpdate, academicSession);
+					academicSessionsDAOService.merge(academicSession);
 					RefreshTable();
 					ClearAllFields();
 					JOptionPane.showMessageDialog(null, "Updated successfully!");
@@ -279,17 +297,6 @@ public class AcademicSessionsCard extends JPanel {
 		  cal.setTime(date);
 		  
 		  return cal;
-		}
-
-	private void ClearAllFields() {
-		this.textFieldName.setText("");
-		this.datePickerSessionStartDateModel.setValue(new Date());
-		this.datePickerClassesEndDateModel.setValue(new Date());
-		this.datePickerExamsStartDateModel.setValue(new Date());
-		this.datePickerSessionEndDateModel.setValue(new Date());		
-		this.comboBoxAcceptedSolution.setSelectedIndex(-1);
-		this.idOfTheAcademicSessionToUpdate = 0;
-		this.notificationLabel.setText(" ");
 	}
 
 	private void LoadSelectedRowDetailsForEdit() {
@@ -306,6 +313,7 @@ public class AcademicSessionsCard extends JPanel {
 			this.datePickerExamsStartDateModel.setValue(existingAcademicSession.getExamsStartDate().getTime());
 			this.datePickerSessionEndDateModel.setValue(existingAcademicSession.getSessionEndDate().getTime());		
 			this.comboBoxAcceptedSolution.setSelectedItem(existingAcademicSession.getAcceptedSolution());
+			this.repaint();
 		}
 	}
 
@@ -333,6 +341,18 @@ public class AcademicSessionsCard extends JPanel {
 						e);
 			}
 		}
+	}
+
+	private void ClearAllFields() {
+		this.textFieldName.setText("");
+		this.datePickerSessionStartDateModel.setValue(new Date());
+		this.datePickerClassesEndDateModel.setValue(new Date());
+		this.datePickerExamsStartDateModel.setValue(new Date());
+		this.datePickerSessionEndDateModel.setValue(new Date());
+		this.comboBoxAcceptedSolution.setSelectedIndex(-1);
+		this.idOfTheAcademicSessionToUpdate = 0;
+		this.notificationLabel.setText(" ");
+		this.repaint();
 	}
 
 	private JPanel CreateAdjustmentPanel(JPanel componentPanel) {

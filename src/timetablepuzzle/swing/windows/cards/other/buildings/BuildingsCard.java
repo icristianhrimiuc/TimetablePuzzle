@@ -186,7 +186,7 @@ public class BuildingsCard extends JPanel {
 		propertiesPanel.add(CreateCrudButtonsPanel());
 		
 		JPanel adjustmentPanel = CreateAdjustmentPanel(propertiesPanel);
-		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update building"));
+		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update Building"));
 		
 		return adjustmentPanel;
 	}
@@ -197,6 +197,13 @@ public class BuildingsCard extends JPanel {
 		labelName.setLabelFor(propertyTextField);
 		labelName.setHorizontalAlignment(SwingConstants.CENTER);
 		propertyTextField.setHorizontalAlignment(JTextField.CENTER);
+		propertyTextField.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CreateAndSaveNew();
+			}
+		});
 		propertyPanel.add(labelName);
 		propertyPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 		propertyPanel.add(propertyTextField);
@@ -210,7 +217,7 @@ public class BuildingsCard extends JPanel {
 		buttonSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CreateAndSaveNewBuilding();
+				CreateAndSaveNew();
 			}
 		});
 		;
@@ -247,7 +254,7 @@ public class BuildingsCard extends JPanel {
 		return crudButtonsPanel;
 	}
 
-	private void CreateAndSaveNewBuilding() {
+	private void CreateAndSaveNew() {
 		String name = this.textFieldName.getText();
 		String abbreviation = this.textFieldAbbreviation.getText();
 		String address = this.textFieldAddress.getText();

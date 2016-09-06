@@ -37,8 +37,8 @@ public class AcademicSession{
 	@Column(name="session_end_date")
 	private Calendar sessionEndDate;
 	
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="accepted_solution_id", unique=true)
+	@OneToOne(cascade={CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH})
+	@JoinColumn(name="accepted_solution_id", unique=false)
 	private Solution acceptedSolution;
 	
 	public AcademicSession()
@@ -119,7 +119,7 @@ public class AcademicSession{
 	/*******************Methods that model the class behavior*******************/
 	@Override
 	public String toString() {
-		return String.format("%s %s", this.name, this.sessionStartDate.get(Calendar.YEAR));
+		return String.format("%s(%s)", this.name, this.sessionStartDate.get(Calendar.YEAR));
 	}
 
 	@Override

@@ -43,6 +43,8 @@ public class CustomComboBoxModel<E> extends AbstractListModel<E> implements Comb
 	public void setSelectedItem(Object anItem) {
 		if (this.data.contains(anItem)) {
 			this.selectedItem = (E)anItem;
+		}else{
+			this.selectedItem = null;
 		}
 	}
 

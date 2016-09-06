@@ -87,6 +87,13 @@ public class InstructorMeetingsCard extends JPanel {
 		
 		this.textFieldNrOfMeetings = new JTextField(10);
 		this.textFieldNrOfMeetings.setHorizontalAlignment(JTextField.CENTER);
+		this.textFieldNrOfMeetings.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CreateAndSaveNew();
+			}
+		});
 		AddDocumentListener(this.textFieldNrOfMeetings);
 		
 		SetInstructorMeetingsCardComponents();
@@ -200,7 +207,7 @@ public class InstructorMeetingsCard extends JPanel {
 		buttonSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CreateAndSaveNewRoomType();
+				CreateAndSaveNew();
 			}
 		});
 		;
@@ -237,7 +244,7 @@ public class InstructorMeetingsCard extends JPanel {
 		return crudButtonsPanel;
 	}
 
-	private void CreateAndSaveNewRoomType() {
+	private void CreateAndSaveNew() {
 		Instructor instructor = (Instructor)this.comboBoxInstructor.getSelectedItem();
 		Offering offering = (Offering)this.comboBoxOffering.getSelectedItem();
 		String nrOfMeetings = this.textFieldNrOfMeetings.getText();

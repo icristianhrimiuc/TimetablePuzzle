@@ -13,15 +13,15 @@ public class AcademicYear {
 	@Column(name = "name")
 	private String name;
 
-	@OneToOne(cascade = CascadeType.ALL, optional = false)
+	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, optional = false)
 	@JoinColumn(name = "first_academicsession_id", unique = false, nullable = false)
 	private AcademicSession firstAcademicSession;
 
-	@OneToOne(cascade = CascadeType.ALL, optional = false)
+	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, optional = false)
 	@JoinColumn(name = "second_academicsession_id", unique = false, nullable = false)
 	private AcademicSession secondAcademicSession;
 
-	@OneToOne(cascade = CascadeType.ALL, optional = true)
+	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, optional = true)
 	@JoinColumn(name = "third_academicsession_id", unique = false, nullable = true)
 	private AcademicSession thirdAcademicSession;
 

@@ -161,18 +161,7 @@ public class RoomTypesCard extends JPanel {
 
 		// Adjust properties on center
 		JPanel adjustmentPanel = CreateAdjustmentPanel(propertiesPanel);
-		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update room type"));
-		
-		return adjustmentPanel;
-	}
-	
-	private JPanel CreateAdjustmentPanel(JPanel componentPanel){
-		JPanel adjustmentPanel = new JPanel();
-		adjustmentPanel.add(componentPanel);
-		SpringLayout layout = new SpringLayout();
-		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, componentPanel, 0, SpringLayout.HORIZONTAL_CENTER, adjustmentPanel);
-		layout.putConstraint(SpringLayout.VERTICAL_CENTER, componentPanel, 0, SpringLayout.VERTICAL_CENTER, adjustmentPanel);
-		adjustmentPanel.setLayout(layout);
+		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update Room Type"));
 		
 		return adjustmentPanel;
 	}
@@ -442,6 +431,17 @@ public class RoomTypesCard extends JPanel {
 			LOGGER.log(Level.SEVERE, "An error occured. Please make sure that nothing else depends on this roomFeature.", e);
 		}
 		RefreshTransferableItemsControl(new ArrayList<RoomFeature>());
+	}
+	
+	private JPanel CreateAdjustmentPanel(JPanel componentPanel){
+		JPanel adjustmentPanel = new JPanel();
+		adjustmentPanel.add(componentPanel);
+		SpringLayout layout = new SpringLayout();
+		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, componentPanel, 0, SpringLayout.HORIZONTAL_CENTER, adjustmentPanel);
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, componentPanel, 0, SpringLayout.VERTICAL_CENTER, adjustmentPanel);
+		adjustmentPanel.setLayout(layout);
+		
+		return adjustmentPanel;
 	}
 
 	private JPanel CreateViewAllRoomTypesPanel() {

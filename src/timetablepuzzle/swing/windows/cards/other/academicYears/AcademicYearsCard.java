@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +26,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import timetablepuzzle.eclipselink.DAO.JPA.services.other.AcademicSessionJPADAOService;
 import timetablepuzzle.eclipselink.DAO.JPA.services.other.AcademicYearJPADAOService;
@@ -63,6 +65,9 @@ public class AcademicYearsCard extends JPanel {
 		this.academicYearsTableModel = new AcademicYearsTableModel();
 		RefreshTable();
 		this.academicYearsTable = new JTable(this.academicYearsTableModel);
+		DefaultTableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
+		defaultRenderer.setHorizontalAlignment(JLabel.CENTER);
+		this.academicYearsTable.setDefaultRenderer(String.class, defaultRenderer);
 		SetColumnsMaxSizes();
 		
 		// Notification label
@@ -72,6 +77,13 @@ public class AcademicYearsCard extends JPanel {
 		
 		this.textFieldName = new JTextField(20);
 		this.textFieldName.setHorizontalAlignment(JTextField.CENTER);
+		this.textFieldName.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CreateAndSaveNew();
+			}
+		});
 		
 		// First Academic Session combo box
 		this.comboBoxFirstAcademicSessionModel = new CustomComboBoxModel<AcademicSession>();
@@ -110,7 +122,9 @@ public class AcademicYearsCard extends JPanel {
 	}
 	
 	private void RefreshComboBoxThirdAcademicSession(){
-		this.comboBoxThirdAcademicSessionModel.setData(academicSessionDAOService.GetAll());
+		List<AcademicSession> academisSessions = academicSessionDAOService.GetAll();
+		academisSessions.add(null);
+		this.comboBoxThirdAcademicSessionModel.setData(academisSessions);
 	}
 
 	private void SetAcademicYearsCardComponents() {
@@ -126,19 +140,20 @@ public class AcademicYearsCard extends JPanel {
 		return createNewAcademicYearPanel;
 	}
 
-	private JPanel CreatePropertiesPanel() {
+	private JPanel CreatePropertiesPanel() {		
 		JPanel propertiesPanel = new JPanel();
 		propertiesPanel.setLayout(new BoxLayout(propertiesPanel, BoxLayout.Y_AXIS));
+		
 		propertiesPanel.add(CreatePropertyPanel("Name", this.textFieldName));
 		propertiesPanel.add(CreatePropertyPanel("First Academic Session", this.comboBoxFirstAcademicSession));
 		propertiesPanel.add(CreatePropertyPanel("Second Academic Session", this.comboBoxSecondAcademicSession));
-		propertiesPanel.add(CreatePropertyPanel("Third Academic Session", this.comboBoxThirdAcademicSession));
+		propertiesPanel.add(AddOptionalLabel(CreatePropertyPanel("Third Academic Session ", this.comboBoxThirdAcademicSession)));
 		propertiesPanel.add(this.notificationLabel);
 		propertiesPanel.add(CreateCrudButtonsPanel());
 
 		// Adjust properties on center
 		JPanel adjustmentPanel = CreateAdjustmentPanel(propertiesPanel);
-		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update room type"));
+		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update Academic Year"));
 		
 		return adjustmentPanel;
 	}
@@ -154,6 +169,15 @@ public class AcademicYearsCard extends JPanel {
 
 		return propertyPanel;
 	}
+	
+	private JPanel AddOptionalLabel(JPanel propertyPanel){
+		JLabel optionalLabel = new JLabel("Optional*");
+		optionalLabel.setForeground(Color.LIGHT_GRAY);
+		propertyPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+		propertyPanel.add(optionalLabel);
+		
+		return propertyPanel;
+	}
 
 	private JPanel CreateCrudButtonsPanel() {
 		JPanel crudButtonsPanel = new JPanel();
@@ -161,7 +185,7 @@ public class AcademicYearsCard extends JPanel {
 		buttonSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CreateAndSaveNewRoomType();
+				CreateAndSaveNew();
 			}
 		});
 		;
@@ -198,7 +222,7 @@ public class AcademicYearsCard extends JPanel {
 		return crudButtonsPanel;
 	}
 
-	private void CreateAndSaveNewRoomType() {
+	private void CreateAndSaveNew() {
 		String name = this.textFieldName.getText();
 		AcademicSession firstAcademicSession = (AcademicSession)this.comboBoxFirstAcademicSession.getSelectedItem();
 		AcademicSession secondAcademicSession = (AcademicSession)this.comboBoxSecondAcademicSession.getSelectedItem();
@@ -247,10 +271,12 @@ public class AcademicYearsCard extends JPanel {
 			LOGGER.log(Level.WARNING, "An attempt was made to edit a academicYear while no row was selected.");
 		} else {
 			AcademicYear existingAcademicYear = this.academicYearsTableModel.elementAt(selecteRow);
+			this.idOfTheAcademicYearToUpdate = existingAcademicYear.getId();
 			this.textFieldName.setText(existingAcademicYear.getName());
 			this.comboBoxFirstAcademicSession.setSelectedItem(existingAcademicYear.getFirstAcademicSession());
 			this.comboBoxSecondAcademicSession.setSelectedItem(existingAcademicYear.getSecondAcademicSession());
 			this.comboBoxThirdAcademicSession.setSelectedItem(existingAcademicYear.getThirdAcademicSession());
+			this.repaint();
 		}
 	}
 
@@ -284,6 +310,7 @@ public class AcademicYearsCard extends JPanel {
 		this.comboBoxThirdAcademicSession.setSelectedItem(null);
 		this.notificationLabel.setText("  ");
 		this.idOfTheAcademicYearToUpdate = 0;
+		this.repaint();
 	}
 	
 	private JPanel CreateAdjustmentPanel(JPanel componentPanel){

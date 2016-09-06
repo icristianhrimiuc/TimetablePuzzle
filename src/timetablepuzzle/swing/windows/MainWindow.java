@@ -345,24 +345,11 @@ public class MainWindow implements ActionListener {
 		headerPanel.add(Box.createHorizontalGlue());
 		headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
 
-		// Create the user type & user last name section
-		String userName = loggedUser.getFirstName() + " " + loggedUser.getLastName();
-		String userType = loggedUser.getUserType().toString();
-		JPanel hUserSection = CreateHeaderSection("User Name&Type:", userName + "-" + userType.toLowerCase(),
-				"Show all users");
-
-		// Create the academic year section
-		String lastViewedAcadYear = viewedAcadYear.getName();
-		JPanel hViewedAcademicYear = CreateHeaderSection("Academic year:", lastViewedAcadYear, "Change year");
-
-		// Create the academic session section
-		String lastViewedAcadSession = viewedAcadSession.getName();
-		JPanel hViewedAcademicSession = CreateHeaderSection("Academic session:", lastViewedAcadSession,
-				"Change session");
-
-		// Create the faculty section
-		String lastViewedFaculty = viewedFaculty.getName();
-		JPanel hViewedFaculty = CreateHeaderSection("Faculty:", lastViewedFaculty, "Change faculty");
+		// Create header sections
+		JPanel hUserSection = CreateHeaderSection("User Name&Type:", loggedUser.toString(), "Show all users");
+		JPanel hViewedAcademicYear = CreateHeaderSection("Academic year:", viewedAcadYear.toString(), "Change year");
+		JPanel hViewedAcademicSession = CreateHeaderSection("Academic session:", viewedAcadSession.toString(), "Change session");
+		JPanel hViewedFaculty = CreateHeaderSection("Faculty:", viewedFaculty.toString(), "Change faculty");
 
 		// Add the different section to the header panel
 		headerPanel.add(hUserSection);

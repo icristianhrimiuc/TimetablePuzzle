@@ -17,7 +17,7 @@ public class Building{
 	private String abbreviation;
 
 	@OneToOne(cascade=CascadeType.ALL,optional=false)
-	@JoinColumn(name="location_id", unique=true, nullable=false, updatable=false)
+	@JoinColumn(name="location_id", unique=true, nullable=false)
 	private Location location;
 	
 	public Building()

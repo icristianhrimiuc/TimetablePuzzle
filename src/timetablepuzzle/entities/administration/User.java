@@ -137,7 +137,7 @@ public class User{
 
 	@Override
 	public String toString() {
-		return String.format("%s(%s)", this.username, this.userType.name());
+		return String.format("%s %s(%s)", this.firstName, this.lastName, this.userType.name().toLowerCase());
 	}
 
 	@Override
