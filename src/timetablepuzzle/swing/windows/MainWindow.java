@@ -266,7 +266,6 @@ public class MainWindow implements ActionListener {
 		JMenuItem mntmAcademicYears = new JMenuItem(ACADEMIC_YEARS_CARD);
 		JMenuItem mntmAcademicSessions = new JMenuItem(ACADEMIC_SESSIONS_CARD);
 		JMenuItem mntmBuildings = new JMenuItem(BUILDING_CARD);
-		JMenuItem mntmDatePatterns = new JMenuItem("Date Patterns");
 		JMenuItem mntmRoomtypes = new JMenuItem(ROOM_TYPE_CARD);
 		JMenuItem menuTimePreferences = new JMenuItem(TIME_PREFERENCES_CARD);
 		
@@ -282,7 +281,6 @@ public class MainWindow implements ActionListener {
 		mnOther.add(mntmAcademicSessions);
 		mnOther.add(new JSeparator());
 		mnOther.add(mntmBuildings);
-		mnOther.add(mntmDatePatterns);
 		mnOther.add(mntmRoomtypes);
 		mnOther.add(menuTimePreferences);
 		return mnOther;

@@ -5,28 +5,27 @@
 	<persistence-unit name="TimetablePuzzle" transaction-type="RESOURCE_LOCAL" >
 		<!-- EclipseLink -->
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>timetablepuzzle.entities.other.AcademicSession</class>
+		<class>timetablepuzzle.entities.other.AcademicYear</class>
 		<class>timetablepuzzle.entities.other.RoomFeature</class>
 		<class>timetablepuzzle.entities.other.RoomType</class>
 		<class>timetablepuzzle.entities.other.Location</class>
-		<class>timetablepuzzle.entities.other.DatePattern</class>
-		<class>timetablepuzzle.entities.other.TimePreferences</class>
 		<class>timetablepuzzle.entities.other.Building</class>
-		<class>timetablepuzzle.entities.inputData.Instructor</class>
-		<class>timetablepuzzle.entities.inputData.Room</class>
-		<class>timetablepuzzle.entities.inputData.StudentGroup</class>
+		<class>timetablepuzzle.entities.other.TimePreferences</class>
 		<class>timetablepuzzle.entities.administration.Offering</class>
-		<class>timetablepuzzle.entities.administration.CourseOffering</class>
-		<class>timetablepuzzle.entities.inputData.Class</class>
-		<class>timetablepuzzle.entities.Solution</class>
 		<class>timetablepuzzle.entities.administration.InstructorMeetings</class>
+		<class>timetablepuzzle.entities.administration.CourseOffering</class>
 		<class>timetablepuzzle.entities.administration.Curricula</class>
 		<class>timetablepuzzle.entities.administration.SubjectArea</class>
 		<class>timetablepuzzle.entities.administration.YearOfStudy</class>
 		<class>timetablepuzzle.entities.administration.Department</class>
-		<class>timetablepuzzle.entities.other.AcademicSession</class>
-		<class>timetablepuzzle.entities.other.AcademicYear</class>
 		<class>timetablepuzzle.entities.administration.Faculty</class>
 		<class>timetablepuzzle.entities.administration.User</class>
+		<class>timetablepuzzle.entities.inputData.Instructor</class>
+		<class>timetablepuzzle.entities.inputData.Room</class>
+		<class>timetablepuzzle.entities.inputData.StudentGroup</class>
+		<class>timetablepuzzle.entities.inputData.Class</class>
+		<class>timetablepuzzle.entities.Solution</class>
 		
 		
 		<properties>

@@ -6,12 +6,12 @@ import javax.persistence.*;
 
 import timetablepuzzle.entities.inputData.Instructor;
 import timetablepuzzle.entities.inputData.Room;
-import timetablepuzzle.entities.other.DatePattern;
 
 @Entity
 @Table(name="offerings")
 public class Offering{
 	public static enum OfferingType{LECTURE,SEMINARY,LABORATORY,GYM,UNASSIGNED};
+	public static enum DatePattern{FULL_TERM,EVEN_WEEKS,ODD_WEEKS,FIRST_HALF,SECOND_HALF}
 
 	@Id
 	@Column(name="id")
@@ -41,8 +41,9 @@ public class Offering{
          @JoinColumn(name="instructormeetings_id"))
 	private List<InstructorMeetings> nrOfMeetingsPerInstructor;
 	
-	@ManyToOne(cascade=CascadeType.ALL,targetEntity=DatePattern.class,optional=false)
 	@JoinColumn(name="date_pattern", nullable=false, updatable=false)
+	@Column(name="date_pattern", nullable=false)
+	@Enumerated(EnumType.STRING)
 	private DatePattern datePattern;
 	
 	@Column(name="nroftimeslots")
@@ -54,7 +55,7 @@ public class Offering{
 	public Offering()
 	{
 		this(0,"NoName",OfferingType.UNASSIGNED,new ArrayList<Room>(),
-				new ArrayList<InstructorMeetings>(),new DatePattern(),0,0);
+				new ArrayList<InstructorMeetings>(), DatePattern.FULL_TERM,0,0);
 	}
 
 	public Offering(int id, String name, OfferingType type,
