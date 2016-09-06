@@ -18,19 +18,22 @@ public class TimePreferences{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name="monday")
+	@Column(name="name", nullable=false)
+	private String name;
+	
+	@Column(name="monday", nullable=false)
 	private String monPreferences;
 	
-	@Column(name="tuesday")
+	@Column(name="tuesday", nullable=false)
 	private String tuePreferences;
 	
-	@Column(name="wednesday")
+	@Column(name="wednesday", nullable=false)
 	private String wedPreferences;
 	
-	@Column(name="thursday")
+	@Column(name="thursday", nullable=false)
 	private String thuPreferences;
 	
-	@Column(name="friday")
+	@Column(name="friday", nullable=false)
 	private String friPreferences;
 	
 	@Transient
@@ -50,15 +53,16 @@ public class TimePreferences{
 
 	public TimePreferences()
 	{
-		this(0, generateSamePreferenceAllDay(TimePreference.NEUTRAL), generateSamePreferenceAllDay(TimePreference.NEUTRAL),
+		this(0, "NoName", generateSamePreferenceAllDay(TimePreference.NEUTRAL), generateSamePreferenceAllDay(TimePreference.NEUTRAL),
 				generateSamePreferenceAllDay(TimePreference.NEUTRAL), generateSamePreferenceAllDay(TimePreference.NEUTRAL),
 				generateSamePreferenceAllDay(TimePreference.NEUTRAL));
 	}
 
-	public TimePreferences(int id, String monPreferences, String tuePreferences,
+	public TimePreferences(int id, String name, String monPreferences, String tuePreferences,
 			String wedPreferences, String thuPreferences, String friPreferences)
 	{
 		this.id = id;
+		this.setName(name);
 		setMonPreferences(monPreferences);
 		setTuePreferences(tuePreferences);
 		setWedPreferences(wedPreferences);
@@ -69,6 +73,14 @@ public class TimePreferences{
 	/*********Getters and setters*********/
 	public int getId() {
 		return this.id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public String getMonPreferences()

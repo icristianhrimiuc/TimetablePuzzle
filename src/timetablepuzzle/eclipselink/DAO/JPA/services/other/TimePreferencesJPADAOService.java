@@ -27,6 +27,7 @@ public class TimePreferencesJPADAOService extends JPADAO<TimePreferences,Integer
 		if(existingTimePreference != null)
 		{
 			this.entityManager.getTransaction().begin();
+			existingTimePreference.setName(newTimePreferences.getName());
 			existingTimePreference.setMonPreferences(newTimePreferences.getMonPreferences());
 			existingTimePreference.setTuePreferences(newTimePreferences.getTuePreferences());
 			existingTimePreference.setWedPreferences(newTimePreferences.getWedPreferences());

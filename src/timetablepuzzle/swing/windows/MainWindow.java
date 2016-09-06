@@ -163,15 +163,15 @@ public class MainWindow implements ActionListener {
 			jMenuBar.add(mnCourseTimetabling);
 		}
 
-		// Input Data menu
-		JMenu mnInputData = CreateJMenuInputData();
-		jMenuBar.add(mnInputData);
-
 		// Administration menu
 		if (userType == UserType.ADMIN || userType == UserType.SECRETARY || userType == UserType.INSTRUCTOR) {
 			JMenu mnAdministration = CreateJMenuAdministration();
 			jMenuBar.add(mnAdministration);
 		}
+
+		// Input Data menu
+		JMenu mnInputData = CreateJMenuInputData();
+		jMenuBar.add(mnInputData);
 
 		// Other menu
 		if (userType == UserType.ADMIN || userType == UserType.SECRETARY) {
@@ -216,73 +216,77 @@ public class MainWindow implements ActionListener {
 		return mnCourseTimetabling;
 	}
 
+	private JMenu CreateJMenuAdministration() {
+		JMenu mnAdministration = new JMenu("Administration");
+		// Administration menu items
+		JMenuItem mntmOfferings = new JMenuItem("Offerings");
+		JMenuItem mntmInstructorMeetings = new JMenuItem(INSTRUCTOR_MEETINGS_CARD);
+		JMenuItem mntmCourseOfferings = new JMenuItem("Course Offerings");
+		JMenuItem mntmCurriculas = new JMenuItem("Curriculas");
+		JMenuItem mntmSubjectAreas = new JMenuItem("Subject Areas");
+		JMenuItem mntmYearsOfStudy = new JMenuItem("Years Of Study");
+		JMenuItem mntmDepartments = new JMenuItem("Departments");
+		JMenuItem mntmFaculties = new JMenuItem("Faculties");
+		
+		// Add action listeners
+		mntmInstructorMeetings.addActionListener(this);
+		
+		// Add menu items
+		mnAdministration.add(mntmOfferings);
+		mnAdministration.add(mntmInstructorMeetings);
+		mnAdministration.add(mntmCourseOfferings);
+		mnAdministration.add(mntmCurriculas);
+		mnAdministration.add(new JSeparator());
+		mnAdministration.add(mntmSubjectAreas);
+		mnAdministration.add(mntmYearsOfStudy);
+		mnAdministration.add(mntmDepartments);
+		mnAdministration.add(mntmFaculties);
+		
+		return mnAdministration;
+	}
+
 	private JMenu CreateJMenuInputData() {
 		JMenu mnInputData = new JMenu("InputData");
 
 		// Input data menu items
-		JMenuItem mntmClasses = new JMenuItem("Classes");
 		JMenuItem mntmInstructors = new JMenuItem("Instructors");
 		JMenuItem mntmRooms = new JMenuItem("Rooms");
 		JMenuItem mntmStudentgroups = new JMenuItem("StudentGroups");
+		JMenuItem mntmClasses = new JMenuItem("Classes");
 
 		// Add menu items
-		mnInputData.add(new JSeparator());
-		mnInputData.add(mntmClasses);
 		mnInputData.add(mntmInstructors);
 		mnInputData.add(mntmRooms);
 		mnInputData.add(mntmStudentgroups);
+		mnInputData.add(mntmClasses);
 
 		return mnInputData;
-	}
-
-	private JMenu CreateJMenuAdministration() {
-		JMenu mnAdministration = new JMenu("Administration");
-		// Administration menu items
-		JMenuItem mntmFaculties = new JMenuItem("Faculties");
-		JMenuItem mntmDepartments = new JMenuItem("Departments");
-		JMenuItem mntmYearsOfStudy = new JMenuItem("Years Of Study");
-		JMenuItem mntmSubjectAreas = new JMenuItem("Subject Areas");
-		JMenuItem mntmCurriculas = new JMenuItem("Curriculas");
-		JMenuItem mntmCourseOfferings = new JMenuItem("Course Offerings");
-		JMenuItem mntmInstructorMeetings = new JMenuItem(INSTRUCTOR_MEETINGS_CARD);
-		mntmInstructorMeetings.addActionListener(this);
-		JMenuItem mntmOfferings = new JMenuItem("Offerings");
-		// Add menu items
-		mnAdministration.add(mntmFaculties);
-		mnAdministration.add(mntmDepartments);
-		mnAdministration.add(mntmYearsOfStudy);
-		mnAdministration.add(mntmSubjectAreas);
-		mnAdministration.add(new JSeparator());
-		mnAdministration.add(mntmCurriculas);
-		mnAdministration.add(mntmCourseOfferings);
-		mnAdministration.add(mntmInstructorMeetings);
-		mnAdministration.add(mntmOfferings);
-		return mnAdministration;
 	}
 
 	private JMenu CreateJMenuOther() {
 		JMenu mnOther = new JMenu("Other");
 		// Other menu items
-		JMenuItem mntmAcademicYears = new JMenuItem(ACADEMIC_YEARS_CARD);
 		JMenuItem mntmAcademicSessions = new JMenuItem(ACADEMIC_SESSIONS_CARD);
+		JMenuItem mntmAcademicYears = new JMenuItem(ACADEMIC_YEARS_CARD);
 		JMenuItem mntmBuildings = new JMenuItem(BUILDING_CARD);
 		JMenuItem mntmRoomtypes = new JMenuItem(ROOM_TYPE_CARD);
 		JMenuItem menuTimePreferences = new JMenuItem(TIME_PREFERENCES_CARD);
 		
 		// Add action listeners
-		mntmAcademicYears.addActionListener(this);
 		mntmAcademicSessions.addActionListener(this);
+		mntmAcademicYears.addActionListener(this);
 		mntmBuildings.addActionListener(this);
 		mntmRoomtypes.addActionListener(this);
 		menuTimePreferences.addActionListener(this);
 		
 		// Add menu items
-		mnOther.add(mntmAcademicYears);
 		mnOther.add(mntmAcademicSessions);
+		mnOther.add(mntmAcademicYears);
 		mnOther.add(new JSeparator());
 		mnOther.add(mntmBuildings);
 		mnOther.add(mntmRoomtypes);
 		mnOther.add(menuTimePreferences);
+		
 		return mnOther;
 	}
 

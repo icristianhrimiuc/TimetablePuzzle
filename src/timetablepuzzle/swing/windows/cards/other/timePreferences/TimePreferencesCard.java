@@ -16,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -43,6 +44,7 @@ public class TimePreferencesCard extends JPanel {
 
 	private TimePreferencesTableModel timePreferencesTableModel;
 	private JTable timePreferencesTable;
+	private JTextField textFieldName;
 	private JLabel notificationLabel;
 	private WeekPreferencesTableModel weekPreferencesTableModel;
 	private JTable weekPreferencesTable;
@@ -58,6 +60,16 @@ public class TimePreferencesCard extends JPanel {
 		defaultRenderer.setHorizontalAlignment(JLabel.CENTER);
 		this.timePreferencesTable.setDefaultRenderer(String.class, defaultRenderer);
 		SetColumnsMaxSizes();
+
+		this.textFieldName = new JTextField(20);
+		this.textFieldName.setHorizontalAlignment(JTextField.CENTER);
+		this.textFieldName.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CreateAndSaveNew();
+			}
+		});
 
 		this.notificationLabel = new JLabel("  ");
 		this.notificationLabel.setForeground(Color.RED);
@@ -84,9 +96,9 @@ public class TimePreferencesCard extends JPanel {
 	}
 
 	private void ConfigureWeekPreferencesTable() {
-		this.weekPreferencesTable.setRowHeight(35);
+		this.weekPreferencesTable.setRowHeight(32);
 		for (int i = 0; i <= 12; i++) {
-			this.weekPreferencesTable.getColumnModel().getColumn(i).setMaxWidth(35);
+			this.weekPreferencesTable.getColumnModel().getColumn(i).setMaxWidth(32);
 		}
 		this.weekPreferencesTable.setDefaultRenderer(String.class, new WeekPreferencesCellRenderer());
 		this.weekPreferencesTable.setRowSelectionAllowed(false);
@@ -141,6 +153,7 @@ public class TimePreferencesCard extends JPanel {
 		weekPreferencesPanel.setLayout(new BoxLayout(weekPreferencesPanel, BoxLayout.Y_AXIS));
 		weekPreferencesPanel.add(this.weekPreferencesTable);
 		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
+		weekPreferencesPanel.add(CreatePropertyPanel("Name", this.textFieldName));
 		weekPreferencesPanel.add(this.notificationLabel);
 		weekPreferencesPanel.add(CreateCrudButtonsPanel());
 
@@ -149,6 +162,18 @@ public class TimePreferencesCard extends JPanel {
 		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update Time Preferences"));
 
 		return adjustmentPanel;
+	}
+
+	private JPanel CreatePropertyPanel(String propertyName, JComponent propertyTextField) {
+		JPanel propertyPanel = new JPanel();
+		JLabel labelName = new JLabel(propertyName, JLabel.TRAILING);
+		labelName.setLabelFor(propertyTextField);
+		labelName.setHorizontalAlignment(SwingConstants.CENTER);
+		propertyPanel.add(labelName);
+		propertyPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+		propertyPanel.add(propertyTextField);
+
+		return propertyPanel;
 	}
 
 	private JPanel CreateExplanatoryPanelPanel() {
@@ -241,27 +266,35 @@ public class TimePreferencesCard extends JPanel {
 	}
 
 	private void CreateAndSaveNew() {
-		try {
-			TimePreferences timePreferences = this.weekPreferencesTableModel.getData();
+		String name = this.textFieldName.getText();
 
-			if (this.idOfTheTimePreferencesToUpdate != 0) {
-				timePreferencesDAOService.Update(this.idOfTheTimePreferencesToUpdate, timePreferences);
-				RefreshTable();
-				ClearAllFields();
-				JOptionPane.showMessageDialog(null, "Updated successfully!");
-				LOGGER.log(Level.FINE, "Update performed on timePreferences with id {0}.",
-						new Object[] { timePreferences.getId() });
-			} else {
-				timePreferencesDAOService.persist(timePreferences);
-				RefreshTable();
-				ClearAllFields();
-				JOptionPane.showMessageDialog(null, "Saved successfully!");
-				LOGGER.log(Level.FINE, "Create performed on timePreferences. ");
+		if ((name.isEmpty())) {
+			this.notificationLabel.setText("Please make sure that all the property fields are filled!");
+			LOGGER.log(Level.WARNING, "Attempt to create a new timePreferences with empty property field.");
+		} else {
+			try {
+				TimePreferences timePreferences = this.weekPreferencesTableModel.getData();
+				timePreferences.setName(name);
+
+				if (this.idOfTheTimePreferencesToUpdate != 0) {
+					timePreferencesDAOService.Update(this.idOfTheTimePreferencesToUpdate, timePreferences);
+					RefreshTable();
+					ClearAllFields();
+					JOptionPane.showMessageDialog(null, "Updated successfully!");
+					LOGGER.log(Level.FINE, "Update performed on timePreferences with id {0}.",
+							new Object[] { timePreferences.getId() });
+				} else {
+					timePreferencesDAOService.persist(timePreferences);
+					RefreshTable();
+					ClearAllFields();
+					JOptionPane.showMessageDialog(null, "Saved successfully!");
+					LOGGER.log(Level.FINE, "Create performed on timePreferences. ");
+				}
+			} catch (Exception e) {
+				this.notificationLabel
+						.setText("A error occured while saving the timePreferences. Check log files for more info!");
+				LOGGER.log(Level.SEVERE, "A error occured while saving the timePreferences" + e.toString(), e);
 			}
-		} catch (Exception e) {
-			this.notificationLabel
-					.setText("A error occured while saving the timePreferences. Check log files for more info!");
-			LOGGER.log(Level.SEVERE, "A error occured while saving the timePreferences" + e.toString(), e);
 		}
 	}
 
@@ -273,13 +306,14 @@ public class TimePreferencesCard extends JPanel {
 		} else {
 			TimePreferences existingTimePreferences = this.timePreferencesTableModel.elementAt(selecteRow);
 			this.idOfTheTimePreferencesToUpdate = existingTimePreferences.getId();
+			this.textFieldName.setText(existingTimePreferences.getName());
 			this.weekPreferencesTableModel.setData(DeepCopyTimePreferences(existingTimePreferences));
 			this.repaint();
 		}
 	}
 
 	private TimePreferences DeepCopyTimePreferences(TimePreferences original) {
-		TimePreferences copy = new TimePreferences(original.getId(), original.getMonPreferences(),
+		TimePreferences copy = new TimePreferences(original.getId(), original.getName(), original.getMonPreferences(),
 				original.getTuePreferences(), original.getWedPreferences(), original.getThuPreferences(),
 				original.getFriPreferences());
 
@@ -314,6 +348,7 @@ public class TimePreferencesCard extends JPanel {
 
 	private void ClearAllFields() {
 		RefreshTableWeekPreferences();
+		this.textFieldName.setText("");
 		this.idOfTheTimePreferencesToUpdate = 0;
 		this.notificationLabel.setText("  ");
 	}

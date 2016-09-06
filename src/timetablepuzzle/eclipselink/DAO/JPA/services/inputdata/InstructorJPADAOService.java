@@ -27,7 +27,8 @@ public class InstructorJPADAOService extends JPADAO<Instructor,Integer> implemen
 		if(existingInstructor != null)
 		{
 			this.entityManager.getTransaction().begin();
-			existingInstructor.setName(newInstructor.getName());
+			existingInstructor.setFirstName(newInstructor.getFirstName());
+			existingInstructor.setLastName(newInstructor.getLastName());
 			existingInstructor.setAcademicTitle(newInstructor.getAcademicTitle());
 			existingInstructor.setTimePreferences(newInstructor.getTimePreferences());
 			this.entityManager.getTransaction().commit();

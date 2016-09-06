@@ -14,40 +14,53 @@ public class Instructor{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name="name")
-	private String name;
+	@Column(name="first_name",nullable=false)
+	private String firstName;
+	
+	@Column(name="last_name",nullable=false)
+	private String lastName;
 	
 	@Column(name="academic_title")
 	private String academicTitle;
 	
-	@OneToOne(cascade=CascadeType.ALL,optional=false)
+	@OneToOne(cascade={CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH},optional=false)
 	@JoinColumn(name="timepreferences_id", unique=true, nullable=false, updatable=false)
 	private TimePreferences timePreferences;
 
 	public Instructor()
 	{
-		this(0,"NoName","NoPosition",new TimePreferences());
+		this(0,"Nemo", "Nobody", "NoPosition",new TimePreferences());
 	}
 
-	public Instructor(int id, String name, String academicTitle,
+	public Instructor(int id, String firstName, String lastName, String academicTitle,
 			TimePreferences timePreferences)
 	{
 		this.id = id;
-		setName(name);
+		this.setFirstName(firstName);
+		this.setLastName(lastName);
 		setAcademicTitle(academicTitle);
 		setTimePreferences(timePreferences);
 	}
+	
 	/**********Getters and setters**************/
 	public int getId() {
 		return id;
 	}
-	
-	public String getName() {
-		return this.name;
+
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getAcademicTitle() {
@@ -68,6 +81,8 @@ public class Instructor{
 		this.timePreferences = timePreferences;
 	}
 	
+	/**************Methods that model the class behavior******************/
+	
 	public TimePreference[] getTimePreferencesByDay(DayOfTheWeek dayOfTheWeek) {
 		return timePreferences.getPreferencesByDay(dayOfTheWeek);
 	}
@@ -85,5 +100,4 @@ public class Instructor{
 	{
 		this.timePreferences.setPreferencesByDayAndTime(dayOfTheWeek, timePref, slotNr);
 	}
-	/**************Methods that model the class behavior******************/
 }

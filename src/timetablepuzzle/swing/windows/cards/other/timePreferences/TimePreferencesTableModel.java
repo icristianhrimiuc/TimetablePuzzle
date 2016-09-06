@@ -13,13 +13,14 @@ class TimePreferencesTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final int Column_Id = 0;
-	private static final int Column_MonPreerences = 1;
-	private static final int Column_TuePreferences = 2;
-	private static final int Column_WedPreferences = 3;
-	private static final int Column_ThuPreferences = 4;
-	private static final int Column_FriPreferences = 5;
+	private static final int Column_Name = 1;
+	private static final int Column_MonPreerences = 2;
+	private static final int Column_TuePreferences = 3;
+	private static final int Column_WedPreferences = 4;
+	private static final int Column_ThuPreferences = 5;
+	private static final int Column_FriPreferences = 6;
 
-	private String[] columnNames = {"Id","Monday Preferences","Tuesday Preferences",
+	private String[] columnNames = {"Id","Name","Monday Preferences","Tuesday Preferences",
 			"Wednesday Preferences","Thursday Preferences","Friday Preferences"};
     private List<TimePreferences> data;
     
@@ -65,6 +66,9 @@ class TimePreferencesTableModel extends AbstractTableModel {
             case Column_Id:
             	colummnValue = timePreferences.getId();
                 break;
+            case Column_Name:
+            	colummnValue = timePreferences.getName();
+                break;
             case Column_MonPreerences:
             	colummnValue = timePreferences.getMonPreferences();
                 break;
@@ -93,6 +97,9 @@ class TimePreferencesTableModel extends AbstractTableModel {
         switch (columnIndex) {
         case Column_MonPreerences:
         	timePreferences.setMonPreferences((String)value);
+            break;
+        case Column_Name:
+        	timePreferences.setName((String)value);
             break;
         case Column_TuePreferences:
         	timePreferences.setTuePreferences((String)value);
