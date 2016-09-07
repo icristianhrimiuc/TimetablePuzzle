@@ -10,11 +10,29 @@ import timetablepuzzle.usecases.solution.TimeslotPattern;
 @Table(name = "time_preferences")
 public class TimePreferences {
 	public static enum DayOfTheWeek {
-		MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+		MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;
+		
+		@Override
+		public String toString() {
+			String name = this.name();
+			name = name.replace('_', ' ');
+			name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+			return name;
+		}
 	};
 
 	public static enum TimePreference {
-		PROHIBITED, STRONGLY_DISCOURAGED, DISCOURAGED, NEUTRAL, PREFFERED, STRONGLY_PREFFERED, REQUIRED
+		PROHIBITED, STRONGLY_DISCOURAGED, DISCOURAGED, NEUTRAL, PREFFERED, STRONGLY_PREFFERED, REQUIRED;
+		
+		@Override
+		public String toString() {
+			String name = this.name();
+			name = name.replace('_', ' ');
+			name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+			return name;
+		}
 	};
 
 	@Id
@@ -320,13 +338,9 @@ public class TimePreferences {
 		return week;
 	}
 
-	public static String getTimePreferenceNameByIndex(int index) {
-		String name = TimePreference.values()[index].name();
-		name = name.replace('_', ' ');
-		name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-
-		return name;
-	}
+	/******************************
+	 * Overridden methods
+	 ********************************/
 
 	@Override
 	public String toString() {

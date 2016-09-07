@@ -32,6 +32,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import timetablepuzzle.eclipselink.DAO.JPA.services.other.TimePreferencesJPADAOService;
 import timetablepuzzle.eclipselink.DAO.interfaces.other.TimePreferencesDAO;
 import timetablepuzzle.entities.other.TimePreferences;
+import timetablepuzzle.entities.other.TimePreferences.TimePreference;
 
 public class TimePreferencesCard extends JPanel {
 	/**
@@ -184,7 +185,7 @@ public class TimePreferencesCard extends JPanel {
 		explanatoryPanel.setLayout(new BoxLayout(explanatoryPanel, BoxLayout.Y_AXIS));
 		for (int i = TimePreferences.TimePreference.values().length - 1; i >= 0; i--) {
 			Color color = WeekPreferencesCellRenderer.ColorsForPreference[i];
-			String text = String.format("%s (%d)", TimePreferences.getTimePreferenceNameByIndex(i), i);
+			String text = TimePreference.values()[i].toString();
 			explanatoryPanel.add(CreateColorPanel(text, color));
 		}
 

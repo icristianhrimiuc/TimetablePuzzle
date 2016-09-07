@@ -21,6 +21,9 @@ public class SubjectArea {
 	@Column(name = "name")
 	private String name;
 
+	@Column(name = "abbreviation")
+	private String abbreviation;
+
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
 	@JoinColumn(name = "firstterm_curricula_id", unique = true, nullable = false)
 	private Curricula firstTermCurricula;
@@ -34,12 +37,15 @@ public class SubjectArea {
 	private Curricula thirdTermCurricula;
 
 	public SubjectArea() {
-		this(0, "NoName", new Curricula(), new Curricula());
+		this(0, "NoName", "NoAbbreviation", new Curricula(), new Curricula());
 	}
 
-	public SubjectArea(int id, String name, Curricula firstTermCurricula, Curricula secondTermCurricula) {
+	public SubjectArea(int id, String name, String abbreviation, Curricula firstTermCurricula, Curricula secondTermCurricula) {
 		this.id = id;
 		setName(name);
+		setAbbreviation(abbreviation);
+		setCurriculaToStudyByTerm(Term.FIRST, firstTermCurricula);
+		setCurriculaToStudyByTerm(Term.SECOND, secondTermCurricula);
 	}
 
 	/******************** Getters and setters ****************/
@@ -53,6 +59,14 @@ public class SubjectArea {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getAbbreviation() {
+		return abbreviation;
+	}
+
+	public void setAbbreviation(String abbreviation) {
+		this.abbreviation = abbreviation;
 	}
 
 	public Curricula getCurriculaToStudyByTerm(Term term) {

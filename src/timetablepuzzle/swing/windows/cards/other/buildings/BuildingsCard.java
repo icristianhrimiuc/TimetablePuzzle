@@ -89,9 +89,12 @@ public class BuildingsCard extends JPanel {
 		this.textFieldName = new JTextField(30);
 		this.textFieldAbbreviation = new JTextField(10);
 		this.textFieldAddress = new JTextField(30);
+		this.textFieldAddress.setText("Bulevardul Profesor Dr. doc. Dimitrie Mangeron 27");
 		this.textFieldLatitude = new JTextField(20);
+		this.textFieldLatitude.setText("47.1539305");
 		AddDocumentListener(this.textFieldLatitude);
 		this.textFieldLongitude = new JTextField(20);
+		this.textFieldLongitude.setText("27.5931772");
 		AddDocumentListener(textFieldLongitude);
 		
 		this.idOfTheBuildingToUpdate = 0;
@@ -343,9 +346,9 @@ public class BuildingsCard extends JPanel {
 	private void RefreshAllFields(){
 		this.textFieldName.setText("");
 		this.textFieldAbbreviation.setText("");
-		this.textFieldAddress.setText("");
-		this.textFieldLatitude.setText("");
-		this.textFieldLongitude.setText("");
+		this.textFieldAddress.setText("Bulevardul Profesor Dr. doc. Dimitrie Mangeron 27");
+		this.textFieldLatitude.setText("47.1539305");
+		this.textFieldLongitude.setText("27.5931772");
 		this.idOfTheBuildingToUpdate = 0;
 		this.notificationLabel.setText(" ");
 		RefreshTable();

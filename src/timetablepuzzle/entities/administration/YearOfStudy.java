@@ -13,7 +13,16 @@ import timetablepuzzle.entities.inputdata.StudentGroup;
 @Table(name = "years_of_study")
 public class YearOfStudy {
 	public static enum CollegeYear {
-		FIRST, SECOND, THIRD, FOURTH, FIFTH, SIXTH, UNASSIGNED
+		FIRST, SECOND, THIRD, FOURTH, FIFTH, SIXTH, UNASSIGNED;
+
+		@Override
+		public String toString() {
+			String name = this.name();
+			name = name.replace('_', ' ');
+			name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+			return name;
+		}
 	};
 
 	@Id

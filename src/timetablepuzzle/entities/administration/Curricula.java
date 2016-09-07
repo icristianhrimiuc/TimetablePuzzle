@@ -12,7 +12,16 @@ import timetablepuzzle.entities.inputdata.StudentGroup;
 @Table(name = "curriculas")
 public class Curricula {
 	public static enum Term {
-		FIRST, SECOND, THIRD, UNASSIGNED
+		FIRST, SECOND, THIRD, UNASSIGNED;
+
+		@Override
+		public String toString() {
+			String name = this.name();
+			name = name.replace('_', ' ');
+			name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+			return name;
+		}
 	};
 
 	@Id
@@ -79,6 +88,10 @@ public class Curricula {
 
 	public List<CourseOffering> getCourses() {
 		return courses;
+	}
+	
+	public void setCourses(List<CourseOffering> courses){
+		this.courses = courses;
 	}
 
 	/*******************

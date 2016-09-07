@@ -13,7 +13,7 @@
 		<class>timetablepuzzle.entities.other.Building</class>
 		<class>timetablepuzzle.entities.other.TimePreferences</class>
 		<class>timetablepuzzle.entities.inputdata.Offering</class>
-		<class>timetablepuzzle.entities.administration.InstructorMeetings</class>
+		<class>timetablepuzzle.entities.inputdata.InstructorMeetings</class>
 		<class>timetablepuzzle.entities.administration.CourseOffering</class>
 		<class>timetablepuzzle.entities.administration.Curricula</class>
 		<class>timetablepuzzle.entities.administration.SubjectArea</class>

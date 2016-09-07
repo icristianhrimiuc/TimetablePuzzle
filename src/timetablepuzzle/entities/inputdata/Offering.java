@@ -4,18 +4,34 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import timetablepuzzle.entities.administration.InstructorMeetings;
-
 @Entity
 @Table(name = "offerings")
 public class Offering {
 	public static enum OfferingType {
-		LECTURE, SEMINARY, LABORATORY, GYM, UNASSIGNED
+		LECTURE, SEMINARY, LABORATORY, GYM, UNASSIGNED;
+
+		@Override
+		public String toString() {
+			String name = this.name();
+			name = name.replace('_', ' ');
+			name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+			return name;
+		}
 	};
 
 	public static enum DatePattern {
-		FULL_TERM, EVEN_WEEKS, ODD_WEEKS, FIRST_HALF, SECOND_HALF
-	}
+		FULL_TERM, EVEN_WEEKS, ODD_WEEKS, FIRST_HALF, SECOND_HALF;
+		
+		@Override
+		public String toString() {
+			String name = this.name();
+			name = name.replace('_', ' ');
+			name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+			return name;
+		}
+	};
 
 	@Id
 	@Column(name = "id")
@@ -37,8 +53,7 @@ public class Offering {
 	@Enumerated(EnumType.STRING)
 	private DatePattern datePattern;
 
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH }, targetEntity = InstructorMeetings.class)
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = InstructorMeetings.class)
 	@JoinTable(name = "offering_instructormeetings", joinColumns = @JoinColumn(name = "offering_id"), inverseJoinColumns = @JoinColumn(name = "instructormeetings_id"))
 	private List<InstructorMeetings> nrOfMeetingsPerInstructor;
 
