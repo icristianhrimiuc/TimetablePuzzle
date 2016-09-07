@@ -38,7 +38,10 @@ import timetablepuzzle.swing.windows.cards.administration.academicSessions.Acade
 import timetablepuzzle.swing.windows.cards.administration.academicYears.AcademicYearsCard;
 import timetablepuzzle.swing.windows.cards.administration.courseOfferings.CourseOfferingsCard;
 import timetablepuzzle.swing.windows.cards.administration.curriculas.CurriculasCard;
+import timetablepuzzle.swing.windows.cards.administration.departments.DepartmentsCard;
+import timetablepuzzle.swing.windows.cards.administration.faculties.FacultiesCard;
 import timetablepuzzle.swing.windows.cards.administration.subjectAreas.SubjectAreasCard;
+import timetablepuzzle.swing.windows.cards.administration.yearsOfStudy.YearsOfStudyCard;
 import timetablepuzzle.swing.windows.cards.inputdata.instructorMeetings.InstructorMeetingsCard;
 import timetablepuzzle.swing.windows.cards.inputdata.instructors.InstructorsCard;
 import timetablepuzzle.swing.windows.cards.inputdata.offerings.OfferingsCard;
@@ -59,6 +62,9 @@ public class MainWindow implements ActionListener {
 	final static String COURSE_OFFERINDS_CARD = "Course Offerings";
 	final static String CURRICULAS_CARD = "Curriculas";
 	final static String SUBJECT_AREAS_CARD = "Subject Areas";
+	final static String YEARS_OF_STUDY_CARD = "Years of Study";
+	final static String DEPARTMENTS_CARD = "Departments";
+	final static String FACULTIES_CARD = "Faculties";
 	
 	// Input data menu
 	final static String INSTRUCTORS_CARD = "Instructors";
@@ -127,6 +133,9 @@ public class MainWindow implements ActionListener {
 			cards.put(COURSE_OFFERINDS_CARD, new CourseOfferingsCard(bgColor));
 			cards.put(CURRICULAS_CARD, new CurriculasCard(bgColor));
 			cards.put(SUBJECT_AREAS_CARD, new SubjectAreasCard(bgColor));
+			cards.put(YEARS_OF_STUDY_CARD, new YearsOfStudyCard(bgColor));
+			cards.put(DEPARTMENTS_CARD, new DepartmentsCard(bgColor));
+			cards.put(FACULTIES_CARD, new FacultiesCard(bgColor));
 			// Input data menu
 			cards.put(INSTRUCTORS_CARD, new InstructorsCard(bgColor));
 			cards.put(ROOMS_CARD, new RoomsCard(bgColor));
@@ -260,9 +269,9 @@ public class MainWindow implements ActionListener {
 		JMenuItem mntmCourseOfferings = new JMenuItem(COURSE_OFFERINDS_CARD);
 		JMenuItem mntmCurriculas = new JMenuItem(CURRICULAS_CARD);
 		JMenuItem mntmSubjectAreas = new JMenuItem(SUBJECT_AREAS_CARD);
-		JMenuItem mntmYearsOfStudy = new JMenuItem("Years Of Study");
-		JMenuItem mntmDepartments = new JMenuItem("Departments");
-		JMenuItem mntmFaculties = new JMenuItem("Faculties");
+		JMenuItem mntmYearsOfStudy = new JMenuItem(YEARS_OF_STUDY_CARD);
+		JMenuItem mntmDepartments = new JMenuItem(DEPARTMENTS_CARD);
+		JMenuItem mntmFaculties = new JMenuItem(FACULTIES_CARD);
 		
 		// Add action listeners
 		mntmAcademicSessions.addActionListener(this);
@@ -270,6 +279,9 @@ public class MainWindow implements ActionListener {
 		mntmCourseOfferings.addActionListener(this);
 		mntmCurriculas.addActionListener(this);
 		mntmSubjectAreas.addActionListener(this);
+		mntmYearsOfStudy.addActionListener(this);
+		mntmDepartments.addActionListener(this);
+		mntmFaculties.addActionListener(this);
 		
 		// Add menu items
 		mnAdministration.add(mntmAcademicSessions);
@@ -379,7 +391,7 @@ public class MainWindow implements ActionListener {
 			cardsPanel.add(cards.get(cardName), cardName);
 		}
 		cardLayout = (CardLayout) cardsPanel.getLayout();
-		cardLayout.show(cardsPanel, SUBJECT_AREAS_CARD);
+		cardLayout.show(cardsPanel, FACULTIES_CARD);
 
 		mainPanel.add(cardsPanel, BorderLayout.CENTER);
 

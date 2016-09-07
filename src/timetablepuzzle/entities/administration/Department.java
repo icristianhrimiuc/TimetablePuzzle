@@ -50,6 +50,10 @@ public class Department {
 	public List<YearOfStudy> getYearsOfStudy() {
 		return this.yearsOfStudy;
 	}
+	
+	public void setYearsOfStudy(List<YearOfStudy> yearsOfStudy){
+		this.yearsOfStudy = yearsOfStudy;
+	}
 
 	/*******************
 	 * Methods that model the class behavior

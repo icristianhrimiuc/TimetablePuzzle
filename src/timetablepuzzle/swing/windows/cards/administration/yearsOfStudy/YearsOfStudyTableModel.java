@@ -1,16 +1,15 @@
-package timetablepuzzle.swing.windows.cards.administration.curriculas;
+package timetablepuzzle.swing.windows.cards.administration.yearsOfStudy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import timetablepuzzle.entities.administration.CourseOffering;
-import timetablepuzzle.entities.administration.Curricula;
-import timetablepuzzle.entities.administration.Curricula.Term;
+import timetablepuzzle.entities.administration.SubjectArea;
+import timetablepuzzle.entities.administration.YearOfStudy;
 import timetablepuzzle.entities.administration.YearOfStudy.CollegeYear;
 
-class CurriculasTableModel extends AbstractTableModel {
+class YearsOfStudyTableModel extends AbstractTableModel {
     /**
 	 * Generated field
 	 */
@@ -18,16 +17,15 @@ class CurriculasTableModel extends AbstractTableModel {
 	
 	private static final int Column_Id = 0;
 	private static final int Column_Name = 1;
-	private static final int Column_Year = 2;
-	private static final int Column_Term = 3;
-	private static final int Column_Courses = 4;
+	private static final int Column_College_Year = 2;
+	private static final int Column_Subject_Areas = 3;
 
-	private String[] columnNames = {"Id","Name","Year","Term","Courses"};
-    private List<Curricula> data;
+	private String[] columnNames = {"Id","Name","College Year","Subject Areas"};
+    private List<YearOfStudy> data;
     
-    public CurriculasTableModel(){}
+    public YearsOfStudyTableModel(){}
     
-    public void setData(List<Curricula> data)
+    public void setData(List<YearOfStudy> data)
     {
     	this.data = data;
 		this.fireTableDataChanged();
@@ -61,23 +59,20 @@ class CurriculasTableModel extends AbstractTableModel {
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-    	Curricula curricula = data.get(rowIndex);
+    	YearOfStudy yearOfStudy = data.get(rowIndex);
     	Object columnValue = null;
         switch (columnIndex) {
             case Column_Id:
-            	columnValue = curricula.getId();
+            	columnValue = yearOfStudy.getId();
                 break;
             case Column_Name:
-            	columnValue = curricula.getName();
+            	columnValue = yearOfStudy.getName();
                 break;
-            case Column_Year:
-            	columnValue = curricula.getYear().toString();
+            case Column_College_Year:
+            	columnValue = yearOfStudy.getCollegeYear().toString();
                 break;
-            case Column_Term:
-            	columnValue = curricula.getTerm().toString();
-                break;
-            case Column_Courses:
-            	columnValue = GetAsList(curricula.getCourses()).toString();
+            case Column_Subject_Areas:
+            	columnValue = GetAsList(yearOfStudy.getSubjectAreas()).toString();
                 break;
             default:
             	break;
@@ -86,8 +81,8 @@ class CurriculasTableModel extends AbstractTableModel {
         return columnValue;
     }
     
-    private List<CourseOffering> GetAsList(List<CourseOffering> indirectList){
-    	List<CourseOffering> list = new ArrayList<CourseOffering>();
+    private List<SubjectArea> GetAsList(List<SubjectArea> indirectList){
+    	List<SubjectArea> list = new ArrayList<SubjectArea>();
     		list.addAll(indirectList);
     	
     	return list;
@@ -96,28 +91,25 @@ class CurriculasTableModel extends AbstractTableModel {
     @SuppressWarnings("unchecked")
 	@Override
 	public void setValueAt(Object value, int rowIndex, int columnIndex) {
-    	Curricula curricula = data.get(rowIndex);
+    	YearOfStudy yearOfStudy = data.get(rowIndex);
     	switch (columnIndex) {
 	        case Column_Name:
-	        	curricula.setName((String)value);
+	        	yearOfStudy.setName((String)value);
 	            break;
-	        case Column_Year:
-	        	curricula.setYear((CollegeYear)value);
+	        case Column_College_Year:
+	        	yearOfStudy.setCollegeYear((CollegeYear)value);
 	            break;
-	        case Column_Term:
-	        	curricula.setTerm((Term)value);
-	            break;
-	        case Column_Courses:
-	        	curricula.setCourses((List<CourseOffering>)value);
+	        case Column_Subject_Areas:
+	        	yearOfStudy.setSubjectAreas((List<SubjectArea>)value);
 	            break;
 	        default:
 	        	break;
     	}
-    	this.data.set(rowIndex, curricula);
+    	this.data.set(rowIndex, yearOfStudy);
         fireTableCellUpdated(rowIndex, columnIndex);
     }
     
-    public Curricula elementAt(int row){
+    public YearOfStudy elementAt(int row){
     	return this.data.get(row);
     }
 }

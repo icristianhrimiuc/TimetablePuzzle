@@ -30,6 +30,9 @@ public class YearOfStudy {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@Column(name = "name")
+	private String name;
+
 	@Column(name = "college_year")
 	@Enumerated(EnumType.STRING)
 	private CollegeYear collegeYear;
@@ -43,11 +46,12 @@ public class YearOfStudy {
 	private HashMap<Term, List<CourseOffering>> commonCoursesByTerm;
 
 	public YearOfStudy() {
-		this(0, CollegeYear.UNASSIGNED, new ArrayList<SubjectArea>());
+		this(0, "NoName", CollegeYear.UNASSIGNED, new ArrayList<SubjectArea>());
 	}
 
-	public YearOfStudy(int id, CollegeYear collegeYear, List<SubjectArea> subjectAreas) {
+	public YearOfStudy(int id, String name, CollegeYear collegeYear, List<SubjectArea> subjectAreas) {
 		this.id = id;
+		setName(name);
 		setCollegeYear(collegeYear);
 		setSubjectAreas(subjectAreas);
 	}
@@ -55,6 +59,14 @@ public class YearOfStudy {
 	/******************** Getters and setters ****************/
 	public int getId() {
 		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public CollegeYear getCollegeYear() {

@@ -1,4 +1,4 @@
-package timetablepuzzle.swing.windows.cards.administration.curriculas;
+package timetablepuzzle.swing.windows.cards.administration.yearsOfStudy;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -32,48 +32,45 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import timetablepuzzle.eclipselink.DAO.JPA.services.administration.CourseOfferingJPADAOService;
-import timetablepuzzle.eclipselink.DAO.JPA.services.administration.CurriculaJPADAOService;
-import timetablepuzzle.eclipselink.DAO.interfaces.administration.CourseOfferingDAO;
-import timetablepuzzle.eclipselink.DAO.interfaces.administration.CurriculaDAO;
-import timetablepuzzle.entities.administration.CourseOffering;
-import timetablepuzzle.entities.administration.Curricula;
-import timetablepuzzle.entities.administration.Curricula.Term;
+import timetablepuzzle.eclipselink.DAO.JPA.services.administration.SubjectAreaJPADAOService;
+import timetablepuzzle.eclipselink.DAO.JPA.services.administration.YearOfStudyJPADAOService;
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.SubjectAreaDAO;
+import timetablepuzzle.eclipselink.DAO.interfaces.administration.YearOfStudyDAO;
+import timetablepuzzle.entities.administration.SubjectArea;
+import timetablepuzzle.entities.administration.YearOfStudy;
 import timetablepuzzle.entities.administration.YearOfStudy.CollegeYear;
 import timetablepuzzle.swing.windows.cards.common.CustomComboBoxModel;
 import timetablepuzzle.swing.windows.cards.common.ListBoxesWithTransferableItems;
 
-public class CurriculasCard extends JPanel {
+public class YearsOfStudyCard extends JPanel {
 	/**
 	 * Generated field
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final static Logger LOGGER = Logger.getLogger(CurriculasCard.class.getName());
-	private static CurriculaDAO curriculaDAOService = new CurriculaJPADAOService();
-	private static CourseOfferingDAO courseOfferingDAOService = new CourseOfferingJPADAOService();
+	private final static Logger LOGGER = Logger.getLogger(YearsOfStudyCard.class.getName());
+	private static YearOfStudyDAO yearOfStudyDAOService = new YearOfStudyJPADAOService();
+	private static SubjectAreaDAO subjectAreaDAOService = new SubjectAreaJPADAOService();
 
-	private CurriculasTableModel curriculasTableModel;
-	private JTable curriculasTable;
+	private YearsOfStudyTableModel yearsOfStudyTableModel;
+	private JTable yearsOfStudyTable;
 	private JTextField textFieldName;
 	private CustomComboBoxModel<CollegeYear> comboBoxYearModel;
 	private JComboBox<CollegeYear> comboBoxYear;
-	private CustomComboBoxModel<Term> comboBoxTermModel;
-	private JComboBox<Term> comboBoxTerm;
 	private JLabel notificationLabel;
 	private ListBoxesWithTransferableItems transferableItemsControl;
-	private int idOfTheCurriculaToUpdate;
+	private int idOfTheYearOfStudyToUpdate;
 
-	public CurriculasCard(Color backgroundColor) {
+	public YearsOfStudyCard(Color backgroundColor) {
 		this.setBackground(backgroundColor);
 
-		// Curricular table
-		this.curriculasTableModel = new CurriculasTableModel();
+		// YearsOfStudy table
+		this.yearsOfStudyTableModel = new YearsOfStudyTableModel();
 		RefreshTable();
-		this.curriculasTable = new JTable(this.curriculasTableModel);
+		this.yearsOfStudyTable = new JTable(this.yearsOfStudyTableModel);
 		DefaultTableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
 		defaultRenderer.setHorizontalAlignment(JLabel.CENTER);
-		this.curriculasTable.setDefaultRenderer(String.class, defaultRenderer);
+		this.yearsOfStudyTable.setDefaultRenderer(String.class, defaultRenderer);
 		SetColumnsMaxSizes();
 
 		// Property text fields
@@ -84,11 +81,6 @@ public class CurriculasCard extends JPanel {
 		RefreshComboBoxYear();
 		this.comboBoxYear = new JComboBox<CollegeYear>(this.comboBoxYearModel);
 
-		// Term combo box
-		this.comboBoxTermModel = new CustomComboBoxModel<Term>();
-		RefreshComboBoxTerm();
-		this.comboBoxTerm = new JComboBox<Term>(this.comboBoxTermModel);
-
 		// Notification label
 		this.notificationLabel = new JLabel("  ");
 		this.notificationLabel.setForeground(Color.RED);
@@ -96,25 +88,23 @@ public class CurriculasCard extends JPanel {
 		
 		// Transferable items control
 		this.transferableItemsControl = new ListBoxesWithTransferableItems(new Object[]{}, new Object[]{},
-				"Possible course offerings", "Added course offerings");
-		RefreshTransferableItemsControl(new ArrayList<CourseOffering>());
+				"Possible subject areas", "Added subject areas");
+		RefreshTransferableItemsControl(new ArrayList<SubjectArea>());
 
-		this.idOfTheCurriculaToUpdate = 0;
-		SetCurriculasCardComponents();
+		this.idOfTheYearOfStudyToUpdate = 0;
+		SetYearsOfStudyCardComponents();
 	}
 
 	private void RefreshTable() {
-		this.curriculasTableModel.setData(curriculaDAOService.GetAll());
+		this.yearsOfStudyTableModel.setData(yearOfStudyDAOService.GetAll());
 	}
 
 	private void SetColumnsMaxSizes() {
-		this.curriculasTable.getColumnModel().getColumn(0).setMaxWidth(60);
-		this.curriculasTable.getColumnModel().getColumn(1).setMinWidth(150);
-		this.curriculasTable.getColumnModel().getColumn(1).setMaxWidth(150);
-		this.curriculasTable.getColumnModel().getColumn(2).setMinWidth(80);
-		this.curriculasTable.getColumnModel().getColumn(2).setMaxWidth(80);
-		this.curriculasTable.getColumnModel().getColumn(3).setMinWidth(80);
-		this.curriculasTable.getColumnModel().getColumn(3).setMaxWidth(80);
+		this.yearsOfStudyTable.getColumnModel().getColumn(0).setMaxWidth(60);
+		this.yearsOfStudyTable.getColumnModel().getColumn(1).setMinWidth(150);
+		this.yearsOfStudyTable.getColumnModel().getColumn(1).setMaxWidth(150);
+		this.yearsOfStudyTable.getColumnModel().getColumn(2).setMinWidth(80);
+		this.yearsOfStudyTable.getColumnModel().getColumn(2).setMaxWidth(80);
 	}
 
 	private JTextField CreatePropertyTextField(int width) {
@@ -136,49 +126,43 @@ public class CurriculasCard extends JPanel {
 		this.repaint();
 	}
 
-	private void RefreshComboBoxTerm() {
-		this.comboBoxTermModel.setData(Arrays.asList(Term.values()));
-		this.repaint();
-	}
-
-	private void RefreshTransferableItemsControl(List<CourseOffering> addedCourseOfferings) {
-		List<CourseOffering> leftListCourseOfferings = courseOfferingDAOService.GetAll();
-		List<CourseOffering> rightListCourseOfferings = new ArrayList<CourseOffering>();
-		for(CourseOffering addedCourseOffering : addedCourseOfferings){
-			leftListCourseOfferings.remove(addedCourseOffering);
-			rightListCourseOfferings.add(addedCourseOffering);
+	private void RefreshTransferableItemsControl(List<SubjectArea> addedSubjectAreas) {
+		List<SubjectArea> leftListSubjectAreas = subjectAreaDAOService.GetAll();
+		List<SubjectArea> rightListSubjectAreas = new ArrayList<SubjectArea>();
+		for(SubjectArea addedSubjectArea : addedSubjectAreas){
+			leftListSubjectAreas.remove(addedSubjectArea);
+			rightListSubjectAreas.add(addedSubjectArea);
 		}
-		leftListCourseOfferings.sort(Comparator.comparing(CourseOffering::toString));
-		rightListCourseOfferings.sort(Comparator.comparing(CourseOffering::toString));
-		this.transferableItemsControl.ReInitializeLists(leftListCourseOfferings.toArray(), rightListCourseOfferings.toArray());
+		leftListSubjectAreas.sort(Comparator.comparing(SubjectArea::toString));
+		rightListSubjectAreas.sort(Comparator.comparing(SubjectArea::toString));
+		this.transferableItemsControl.ReInitializeLists(leftListSubjectAreas.toArray(), rightListSubjectAreas.toArray());
 	}
 
-	private void SetCurriculasCardComponents() {
+	private void SetYearsOfStudyCardComponents() {
 		this.setLayout(new GridLayout(2, 1));
-		this.add(CreateCreateNewCurriculaPanel());
-		this.add(CreateViewAllCurriculasPanel());
+		this.add(CreateCreateNewYearOfStudyPanel());
+		this.add(CreateViewAllYearsOfStudyPanel());
 	}
 
-	private JPanel CreateCreateNewCurriculaPanel() {
-		JPanel createNewCurriculaPanel = new JPanel(new GridLayout(1, 2));
-		createNewCurriculaPanel.add(CreatePropertiesPanel());
-		createNewCurriculaPanel.add(CreateCurriculaCoursesPanel());
+	private JPanel CreateCreateNewYearOfStudyPanel() {
+		JPanel createNewYearOfStudyPanel = new JPanel(new GridLayout(1, 2));
+		createNewYearOfStudyPanel.add(CreatePropertiesPanel());
+		createNewYearOfStudyPanel.add(CreateYearOfStudySubjectAreasPanel());
 
-		return createNewCurriculaPanel;
+		return createNewYearOfStudyPanel;
 	}
 
 	private JPanel CreatePropertiesPanel() {
 		JPanel propertiesPanel = new JPanel();
 		propertiesPanel.setLayout(new BoxLayout(propertiesPanel, BoxLayout.Y_AXIS));
 		propertiesPanel.add(CreatePropertyPanel("Name", this.textFieldName));
-		propertiesPanel.add(CreatePropertyPanel("Year", this.comboBoxYear));
-		propertiesPanel.add(CreatePropertyPanel("Term", this.comboBoxTerm));
+		propertiesPanel.add(CreatePropertyPanel("College Year", this.comboBoxYear));
 		propertiesPanel.add(this.notificationLabel);
 		propertiesPanel.add(CreateCrudButtonsPanel());
 
 		// Adjust properties on center
 		JPanel adjustmentPanel = CreateAdjustmentPanel(propertiesPanel);
-		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update Curricula"));
+		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update Year Of Study"));
 
 		return adjustmentPanel;
 	}
@@ -237,84 +221,82 @@ public class CurriculasCard extends JPanel {
 	private void CreateAndSaveNew() {
 		String name = this.textFieldName.getText();
 		CollegeYear year = (CollegeYear) this.comboBoxYear.getSelectedItem();
-		Term term = (Term) this.comboBoxTerm.getSelectedItem();
-		List<CourseOffering> courses = ConvertToListOfCourseOfferings(this.transferableItemsControl.GetRightListElements()); 
+		List<SubjectArea> subjectAreas = ConvertToListOfSubjectAreas(this.transferableItemsControl.GetRightListElements()); 
 
-		if ((name.isEmpty()) || (year == null) || (term == null) || (courses.isEmpty())) {
+		if ((name.isEmpty()) || (year == null) || (subjectAreas.isEmpty())) {
 			this.notificationLabel.setText("Please make sure that all the property fields are filled!");
-			LOGGER.log(Level.WARNING, "Attempt to create a new curricula with empty property field.");
+			LOGGER.log(Level.WARNING, "Attempt to create a new yearOfStudy with empty property field.");
 		} else {
 			try {
 				// Create new
-				Curricula curricula = new Curricula(this.idOfTheCurriculaToUpdate, name, year, term, courses);
+				YearOfStudy yearOfStudy = new YearOfStudy(this.idOfTheYearOfStudyToUpdate, name, year, subjectAreas);
 
-				if (this.idOfTheCurriculaToUpdate != 0) {
-					curriculaDAOService.merge(curricula);
+				if (this.idOfTheYearOfStudyToUpdate != 0) {
+					yearOfStudyDAOService.merge(yearOfStudy);
 					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Updated successfully!");
-					LOGGER.log(Level.FINE, "Update performed on curricula with id {0} and name {1}.",
-							new Object[] { curricula.getId(), curricula.getName() });
+					LOGGER.log(Level.FINE, "Update performed on yearOfStudy with id {0} and name {1}.",
+							new Object[] { yearOfStudy.getId(), yearOfStudy.getName() });
 				} else {
-					curriculaDAOService.merge(curricula);
+					yearOfStudyDAOService.merge(yearOfStudy);
 					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Saved successfully!");
-					LOGGER.log(Level.FINE, "Create performed on curricula  with name {1}. ",
-							new Object[] { curricula.getName() });
+					LOGGER.log(Level.FINE, "Create performed on yearOfStudy  with name {1}. ",
+							new Object[] { yearOfStudy.getName() });
 				}
 			} catch (Exception e) {
 				this.notificationLabel
-						.setText("A error occured while saving the curricula. Check log files for more info!");
-				LOGGER.log(Level.SEVERE, "A error occured while saving the curricula" + e.toString(), e);
+						.setText("A error occured while saving the yearOfStudy. Check log files for more info!");
+				LOGGER.log(Level.SEVERE, "A error occured while saving the yearOfStudy" + e.toString(), e);
 			}
 		}
 	}
 
-	private List<CourseOffering> ConvertToListOfCourseOfferings(List<Object> elements) {
-		List<CourseOffering> courseOfferings = new ArrayList<CourseOffering>();
+	private List<SubjectArea> ConvertToListOfSubjectAreas(List<Object> elements) {
+		List<SubjectArea> subjectAreas = new ArrayList<SubjectArea>();
 		for(Object element : elements)
 		{
-			courseOfferings.add((CourseOffering)element);
+			subjectAreas.add((SubjectArea)element);
 		}
 		
-		return courseOfferings;
+		return subjectAreas;
 	}
 
 	private void LoadSelectedRowDetailsForEdit() {
-		int selecteRow = this.curriculasTable.getSelectedRow();
+		int selecteRow = this.yearsOfStudyTable.getSelectedRow();
 		if (selecteRow == -1) {
 			this.notificationLabel.setText("Please select a row from the table first.");
-			LOGGER.log(Level.WARNING, "An attempt was made to edit a curricula while no row was selected.");
+			LOGGER.log(Level.WARNING, "An attempt was made to edit a yearOfStudy while no row was selected.");
 		} else {
-			Curricula existingCurricula = this.curriculasTableModel.elementAt(selecteRow);
-			this.idOfTheCurriculaToUpdate = existingCurricula.getId();
-			this.textFieldName.setText(existingCurricula.getName());
-			this.comboBoxYear.setSelectedItem(existingCurricula.getYear());
-			this.comboBoxTerm.setSelectedItem(existingCurricula.getTerm());
-			RefreshTransferableItemsControl(existingCurricula.getCourses());
+			YearOfStudy existingYearOfStudy = this.yearsOfStudyTableModel.elementAt(selecteRow);
+			this.idOfTheYearOfStudyToUpdate = existingYearOfStudy.getId();
+			this.textFieldName.setText(existingYearOfStudy.getName());
+			this.comboBoxYear.setSelectedItem(existingYearOfStudy.getCollegeYear());
+			RefreshTransferableItemsControl(existingYearOfStudy.getSubjectAreas());
 			this.repaint();
 		}
 	}
 
 	private void DeleteSelectedRow() {
-		int selecteRow = this.curriculasTable.getSelectedRow();
+		int selecteRow = this.yearsOfStudyTable.getSelectedRow();
 		if (selecteRow == -1) {
 			this.notificationLabel.setText("Please select a row from the table first.");
-			LOGGER.log(Level.WARNING, "An attempt was made to delete a curricula while no row was selected.");
+			LOGGER.log(Level.WARNING, "An attempt was made to delete a yearOfStudy while no row was selected.");
 		} else {
 			try {
-				Curricula existingCurricula = this.curriculasTableModel.elementAt(selecteRow);
-				curriculaDAOService.remove(existingCurricula);
+				YearOfStudy existingYearOfStudy = this.yearsOfStudyTableModel.elementAt(selecteRow);
+				yearOfStudyDAOService.remove(existingYearOfStudy);
 				RefreshTable();
 				this.notificationLabel.setText("  ");
 				JOptionPane.showMessageDialog(null, "Deleted successfully!");
-				LOGGER.log(Level.FINE, "Delete performed on curricula with id {0} and named {1}.",
-						new Object[] { existingCurricula.getId(), existingCurricula.getName() });
+				LOGGER.log(Level.FINE, "Delete performed on yearOfStudy with id {0} and named {1}.",
+						new Object[] { existingYearOfStudy.getId(), existingYearOfStudy.getName() });
 			} catch (Exception e) {
 				this.notificationLabel
-						.setText("An error occured. Please make sure that nothing else depends on this curricula."
+						.setText("An error occured. Please make sure that nothing else depends on this yearOfStudy."
 								+ " Check log files for more info.");
 				LOGGER.log(Level.SEVERE,
-						"Exception occured on deleting curricula. Please make sure that nothing else depends on this curricula."
+						"Exception occured on deleting yearOfStudy. Please make sure that nothing else depends on this yearOfStudy."
 								+ e.toString(),
 						e);
 			}
@@ -324,10 +306,9 @@ public class CurriculasCard extends JPanel {
 	private void RefreshAllFields() {
 		this.textFieldName.setText("");
 		RefreshComboBoxYear();
-		RefreshComboBoxTerm();
 		this.notificationLabel.setText("  ");
-		RefreshTransferableItemsControl(new ArrayList<CourseOffering>());
-		this.idOfTheCurriculaToUpdate = 0;
+		RefreshTransferableItemsControl(new ArrayList<SubjectArea>());
+		this.idOfTheYearOfStudyToUpdate = 0;
 		RefreshTable();
 	}
 
@@ -344,30 +325,30 @@ public class CurriculasCard extends JPanel {
 		return adjustmentPanel;
 	}
 
-	private Component CreateCurriculaCoursesPanel() {		
+	private Component CreateYearOfStudySubjectAreasPanel() {		
 		JPanel instructorMeetingsPanel = new JPanel();
 		instructorMeetingsPanel.setLayout(new BoxLayout(instructorMeetingsPanel, BoxLayout.Y_AXIS));
 		instructorMeetingsPanel.add(this.transferableItemsControl);
 		
 		JPanel adjustmentPanel = CreateAdjustmentPanel(instructorMeetingsPanel);
-		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Curricula's Course Offerings"));
+		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Year Of Study-Subject Areas"));
 		
 		return adjustmentPanel;
 	}
 
-	private JPanel CreateViewAllCurriculasPanel() {
-		JPanel viewAllCurriculasPanel = new JPanel(new BorderLayout());
-		viewAllCurriculasPanel.setBorder(CreateRaisedBevelTitledBorder("View All Curriculas"));
+	private JPanel CreateViewAllYearsOfStudyPanel() {
+		JPanel viewAllYearsOfStudyPanel = new JPanel(new BorderLayout());
+		viewAllYearsOfStudyPanel.setBorder(CreateRaisedBevelTitledBorder("View All Years Of Study"));
 
 		JScrollPane scrollPane = new JScrollPane();
-		this.curriculasTable.setShowVerticalLines(true);
-		this.curriculasTable.setShowHorizontalLines(true);
-		this.curriculasTable.setFillsViewportHeight(true);
-		scrollPane.setViewportView(this.curriculasTable);
+		this.yearsOfStudyTable.setShowVerticalLines(true);
+		this.yearsOfStudyTable.setShowHorizontalLines(true);
+		this.yearsOfStudyTable.setFillsViewportHeight(true);
+		scrollPane.setViewportView(this.yearsOfStudyTable);
 
-		viewAllCurriculasPanel.add(scrollPane, BorderLayout.CENTER);
+		viewAllYearsOfStudyPanel.add(scrollPane, BorderLayout.CENTER);
 
-		return viewAllCurriculasPanel;
+		return viewAllYearsOfStudyPanel;
 	}
 
 	private TitledBorder CreateRaisedBevelTitledBorder(String title) {
@@ -378,3 +359,4 @@ public class CurriculasCard extends JPanel {
 		return raisedBevelTitledBorder;
 	}
 }
+
