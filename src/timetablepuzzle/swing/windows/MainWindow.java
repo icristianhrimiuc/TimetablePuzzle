@@ -27,19 +27,19 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
 import timetablepuzzle.entities.Solution;
+import timetablepuzzle.entities.administration.AcademicSession;
+import timetablepuzzle.entities.administration.AcademicYear;
 import timetablepuzzle.entities.administration.Faculty;
 import timetablepuzzle.entities.administration.User;
 import timetablepuzzle.entities.administration.User.UserType;
-import timetablepuzzle.entities.other.AcademicSession;
-import timetablepuzzle.entities.other.AcademicYear;
 import timetablepuzzle.swing.windows.cards.HomeCard;
 import timetablepuzzle.swing.windows.cards.TimetableCard;
+import timetablepuzzle.swing.windows.cards.administration.academicSessions.AcademicSessionsCard;
+import timetablepuzzle.swing.windows.cards.administration.academicYears.AcademicYearsCard;
 import timetablepuzzle.swing.windows.cards.administration.instructorMeetings.InstructorMeetingsCard;
 import timetablepuzzle.swing.windows.cards.inputdata.instructors.InstructorsCard;
 import timetablepuzzle.swing.windows.cards.inputdata.rooms.RoomsCard;
 import timetablepuzzle.swing.windows.cards.inputdata.studentGroups.StudentGroupsCard;
-import timetablepuzzle.swing.windows.cards.other.academicSessions.AcademicSessionsCard;
-import timetablepuzzle.swing.windows.cards.other.academicYears.AcademicYearsCard;
 import timetablepuzzle.swing.windows.cards.other.buildings.BuildingsCard;
 import timetablepuzzle.swing.windows.cards.other.roomTypes.RoomTypesCard;
 import timetablepuzzle.swing.windows.cards.other.timePreferences.TimePreferencesCard;
@@ -219,12 +219,16 @@ public class MainWindow implements ActionListener {
 
 	private JMenu CreateJMenuCourseTimeTabling() {
 		JMenu mnCourseTimetabling = new JMenu("Course Timetabling");
+		
 		// Course timetabling menu items
 		JMenuItem mntmTimetable = new JMenuItem(TIMETABLE_CARD);
-		mntmTimetable.addActionListener(this);
 		JMenuItem mntmAssignedClasses = new JMenuItem("Assigned Classes");
 		JMenuItem mntmUnassignedClasses = new JMenuItem("Unassigned Classes");
 		JMenuItem mntmSavedTimetables = new JMenuItem("Saved Timetables");
+		
+		// Add action listeners
+		mntmTimetable.addActionListener(this);
+		
 		// Add menu items
 		mnCourseTimetabling.add(mntmTimetable);
 		mnCourseTimetabling.add(mntmAssignedClasses);
@@ -236,8 +240,10 @@ public class MainWindow implements ActionListener {
 
 	private JMenu CreateJMenuAdministration() {
 		JMenu mnAdministration = new JMenu("Administration");
+		
 		// Administration menu items
-		JMenuItem mntmInstructorMeetings = new JMenuItem(INSTRUCTOR_MEETINGS_CARD);
+		JMenuItem mntmAcademicSessions = new JMenuItem(ACADEMIC_SESSIONS_CARD);
+		JMenuItem mntmAcademicYears = new JMenuItem(ACADEMIC_YEARS_CARD);
 		JMenuItem mntmCourseOfferings = new JMenuItem("Course Offerings");
 		JMenuItem mntmCurriculas = new JMenuItem("Curriculas");
 		JMenuItem mntmSubjectAreas = new JMenuItem("Subject Areas");
@@ -246,16 +252,19 @@ public class MainWindow implements ActionListener {
 		JMenuItem mntmFaculties = new JMenuItem("Faculties");
 		
 		// Add action listeners
-		mntmInstructorMeetings.addActionListener(this);
+		mntmAcademicSessions.addActionListener(this);
+		mntmAcademicYears.addActionListener(this);
 		
 		// Add menu items
-		mnAdministration.add(mntmInstructorMeetings);
+		mnAdministration.add(mntmAcademicSessions);
+		mnAdministration.add(mntmAcademicYears);
+		mnAdministration.add(new JSeparator());
 		mnAdministration.add(mntmCourseOfferings);
 		mnAdministration.add(mntmCurriculas);
-		mnAdministration.add(new JSeparator());
 		mnAdministration.add(mntmSubjectAreas);
 		mnAdministration.add(mntmYearsOfStudy);
 		mnAdministration.add(mntmDepartments);
+		mnAdministration.add(new JSeparator());
 		mnAdministration.add(mntmFaculties);
 		
 		return mnAdministration;
@@ -267,22 +276,22 @@ public class MainWindow implements ActionListener {
 		// Input data menu items
 		JMenuItem mntmInstructors = new JMenuItem(INSTRUCTORS_CARD);
 		JMenuItem mntmRooms = new JMenuItem(ROOMS_CARD);
+		JMenuItem mntmInstructorMeetings = new JMenuItem(INSTRUCTOR_MEETINGS_CARD);
 		JMenuItem mntmStudentgroups = new JMenuItem(STUDENT_GROUPS_CARD);
 		JMenuItem mntmOfferings = new JMenuItem("Offerings");
-		JMenuItem mntmClasses = new JMenuItem("Classes");
 
 		// Add action listeners
 		mntmInstructors.addActionListener(this);
 		mntmRooms.addActionListener(this);
+		mntmInstructorMeetings.addActionListener(this);
 		mntmStudentgroups.addActionListener(this);
 		
 		// Add menu items
 		mnInputData.add(mntmInstructors);
 		mnInputData.add(mntmRooms);
+		mnInputData.add(mntmInstructorMeetings);
 		mnInputData.add(mntmStudentgroups);
 		mnInputData.add(mntmOfferings);
-		mnInputData.add(new JSeparator());
-		mnInputData.add(mntmClasses);
 
 		return mnInputData;
 	}
@@ -290,25 +299,19 @@ public class MainWindow implements ActionListener {
 	private JMenu CreateJMenuOther() {
 		JMenu mnOther = new JMenu("Other");
 		// Other menu items
-		JMenuItem mntmAcademicSessions = new JMenuItem(ACADEMIC_SESSIONS_CARD);
-		JMenuItem mntmAcademicYears = new JMenuItem(ACADEMIC_YEARS_CARD);
 		JMenuItem mntmBuildings = new JMenuItem(BUILDING_CARD);
 		JMenuItem mntmRoomtypes = new JMenuItem(ROOM_TYPE_CARD);
 		JMenuItem menuTimePreferences = new JMenuItem(TIME_PREFERENCES_CARD);
 		
 		// Add action listeners
-		mntmAcademicSessions.addActionListener(this);
-		mntmAcademicYears.addActionListener(this);
 		mntmBuildings.addActionListener(this);
 		mntmRoomtypes.addActionListener(this);
 		menuTimePreferences.addActionListener(this);
 		
 		// Add menu items
-		mnOther.add(mntmAcademicSessions);
-		mnOther.add(mntmAcademicYears);
-		mnOther.add(new JSeparator());
 		mnOther.add(mntmBuildings);
 		mnOther.add(mntmRoomtypes);
+		mnOther.add(new JSeparator());
 		mnOther.add(menuTimePreferences);
 		
 		return mnOther;
@@ -373,15 +376,15 @@ public class MainWindow implements ActionListener {
 
 		// Create header sections
 		JPanel hUserSection = CreateHeaderSection("User Name&Type:", loggedUser.toString(), "Show all users");
+		JPanel hViewedFaculty = CreateHeaderSection("Faculty:", viewedFaculty.toString(), "Change faculty");
 		JPanel hViewedAcademicYear = CreateHeaderSection("Academic year:", viewedAcadYear.toString(), "Change year");
 		JPanel hViewedAcademicSession = CreateHeaderSection("Academic session:", viewedAcadSession.toString(), "Change session");
-		JPanel hViewedFaculty = CreateHeaderSection("Faculty:", viewedFaculty.toString(), "Change faculty");
 
 		// Add the different section to the header panel
 		headerPanel.add(hUserSection);
+		headerPanel.add(hViewedFaculty);
 		headerPanel.add(hViewedAcademicYear);
 		headerPanel.add(hViewedAcademicSession);
-		headerPanel.add(hViewedFaculty);
 
 		return headerPanel;
 	}

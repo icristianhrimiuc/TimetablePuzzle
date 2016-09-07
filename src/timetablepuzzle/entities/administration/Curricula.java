@@ -5,62 +5,59 @@ import java.util.List;
 import javax.persistence.*;
 
 import timetablepuzzle.entities.administration.YearOfStudy.CollegeYear;
+import timetablepuzzle.entities.inputdata.Class;
+import timetablepuzzle.entities.inputdata.StudentGroup;
 
 @Entity
-@Table(name="curriculas")
-public class Curricula{
-	public static enum Term{FIRST,SECOND,THIRD,UNASSIGNED};
-	
+@Table(name = "curriculas")
+public class Curricula {
+	public static enum Term {
+		FIRST, SECOND, THIRD, UNASSIGNED
+	};
+
 	@Id
-	@Column(name="id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(name="name")
+
+	@Column(name = "name")
 	private String name;
-	
-	@Column(name="year")
+
+	@Column(name = "year")
 	@Enumerated(EnumType.STRING)
 	private CollegeYear year;
-	
-	@Column(name="term")
+
+	@Column(name = "term")
 	@Enumerated(EnumType.STRING)
 	private Term term;
-	
-	@OneToMany(cascade=CascadeType.ALL,targetEntity=CourseOffering.class)
-	@JoinTable(name="curriculas_courseOfferings",
-    joinColumns=
-         @JoinColumn(name="curricula_id"),
-    inverseJoinColumns=
-         @JoinColumn(name="courseOffering_id"))
+
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH }, targetEntity = CourseOffering.class)
+	@JoinTable(name = "curriculas_courseOfferings", joinColumns = @JoinColumn(name = "curricula_id"), inverseJoinColumns = @JoinColumn(name = "courseOffering_id"))
 	private List<CourseOffering> courses;
 
-	public Curricula()
-	{
-		this(0,"NoName", CollegeYear.UNASSIGNED, Term.UNASSIGNED, new ArrayList<CourseOffering>());
+	public Curricula() {
+		this(0, "NoName", CollegeYear.UNASSIGNED, Term.UNASSIGNED, new ArrayList<CourseOffering>());
 	}
 
-	public Curricula(int id, String name, CollegeYear year, Term term,  List<CourseOffering> courses)
-	{
+	public Curricula(int id, String name, CollegeYear year, Term term, List<CourseOffering> courses) {
 		this.id = id;
 		setName(name);
 		setYear(year);
 		setTerm(term);
 		this.courses = courses;
 	}
-	
-	/********************Getters and setters****************/	
+
+	/******************** Getters and setters ****************/
 	public int getId() {
 		return this.id;
 	}
-	
-	public String getName()
-	{
+
+	public String getName() {
 		return this.name;
 	}
-	
-	public void setName(String name)
-	{
+
+	public void setName(String name) {
 		this.name = name;
 	}
 
@@ -84,8 +81,27 @@ public class Curricula{
 		return courses;
 	}
 
-	
-	/*******************Methods that model the class behavior*******************/
+	/*******************
+	 * Methods that model the class behavior
+	 *******************/
+	public List<Class> getClasses(Term term, StudentGroup parentStudentGroup, String departmentName,
+			CollegeYear collegeYear, String subjectAreaName) {
+		List<Class> classes = new ArrayList<Class>();
+		if (parentStudentGroup != null) {
+			for (CourseOffering courseOffering : this.courses) {
+				if (courseOffering != null) {
+					classes.addAll(courseOffering.getClasses(term, parentStudentGroup, departmentName, collegeYear,
+							subjectAreaName));
+				}
+			}
+		}
+
+		return classes;
+	}
+
+	/*******************
+	 * Overridden methods
+	 *******************/
 	@Override
 	public String toString() {
 		String yearName = String.format("%s year", this.year);
@@ -98,18 +114,16 @@ public class Curricula{
 		boolean equals = (o instanceof Curricula);
 		if (equals) {
 			Curricula other = (Curricula) o;
-			equals = ((this.id == other.getId()) && 
-					(this.name.equals(other.getName())) && 
-					(this.year.equals(other.getYear())) && 
-					(this.term.equals(other.getTerm()))
-					);
-			
-			for(CourseOffering course : other.courses){
+			equals = ((this.id == other.getId()) && (this.name.equals(other.getName()))
+					&& (this.year.equals(other.getYear())) && (this.term.equals(other.getTerm())));
+
+			for (CourseOffering course : other.courses) {
 				equals &= this.courses.contains(course);
-				if(!equals) break;
+				if (!equals)
+					break;
 			}
 		}
-		
+
 		return equals;
 	}
 

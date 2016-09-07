@@ -25,13 +25,13 @@ import javax.swing.border.TitledBorder;
 import com.sun.xml.internal.ws.util.StringUtils;
 
 import timetablepuzzle.entities.Solution;
+import timetablepuzzle.entities.administration.AcademicSession;
+import timetablepuzzle.entities.administration.AcademicYear;
 import timetablepuzzle.entities.administration.Department;
 import timetablepuzzle.entities.administration.Faculty;
 import timetablepuzzle.entities.administration.User;
 import timetablepuzzle.entities.administration.YearOfStudy;
 import timetablepuzzle.entities.inputdata.Class;
-import timetablepuzzle.entities.other.AcademicSession;
-import timetablepuzzle.entities.other.AcademicYear;
 import timetablepuzzle.entities.other.TimePreferences;
 
 public class TimetableCard extends JPanel{

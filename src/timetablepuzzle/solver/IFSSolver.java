@@ -1,11 +1,9 @@
 package timetablepuzzle.solver;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import timetablepuzzle.eclipselink.entities.inputdata.*;
 import timetablepuzzle.entities.Solution;
 import timetablepuzzle.entities.inputdata.Class;
 import timetablepuzzle.entities.inputdata.Offering;

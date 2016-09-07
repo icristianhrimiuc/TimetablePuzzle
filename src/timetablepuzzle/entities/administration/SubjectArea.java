@@ -1,8 +1,14 @@
 package timetablepuzzle.entities.administration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
 
 import timetablepuzzle.entities.administration.Curricula.Term;
+import timetablepuzzle.entities.administration.YearOfStudy.CollegeYear;
+import timetablepuzzle.entities.inputdata.Class;
+import timetablepuzzle.entities.inputdata.StudentGroup;
 
 @Entity
 @Table(name = "subject_areas")
@@ -15,15 +21,15 @@ public class SubjectArea {
 	@Column(name = "name")
 	private String name;
 
-	@OneToOne(cascade = CascadeType.ALL, optional = false)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
 	@JoinColumn(name = "firstterm_curricula_id", unique = true, nullable = false)
 	private Curricula firstTermCurricula;
 
-	@OneToOne(cascade = CascadeType.ALL, optional = false)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
 	@JoinColumn(name = "secondterm_curricula_id", unique = true, nullable = false)
 	private Curricula secondTermCurricula;
 
-	@OneToOne(cascade = CascadeType.ALL, optional = true)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = true)
 	@JoinColumn(name = "thirdterm_curricula_id", unique = true, nullable = true)
 	private Curricula thirdTermCurricula;
 
@@ -84,7 +90,25 @@ public class SubjectArea {
 		}
 	}
 
-	/*************Methods that model the class behavior**************/
+	/**********************
+	 * Methods that model the class behavior
+	 ******************/
+	public List<Class> getClasses(Term term, StudentGroup parentStudentGroup, String departmentName,
+			CollegeYear collegeYear, String subjectAreaName) {
+		List<Class> classes = new ArrayList<Class>();
+		if (parentStudentGroup != null) {
+			Curricula curricula = getCurriculaToStudyByTerm(term);
+			if (curricula.getId() != 0) {
+				classes = curricula.getClasses(term, parentStudentGroup, departmentName, collegeYear, subjectAreaName);
+			}
+		}
+
+		return classes;
+	}
+
+	/**********************
+	 * Overridden methods
+	 ******************/
 	@Override
 	public String toString() {
 		return String.format("%s", this.name);

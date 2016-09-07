@@ -5,8 +5,8 @@
 	<persistence-unit name="TimetablePuzzle" transaction-type="RESOURCE_LOCAL" >
 		<!-- EclipseLink -->
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<class>timetablepuzzle.entities.other.AcademicSession</class>
-		<class>timetablepuzzle.entities.other.AcademicYear</class>
+		<class>timetablepuzzle.entities.administration.AcademicSession</class>
+		<class>timetablepuzzle.entities.administration.AcademicYear</class>
 		<class>timetablepuzzle.entities.other.RoomFeature</class>
 		<class>timetablepuzzle.entities.other.RoomType</class>
 		<class>timetablepuzzle.entities.other.Location</class>

@@ -28,12 +28,10 @@ public class OfferingJPADAOService extends JPADAO<Offering,Integer> implements O
 		{
 			this.entityManager.getTransaction().begin();
 			existingOffering.setName(newOffering.getName());
-			existingOffering.setType(newOffering.getType());
-			existingOffering.setRooms(newOffering.getRooms());
-			existingOffering.setNrOfMeetingsPerInstructor(newOffering.getNrOfMeetingsPerInstructor());
-			existingOffering.setDatePattern(newOffering.getDatePattern());
 			existingOffering.setNrOfTimeSlots(newOffering.getNrOfTimeSlots());
-			existingOffering.setNrOfGroupSlots(newOffering.getNrOfGroupSlots());
+			existingOffering.setType(newOffering.getType());
+			existingOffering.setDatePattern(newOffering.getDatePattern());
+			existingOffering.setNrOfMeetingsPerInstructor(newOffering.getNrOfMeetingsPerInstructor());
 			this.entityManager.getTransaction().commit();
 		}
 	}

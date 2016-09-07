@@ -2,57 +2,53 @@ package timetablepuzzle.entities.administration;
 
 import javax.persistence.*;
 
-import timetablepuzzle.entities.other.AcademicSession;
-import timetablepuzzle.entities.other.AcademicYear;
-
 @Entity
-@Table(name="users")
-public class User{
-	public static enum UserType{NOT_ASSIGNED,GUEST,INSTRUCTOR,SECRETARY,ADMIN};
-	
+@Table(name = "users")
+public class User {
+	public static enum UserType {
+		NOT_ASSIGNED, GUEST, INSTRUCTOR, SECRETARY, ADMIN
+	};
+
 	@Id
-	@Column(name="id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(name="username")
+
+	@Column(name = "username")
 	private String username;
-	
-	@Column(name="password_token")
+
+	@Column(name = "password_token")
 	private String passwordToken;
-	
-	@Column(name="user_type")
+
+	@Column(name = "user_type")
 	@Enumerated(EnumType.STRING)
 	private UserType userType;
 
-	@Column(name="first_name")
+	@Column(name = "first_name")
 	private String firstName;
-	
-	@Column(name="last_name")
+
+	@Column(name = "last_name")
 	private String lastName;
-	
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="lastviewed_academicyear_id")
+
+	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH})
+	@JoinColumn(name = "lastviewed_academicyear_id")
 	private AcademicYear lastViewedAcademicYear;
-	
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="lastviewed_academicsession_id")
+
+	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH})
+	@JoinColumn(name = "lastviewed_academicsession_id")
 	private AcademicSession lastViewedAcademicSession;
-	
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="lastviewed_faculty_id")
+
+	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH})
+	@JoinColumn(name = "lastviewed_faculty_id")
 	private Faculty lastViewedFaculty;
 
-	public User()
-	{
-		this(0,"NoUsername","NoToken",UserType.NOT_ASSIGNED, "NoFirstName",
-				"NoLastName", new AcademicYear(), new AcademicSession(), new Faculty());
+	public User() {
+		this(0, "NoUsername", "NoToken", UserType.NOT_ASSIGNED, "NoFirstName", "NoLastName", new AcademicYear(),
+				new AcademicSession(), new Faculty());
 	}
 
-	public User(int id, String username, String passwordToken, UserType userType,
-			String firstName, String lastName, AcademicYear lastViewedAcademicYear, 
-			AcademicSession lastViewedAcademicSession, Faculty lastViewedFaculty)
-	{
+	public User(int id, String username, String passwordToken, UserType userType, String firstName, String lastName,
+			AcademicYear lastViewedAcademicYear, AcademicSession lastViewedAcademicSession, Faculty lastViewedFaculty) {
 		this.id = id;
 		this.setUsername(username);
 		this.setToken(passwordToken);
@@ -64,11 +60,11 @@ public class User{
 		this.setLastViewedFaculty(lastViewedFaculty);
 	}
 
-	/****************Getters and setters********************/
+	/**************** Getters and setters ********************/
 	public int getId() {
 		return id;
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}
@@ -116,7 +112,7 @@ public class User{
 	public void setLastViewedAcademicYear(AcademicYear lastViewedAcademicYear) {
 		this.lastViewedAcademicYear = lastViewedAcademicYear;
 	}
-	
+
 	public AcademicSession getLastViewedAcademicSession() {
 		return lastViewedAcademicSession;
 	}
@@ -132,8 +128,8 @@ public class User{
 	public void setLastViewedFaculty(Faculty lastViewedFaculty) {
 		this.lastViewedFaculty = lastViewedFaculty;
 	}
-	
-	/***********Methods that model the class behavior***************/
+
+	/*********** Methods that model the class behavior ***************/
 
 	@Override
 	public String toString() {
@@ -145,18 +141,15 @@ public class User{
 		boolean equals = (o instanceof User);
 		if (equals) {
 			User other = (User) o;
-			equals = ((this.id == other.getId()) && 
-					(this.username.equals(other.getUsername())) && 
-					(this.passwordToken.equals(other.getPasswordToken())) && 
-					(this.userType.equals(other.getUserType())) && 
-					(this.firstName.equals(other.getFirstName())) &&
-					(this.lastName.equals(other.getLastName())) && 
-					(this.lastViewedAcademicYear.equals(other.getLastViewedAcademicYear())) && 
-					(this.lastViewedAcademicSession.equals(other.getLastViewedAcademicSession())) &&
-					(this.lastViewedFaculty.equals(other.getLastViewedFaculty()))
-					);
+			equals = ((this.id == other.getId()) && (this.username.equals(other.getUsername()))
+					&& (this.passwordToken.equals(other.getPasswordToken()))
+					&& (this.userType.equals(other.getUserType())) && (this.firstName.equals(other.getFirstName()))
+					&& (this.lastName.equals(other.getLastName()))
+					&& (this.lastViewedAcademicYear.equals(other.getLastViewedAcademicYear()))
+					&& (this.lastViewedAcademicSession.equals(other.getLastViewedAcademicSession()))
+					&& (this.lastViewedFaculty.equals(other.getLastViewedFaculty())));
 		}
-		
+
 		return equals;
 	}
 

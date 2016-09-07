@@ -4,38 +4,31 @@ import java.util.List;
 import javax.persistence.*;
 
 @Entity
-@Table(name="room_types")
-public class RoomType{
+@Table(name = "room_types")
+public class RoomType {
 	@Id
-	@Column(name="id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-		
-	@Column(name="name")
+
+	@Column(name = "name")
 	private String name;
-	
-	@Column(name="mincapacity")
+
+	@Column(name = "mincapacity")
 	private int minCapacity;
-	
-	@Column(name="maxcapacity")
+
+	@Column(name = "maxcapacity")
 	private int maxCapacity;
-	
-	@OneToMany(targetEntity=RoomFeature.class)
-	@JoinTable(name="roomType_roomFeatures",
-    joinColumns=
-         @JoinColumn(name="roomType_id"),
-    inverseJoinColumns=
-         @JoinColumn(name="roomFeature_id"))
+
+	@OneToMany(targetEntity = RoomFeature.class)
+	@JoinTable(name = "roomType_roomFeatures", joinColumns = @JoinColumn(name = "roomType_id"), inverseJoinColumns = @JoinColumn(name = "roomFeature_id"))
 	private List<RoomFeature> roomFeatures;
-	
-	public RoomType()
-	{
-		this(0,"NoName",0,0,null);
+
+	public RoomType() {
+		this(0, "NoName", 0, 0, null);
 	}
 
-	public RoomType(int id, String name, int minCapacity,
-			int maxCapacity, List<RoomFeature> roomFeatures)
-	{
+	public RoomType(int id, String name, int minCapacity, int maxCapacity, List<RoomFeature> roomFeatures) {
 		this.id = id;
 		setName(name);
 		setMinCapacity(minCapacity);
@@ -43,12 +36,12 @@ public class RoomType{
 		setRoomFeatures(roomFeatures);
 	}
 
-	/**************Getters and setters*****************/
+	/************** Getters and setters *****************/
 
 	public int getId() {
 		return id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -80,16 +73,19 @@ public class RoomType{
 	public void setRoomFeatures(List<RoomFeature> roomFeatures) {
 		this.roomFeatures = roomFeatures;
 	}
-	/********************Methods that model the class behavior**************************/
-	public String GetFeatures(){
-		String features= "";
-		for(RoomFeature roomFeature : this.roomFeatures){
+
+	/********************
+	 * Methods that model the class behavior
+	 **************************/
+	public String GetFeatures() {
+		String features = "";
+		for (RoomFeature roomFeature : this.roomFeatures) {
 			features += roomFeature.getFeature() + ";";
 		}
-		
+
 		return features;
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("%s", this.name);
@@ -100,19 +96,16 @@ public class RoomType{
 		boolean equals = (o instanceof RoomType);
 		if (equals) {
 			RoomType other = (RoomType) o;
-			equals = (
-					(this.id == other.getId()) && 
-					(this.name.equals(other.getName())) &&
-					(this.minCapacity == other.getMinCapacity()) && 
-					(this.maxCapacity == other.getMaxCapacity()) 
-					);
-			
-			for(RoomFeature roomFeature : other.getRoomFeatures()){
+			equals = ((this.id == other.getId()) && (this.name.equals(other.getName()))
+					&& (this.minCapacity == other.getMinCapacity()) && (this.maxCapacity == other.getMaxCapacity()));
+
+			for (RoomFeature roomFeature : other.getRoomFeatures()) {
 				equals &= this.roomFeatures.contains(roomFeature);
-				if(!equals)break;
+				if (!equals)
+					break;
 			}
 		}
-		
+
 		return equals;
 	}
 

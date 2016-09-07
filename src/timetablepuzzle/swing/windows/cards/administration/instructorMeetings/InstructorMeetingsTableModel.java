@@ -6,7 +6,7 @@ import javax.swing.table.AbstractTableModel;
 
 import timetablepuzzle.entities.administration.InstructorMeetings;
 import timetablepuzzle.entities.inputdata.Instructor;
-import timetablepuzzle.entities.inputdata.Offering;
+import timetablepuzzle.entities.inputdata.Room;
 
 class InstructorMeetingsTableModel extends AbstractTableModel {
     /**
@@ -16,10 +16,10 @@ class InstructorMeetingsTableModel extends AbstractTableModel {
 	
 	private static final int Column_Id = 0;
 	private static final int Column_Instructor = 1;
-	private static final int Column_Offering = 2;
+	private static final int Column_Room = 2;
 	private static final int Column_NrOfMeetings = 3;
 
-	private String[] columnNames = {"Id","Instructor","Offering","NrOfMeetings"};
+	private String[] columnNames = {"Id","Instructor","Room","NrOfMeetings"};
     private List<InstructorMeetings> data;
     
     public InstructorMeetingsTableModel(){}
@@ -67,8 +67,8 @@ class InstructorMeetingsTableModel extends AbstractTableModel {
             case Column_Instructor:
             	colummnValue = instructorMeetings.getInstructor().toString();
                 break;
-            case Column_Offering:
-            	colummnValue = instructorMeetings.getOffering().toString();
+            case Column_Room:
+            	colummnValue = instructorMeetings.getRoom().toString();
                 break;
             case Column_NrOfMeetings:
             	colummnValue = instructorMeetings.getNrOfMeetings();
@@ -87,8 +87,8 @@ class InstructorMeetingsTableModel extends AbstractTableModel {
         case Column_Instructor:
         	instructorMeetings.setInstructor((Instructor)value);
             break;
-        case Column_Offering:
-        	instructorMeetings.setOffering((Offering)value);
+        case Column_Room:
+        	instructorMeetings.setRoom((Room)value);
             break;
         case Column_NrOfMeetings:
         	instructorMeetings.setNrOfMeetings((int)value);

@@ -34,8 +34,10 @@ public class RoomFeature {
 	public void setFeature(String feature) {
 		this.feature = feature;
 	}
-	
-	/************************Methods that model the class behavior************************/
+
+	/************************
+	 * Methods that model the class behavior
+	 ************************/
 	@Override
 	public String toString() {
 		return this.feature;
@@ -46,12 +48,9 @@ public class RoomFeature {
 		boolean equals = (o instanceof RoomFeature);
 		if (equals) {
 			RoomFeature other = (RoomFeature) o;
-			equals =  (
-					(this.id == other.getId()) && 
-					(this.feature.equals(other.getFeature()))
-					);
+			equals = ((this.id == other.getId()) && (this.feature.equals(other.getFeature())));
 		}
-		
+
 		return equals;
 	}
 

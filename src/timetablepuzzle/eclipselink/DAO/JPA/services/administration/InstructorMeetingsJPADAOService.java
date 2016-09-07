@@ -28,7 +28,7 @@ public class InstructorMeetingsJPADAOService extends JPADAO<InstructorMeetings,I
 		{
 			this.entityManager.getTransaction().begin();
 			existingInstructorMeetings.setInstructor(newInstructorMeetings.getInstructor());
-			existingInstructorMeetings.setOffering(newInstructorMeetings.getOffering());
+			existingInstructorMeetings.setRoom(newInstructorMeetings.getRoom());
 			existingInstructorMeetings.setNrOfMeetings(newInstructorMeetings.getNrOfMeetings());
 			this.entityManager.getTransaction().commit();
 		}

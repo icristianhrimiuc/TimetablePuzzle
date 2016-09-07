@@ -7,115 +7,66 @@ import javax.persistence.*;
 import timetablepuzzle.entities.administration.InstructorMeetings;
 
 @Entity
-@Table(name="offerings")
-public class Offering{
-	public static enum OfferingType{LECTURE,SEMINARY,LABORATORY,GYM,UNASSIGNED};
-	public static enum DatePattern{FULL_TERM,EVEN_WEEKS,ODD_WEEKS,FIRST_HALF,SECOND_HALF}
+@Table(name = "offerings")
+public class Offering {
+	public static enum OfferingType {
+		LECTURE, SEMINARY, LABORATORY, GYM, UNASSIGNED
+	};
+
+	public static enum DatePattern {
+		FULL_TERM, EVEN_WEEKS, ODD_WEEKS, FIRST_HALF, SECOND_HALF
+	}
 
 	@Id
-	@Column(name="id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(name="name")
+
+	@Column(name = "name")
 	private String name;
-	
-	@Column(name="nroftimeslots")
+
+	@Column(name = "nroftimeslots")
 	private int nrOfTimeSlots;
-	
-	@Column(name="nrofgroupslots")
-	private int nrOfGroupSlots;
-	
-	@Column(name="type")
+
+	@Column(name = "type")
 	@Enumerated(EnumType.STRING)
 	private OfferingType type;
-	
-	@JoinColumn(name="date_pattern", nullable=false, updatable=false)
-	@Column(name="date_pattern", nullable=false)
+
+	@JoinColumn(name = "date_pattern", nullable = false, updatable = false)
+	@Column(name = "date_pattern", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private DatePattern datePattern;
-	
-	@OneToMany(cascade=CascadeType.ALL,targetEntity=Room.class)
-	@JoinTable(name="offering_rooms",
-    joinColumns=
-         @JoinColumn(name="offering_id"),
-    inverseJoinColumns=
-         @JoinColumn(name="room_id"))
-	private List<Room> rooms;
-	
-	@OneToMany(cascade=CascadeType.ALL,targetEntity=InstructorMeetings.class)
-	@JoinTable(name="offering_instructormeetings",
-    joinColumns=
-         @JoinColumn(name="offering_id"),
-    inverseJoinColumns=
-         @JoinColumn(name="instructormeetings_id"))
+
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REFRESH }, targetEntity = InstructorMeetings.class)
+	@JoinTable(name = "offering_instructormeetings", joinColumns = @JoinColumn(name = "offering_id"), inverseJoinColumns = @JoinColumn(name = "instructormeetings_id"))
 	private List<InstructorMeetings> nrOfMeetingsPerInstructor;
 
-	public Offering()
-	{
-		this(0,"NoName",OfferingType.UNASSIGNED,new ArrayList<Room>(),
-				new ArrayList<InstructorMeetings>(), DatePattern.FULL_TERM,0,0);
+	public Offering() {
+		this(0, "NoName", 0, OfferingType.UNASSIGNED, DatePattern.FULL_TERM, new ArrayList<InstructorMeetings>());
 	}
 
-	public Offering(int id, String name, OfferingType type,
-			List<Room> rooms, List<InstructorMeetings> nrOfMeetingsPerInstructor,
-			DatePattern datePattern, int nrOfTimeSlots, int nrOfGroupSlots)
-	{
+	public Offering(int id, String name, int nrOfTimeSlots, OfferingType type, DatePattern datePattern,
+			List<InstructorMeetings> nrOfMeetingsPerInstructor) {
 		this.id = id;
 		setName(name);
-		setType(type);
-		this.rooms = rooms;
-		this.nrOfMeetingsPerInstructor = nrOfMeetingsPerInstructor;
-		setDatePattern(datePattern);
 		setNrOfTimeSlots(nrOfTimeSlots);
-		setNrOfGroupSlots(nrOfGroupSlots);
+		setType(type);
+		setDatePattern(datePattern);
+		setNrOfMeetingsPerInstructor(nrOfMeetingsPerInstructor);
 	}
-	
-	/******************Getters and Setters****************/
+
+	/****************** Getters and Setters ****************/
 	public int getId() {
 		return this.id;
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	public OfferingType getType()
-	{
-		return this.type;
-	}
-	
-	public void setType(OfferingType type)
-	{
-		this.type = type;
-	}
-
-	public List<Room> getRooms() {
-		return this.rooms;
-	}
-	
-	public void setRooms(List<Room> rooms){
-		this.rooms = rooms;
-	}
-
-	public List<InstructorMeetings> getNrOfMeetingsPerInstructor() {
-		return nrOfMeetingsPerInstructor;
-	}
-	
-	public void setNrOfMeetingsPerInstructor(List<InstructorMeetings> nrOfMeetingsPerInstructor){
-		this.nrOfMeetingsPerInstructor = nrOfMeetingsPerInstructor;
-	}
-
-	public DatePattern getDatePattern() {
-		return datePattern;
-	}
-
-	public void setDatePattern(DatePattern datePattern) {
-		this.datePattern = datePattern;
 	}
 
 	public int getNrOfTimeSlots() {
@@ -126,23 +77,83 @@ public class Offering{
 		this.nrOfTimeSlots = nrOfTimeSlots;
 	}
 
-	public int getNrOfGroupSlots() {
-		return this.nrOfGroupSlots;
+	public OfferingType getType() {
+		return this.type;
 	}
 
-	public void setNrOfGroupSlots(int nrOfGroupSlots) {
-		this.nrOfGroupSlots = nrOfGroupSlots;
+	public void setType(OfferingType type) {
+		this.type = type;
 	}
-	
-	/***************Methods that model the class behavior***************/
-	public List<Instructor> getInstructors()
-	{
+
+	public DatePattern getDatePattern() {
+		return datePattern;
+	}
+
+	public void setDatePattern(DatePattern datePattern) {
+		this.datePattern = datePattern;
+	}
+
+	public List<InstructorMeetings> getNrOfMeetingsPerInstructor() {
+		return nrOfMeetingsPerInstructor;
+	}
+
+	public void setNrOfMeetingsPerInstructor(List<InstructorMeetings> nrOfMeetingsPerInstructor) {
+		this.nrOfMeetingsPerInstructor = nrOfMeetingsPerInstructor;
+	}
+
+	/************************
+	 * Methods that model the class behavior
+	 ********************/
+	public List<Instructor> getInstructors() {
 		List<Instructor> instructors = new ArrayList<Instructor>();
-		for(InstructorMeetings instrMeeting : this.nrOfMeetingsPerInstructor)
-		{
+		for (InstructorMeetings instrMeeting : this.nrOfMeetingsPerInstructor) {
 			instructors.add(instrMeeting.getInstructor());
 		}
-		
+
 		return instructors;
+	}
+
+	public int getTotalNumberOfMeetings() {
+		int totalNrOfMeetings = 0;
+		for (InstructorMeetings nrOfMeetingsPerInstructor : this.getNrOfMeetingsPerInstructor()) {
+			totalNrOfMeetings += nrOfMeetingsPerInstructor.getNrOfMeetings();
+		}
+
+		return totalNrOfMeetings;
+	}
+
+	/**********************
+	 * Overridden methods
+	 ********************/
+	@Override
+	public String toString() {
+		return String.format("%s (%s-%s)", this.name, this.type.name().toLowerCase(), this.datePattern.name().toLowerCase());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = (o instanceof Offering);
+		if (equals) {
+			Offering other = (Offering) o;
+			equals = ((this.id == other.getId()) && 
+					(this.name == other.getName()) && 
+					(this.nrOfTimeSlots == other.getNrOfTimeSlots()) && 
+					(this.type.equals(other.getType())) && 
+					(this.datePattern.equals(other.getDatePattern()))
+					);
+			
+			for (InstructorMeetings nrOfMeetingsPerInstructor : other.getNrOfMeetingsPerInstructor()) {
+				equals &= this.nrOfMeetingsPerInstructor.contains(nrOfMeetingsPerInstructor);
+				if (!equals)
+					break;
+			}
+		}
+
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("Offering:%s:%s", Integer.toString(this.id), this.toString()).hashCode();
 	}
 }

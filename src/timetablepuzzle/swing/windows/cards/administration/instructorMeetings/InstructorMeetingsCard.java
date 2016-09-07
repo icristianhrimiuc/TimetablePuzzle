@@ -30,13 +30,13 @@ import javax.swing.event.DocumentListener;
 
 import timetablepuzzle.eclipselink.DAO.JPA.services.administration.InstructorMeetingsJPADAOService;
 import timetablepuzzle.eclipselink.DAO.JPA.services.inputdata.InstructorJPADAOService;
-import timetablepuzzle.eclipselink.DAO.JPA.services.inputdata.OfferingJPADAOService;
+import timetablepuzzle.eclipselink.DAO.JPA.services.inputdata.RoomJPADAOService;
 import timetablepuzzle.eclipselink.DAO.interfaces.administration.InstructorMeetingsDAO;
 import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.InstructorDAO;
-import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.OfferingDAO;
+import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.RoomDAO;
 import timetablepuzzle.entities.administration.InstructorMeetings;
 import timetablepuzzle.entities.inputdata.Instructor;
-import timetablepuzzle.entities.inputdata.Offering;
+import timetablepuzzle.entities.inputdata.Room;
 import timetablepuzzle.swing.windows.cards.common.CustomComboBoxModel;
 
 public class InstructorMeetingsCard extends JPanel {
@@ -48,15 +48,15 @@ public class InstructorMeetingsCard extends JPanel {
 	private final static Logger LOGGER = Logger.getLogger(InstructorMeetingsCard.class.getName());
 	private static InstructorMeetingsDAO instructorMeetingsDAOService = new InstructorMeetingsJPADAOService();
 	private static InstructorDAO instructorDAOService = new InstructorJPADAOService();
-	private static OfferingDAO offeringDAOService = new OfferingJPADAOService();
+	private static RoomDAO roomDAOService = new RoomJPADAOService();
 
 	private InstructorMeetingsTableModel instructorMeetingsTableModel;
 	private JTable instructorsMeetingsTable;
 	private JLabel notificationLabel;
 	private CustomComboBoxModel<Instructor> comboBoxInstructorModel;
 	private JComboBox<Instructor> comboBoxInstructor;
-	private CustomComboBoxModel<Offering> comboBoxOfferingModel;
-	private JComboBox<Offering> comboBoxOffering;
+	private CustomComboBoxModel<Room> comboBoxRoomModel;
+	private JComboBox<Room> comboBoxRoom;
 	private JTextField textFieldNrOfMeetings;
 	private int idOfTheInstructorMeetingsToUpdate;
 
@@ -79,10 +79,10 @@ public class InstructorMeetingsCard extends JPanel {
 		RefreshComboBoxInstructor();
 		this.comboBoxInstructor = new JComboBox<Instructor>(this.comboBoxInstructorModel);
 
-		// Offering combo box
-		this.comboBoxOfferingModel = new CustomComboBoxModel<Offering>();
-		RefreshComboBoxOffering();
-		this.comboBoxOffering = new JComboBox<Offering>(this.comboBoxOfferingModel);
+		// Room combo box
+		this.comboBoxRoomModel = new CustomComboBoxModel<Room>();
+		RefreshComboBoxRoom();
+		this.comboBoxRoom = new JComboBox<Room>(this.comboBoxRoomModel);
 
 		this.textFieldNrOfMeetings = new JTextField(10);
 		this.textFieldNrOfMeetings.setHorizontalAlignment(JTextField.CENTER);
@@ -111,8 +111,8 @@ public class InstructorMeetingsCard extends JPanel {
 		this.comboBoxInstructorModel.setData(instructorDAOService.GetAll());
 	}
 
-	private void RefreshComboBoxOffering() {
-		this.comboBoxOfferingModel.setData(offeringDAOService.GetAll());
+	private void RefreshComboBoxRoom() {
+		this.comboBoxRoomModel.setData(roomDAOService.GetAll());
 	}
 
 	private void AddDocumentListener(JTextField textField) {
@@ -165,7 +165,7 @@ public class InstructorMeetingsCard extends JPanel {
 		JPanel propertiesPanel = new JPanel();
 		propertiesPanel.setLayout(new BoxLayout(propertiesPanel, BoxLayout.Y_AXIS));
 		propertiesPanel.add(CreatePropertyPanel("Instructor", this.comboBoxInstructor));
-		propertiesPanel.add(CreatePropertyPanel("Offering", this.comboBoxOffering));
+		propertiesPanel.add(CreatePropertyPanel("Room", this.comboBoxRoom));
 		propertiesPanel.add(CreatePropertyPanel("Nr. of meetings", this.textFieldNrOfMeetings));
 		propertiesPanel.add(this.notificationLabel);
 		propertiesPanel.add(CreateCrudButtonsPanel());
@@ -230,10 +230,10 @@ public class InstructorMeetingsCard extends JPanel {
 
 	private void CreateAndSaveNew() {
 		Instructor instructor = (Instructor) this.comboBoxInstructor.getSelectedItem();
-		Offering offering = (Offering) this.comboBoxOffering.getSelectedItem();
+		Room room = (Room) this.comboBoxRoom.getSelectedItem();
 		String nrOfMeetings = this.textFieldNrOfMeetings.getText();
 
-		if ((instructor == null) || (offering == null) || (nrOfMeetings.isEmpty())) {
+		if ((instructor == null) || (room == null) || (nrOfMeetings.isEmpty())) {
 			this.notificationLabel.setText("Please make sure that all the property fields are filled!");
 			LOGGER.log(Level.WARNING, "Attempt to create a new instructorMeetings with empty property field.");
 		} else {
@@ -243,7 +243,7 @@ public class InstructorMeetingsCard extends JPanel {
 
 				// Create new entity
 				InstructorMeetings instructorMeetings = new InstructorMeetings(this.idOfTheInstructorMeetingsToUpdate,
-						nrOfMeetingsPerInstructor, instructor, offering);
+						nrOfMeetingsPerInstructor, instructor, room);
 
 				// Save the entity to the database
 				if (this.idOfTheInstructorMeetingsToUpdate != 0) {
@@ -251,15 +251,15 @@ public class InstructorMeetingsCard extends JPanel {
 					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Updated successfully!");
 					LOGGER.log(Level.FINE,
-							"Update performed on instructorMeetings with id {0}, instructor {1}, and offering {2}.",
-							new Object[] { instructorMeetings.getId(), instructor.toString(), offering.toString() });
+							"Update performed on instructorMeetings with id {0}, instructor {1}, and room {2}.",
+							new Object[] { instructorMeetings.getId(), instructor.toString(), room.toString() });
 				} else {
 					instructorMeetingsDAOService.merge(instructorMeetings);
 					RefreshAllFields();
 					JOptionPane.showMessageDialog(null, "Saved successfully!");
 					LOGGER.log(Level.FINE,
-							"Create performed on instructorMeetings with id {0}, instructor {1}, and offering {2}.",
-							new Object[] { instructorMeetings.getId(), instructor.toString(), offering.toString() });
+							"Create performed on instructorMeetings with id {0}, instructor {1}, and room {2}.",
+							new Object[] { instructorMeetings.getId(), instructor.toString(), room.toString() });
 				}
 			} catch (Exception e) {
 				this.notificationLabel
@@ -278,7 +278,7 @@ public class InstructorMeetingsCard extends JPanel {
 			InstructorMeetings existingInstructorMeetings = this.instructorMeetingsTableModel.elementAt(selecteRow);
 			this.idOfTheInstructorMeetingsToUpdate = existingInstructorMeetings.getId();
 			this.comboBoxInstructor.setSelectedItem(existingInstructorMeetings.getInstructor());
-			this.comboBoxOffering.setSelectedItem(existingInstructorMeetings.getOffering());
+			this.comboBoxRoom.setSelectedItem(existingInstructorMeetings.getRoom());
 			this.textFieldNrOfMeetings.setText(Integer.toString(existingInstructorMeetings.getNrOfMeetings()));
 		}
 	}
@@ -296,10 +296,10 @@ public class InstructorMeetingsCard extends JPanel {
 				this.notificationLabel.setText(" ");
 				JOptionPane.showMessageDialog(null, "Deleted successfully!");
 				LOGGER.log(Level.FINE,
-						"Delete performed on instructorMeetings with id {0}, instructor {1}, and offering {2}.",
+						"Delete performed on instructorMeetings with id {0}, instructor {1}, and room {2}.",
 						new Object[] { existingInstructorMeetings.getId(),
 								existingInstructorMeetings.getInstructor().toString(),
-								existingInstructorMeetings.getOffering().toString() });
+								existingInstructorMeetings.getRoom().toString() });
 			} catch (Exception e) {
 				this.notificationLabel.setText(
 						"An error occured. Please make sure that nothing else depends on this instructorMeetings."
@@ -314,7 +314,7 @@ public class InstructorMeetingsCard extends JPanel {
 
 	private void RefreshAllFields() {
 		this.comboBoxInstructor.setSelectedIndex(-1);
-		this.comboBoxOffering.setSelectedIndex(-1);
+		this.comboBoxRoom.setSelectedIndex(-1);
 		this.textFieldNrOfMeetings.setText("");
 		this.notificationLabel.setText("  ");
 		this.idOfTheInstructorMeetingsToUpdate = 0;
