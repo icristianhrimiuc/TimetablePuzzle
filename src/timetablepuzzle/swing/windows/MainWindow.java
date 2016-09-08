@@ -132,6 +132,10 @@ public class MainWindow implements ActionListener {
 	 * Default constructor. Creates the application
 	 */
 	public MainWindow(Color bgColor) {
+		Login(bgColor);
+	}
+
+	private void Login(Color bgColor) {
 		// Initialize the main frame
 		this.frame = new JFrame();
 		this.frame.setSize(1050, 750);
@@ -147,10 +151,6 @@ public class MainWindow implements ActionListener {
 
 		// Initialize the login dialog and display it
 		this.loginDialog = new LoginDialog(frame, true);
-		Login();
-	}
-
-	private void Login() {
 		this.loggedUser = loginDialog.execute();
 
 		if (loginDialog.isValidUser()) {
@@ -168,7 +168,7 @@ public class MainWindow implements ActionListener {
 			this.cards.put(HOME_CARD,
 					new TextCard("src\\resources\\homeBackground.png", "src\\resources\\homeText.txt"));
 			// Course Timetabling menu
-			this.cards.put(TIMETABLE_CARD, new TimetableCard(loggedUser, bgColor));
+			this.cards.put(TIMETABLE_CARD, new TimetableCard(bgColor, this.viewedFaculty, this.viewedAcademicYear, this.viewedAcademicSession));
 			this.cards.put(ASSIGNED_CLASSES_CARD, new ClassesCard(this.bgColor, this.acceptedSolution.getId(), true));
 			this.cards.put(UNASSIGNED_CLASSES_CARD,
 					new ClassesCard(this.bgColor, this.acceptedSolution.getId(), false));
@@ -231,6 +231,7 @@ public class MainWindow implements ActionListener {
 				RefreshComboBoxViewedFaculty();
 				RefreshComboBoxViewedAcademicYear();
 				RefreshComboBoxViewedAcademicSession();
+				RefreshTimeTableCard();
 			}
 		});
 
@@ -312,9 +313,13 @@ public class MainWindow implements ActionListener {
 				}
 			}
 		}
-		
+		RefreshTimeTableCard();
 		((ClassesCard)this.cards.get(ASSIGNED_CLASSES_CARD)).setNewSolution(this.acceptedSolution.getId());
 		((ClassesCard)this.cards.get(UNASSIGNED_CLASSES_CARD)).setNewSolution(this.acceptedSolution.getId());
+	}
+	
+	private void RefreshTimeTableCard(){
+		((TimetableCard)this.cards.get(TIMETABLE_CARD)).setData(this.viewedFaculty, this.viewedAcademicYear, this.viewedAcademicSession);
 	}
 
 	private JMenuBar CreateMenuBar(UserType userType) {
@@ -401,7 +406,7 @@ public class MainWindow implements ActionListener {
 				loggedUser.setLastViewedAcademicSession(viewedAcademicSession);
 				userDAO.merge(loggedUser);
 				frame.setVisible(false);
-				Login();
+				Login(bgColor);
 			}
 		});
 		jMenuBar.add(mnLogOut);
@@ -555,7 +560,7 @@ public class MainWindow implements ActionListener {
 			cardsPanel.add(cards.get(cardName), cardName);
 		}
 		cardLayout = (CardLayout) cardsPanel.getLayout();
-		cardLayout.show(cardsPanel, HOME_CARD);
+		cardLayout.show(cardsPanel, TIMETABLE_CARD);
 
 		mainPanel.add(cardsPanel, BorderLayout.CENTER);
 

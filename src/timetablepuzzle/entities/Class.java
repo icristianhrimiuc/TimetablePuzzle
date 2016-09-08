@@ -41,19 +41,19 @@ public class Class {
 	private Term term;
 
 	// These fields are used by the solver
-	@ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, optional = false)
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
 	@JoinColumn(name = "offering_id", nullable = false, updatable = false)
 	private Offering offering;
 
-	@ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, optional = false)
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
 	@JoinColumn(name = "assigned_room_id", nullable = false, updatable = false)
 	private Room assignedRoom;
 
-	@ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, optional = false)
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
 	@JoinColumn(name = "assigned_instructor_id", nullable = false, updatable = false)
 	private Instructor assignedInstructor;
 
-	@ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, optional = false)
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
 	@JoinColumn(name = "assigned_studentgroup_id", nullable = false, updatable = false)
 	private StudentGroup assignedParentStudentGroup;
 
@@ -205,10 +205,16 @@ public class Class {
 		return this.offering.getNrOfTimeSlots();
 	}
 
+	public String getDisplayName() {
+		return String.format("%s(%s)<br>%s - %s", this.courseTitle, this.courseAbbreviation,
+				this.assignedInstructor.toString(), this.assignedRoom.toString());
+	}
+
 	/******************** Overridden methods ************************/
 	@Override
 	public String toString() {
-		return String.format("%s-%s (%s)",this.departmentName, this.courseTitle, this.courseAbbreviation);
+		return String.format("%s(%s)\n%s - %s", this.courseTitle, this.courseAbbreviation,
+				this.assignedInstructor.toString(), this.assignedRoom.toString());
 	}
 
 	@Override
@@ -220,8 +226,7 @@ public class Class {
 					&& (this.courseAbbreviation.equals(other.getCourseAbbreviation()))
 					&& (this.departmentName.equals(other.getDepartmentName()))
 					&& (this.collegeYear.equals(other.getCollegeYear()))
-					&& (this.subjectAreaName.equals(other.getSubjectAreaName()))
-					&& (this.term.equals(other.getTerm()))
+					&& (this.subjectAreaName.equals(other.getSubjectAreaName())) && (this.term.equals(other.getTerm()))
 					&& (this.offering.equals(other.getOffering()))
 					&& (this.assignedRoom.equals(other.getAssignedRoom()))
 					&& (this.assignedInstructor.equals(other.getAssignedInstructor()))

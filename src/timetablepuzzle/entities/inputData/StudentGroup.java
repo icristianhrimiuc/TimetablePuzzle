@@ -75,6 +75,20 @@ public class StudentGroup {
 	}
 
 	/**************** Methods that model class behavior ******************/
+	public List<StudentGroup> getLeafGroups() {
+		List<StudentGroup> leafGroups = new ArrayList<StudentGroup>();
+		if((this.composingGroups == null) || (this.composingGroups.isEmpty()))
+		{
+			leafGroups.add(this);
+		}else{
+			for(StudentGroup composingGroup : this.composingGroups){
+				leafGroups.addAll(composingGroup.getLeafGroups());
+			}
+		}
+
+		return leafGroups;
+	}
+	
 	public List<StudentGroup> getAllComposingGroupsHierachically() {
 		List<StudentGroup> allComposingGroups = new ArrayList<StudentGroup>();
 		allComposingGroups.addAll(this.composingGroups);
