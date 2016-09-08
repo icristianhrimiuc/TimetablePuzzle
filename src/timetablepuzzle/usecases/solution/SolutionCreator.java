@@ -3,8 +3,8 @@ package timetablepuzzle.usecases.solution;
 import java.util.ArrayList;
 import java.util.List;
 
+import timetablepuzzle.entities.Class;
 import timetablepuzzle.entities.Solution;
-import timetablepuzzle.entities.inputdata.Class;
 
 public class SolutionCreator {
 	private List<Class> classes;

@@ -3,8 +3,8 @@ package timetablepuzzle.usecases.solution;
 import java.util.ArrayList;
 import java.util.List;
 
+import timetablepuzzle.entities.Class;
 import timetablepuzzle.entities.Solution;
-import timetablepuzzle.entities.inputdata.Class;
 import timetablepuzzle.entities.inputdata.Instructor;
 import timetablepuzzle.entities.inputdata.Room;
 import timetablepuzzle.entities.other.TimePreferences.DayOfTheWeek;

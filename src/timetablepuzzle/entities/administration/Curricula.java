@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.entities.Class;
 import timetablepuzzle.entities.administration.YearOfStudy.CollegeYear;
-import timetablepuzzle.entities.inputdata.Class;
 import timetablepuzzle.entities.inputdata.StudentGroup;
 
 @Entity

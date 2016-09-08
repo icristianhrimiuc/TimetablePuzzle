@@ -18,7 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
-public class HomeCard extends JPanel{
+public class TextCard extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private static final Color foregroundColor = Color.BLACK;
 	private static final Font foregroundFont = new Font("Courier New",Font.BOLD, 14);
@@ -29,7 +29,7 @@ public class HomeCard extends JPanel{
 	private Image backgroundImage;
 	private String welcomeText;
 	
-	public HomeCard(String backgroundImageFilePath, String textToDisplayFilePath)
+	public TextCard(String backgroundImageFilePath, String textToDisplayFilePath)
 	{
 		this.backgroundImageFilePath = backgroundImageFilePath;
 		this.textToDisplayFilePath = textToDisplayFilePath;

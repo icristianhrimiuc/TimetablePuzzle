@@ -24,7 +24,7 @@
 		<class>timetablepuzzle.entities.inputdata.Instructor</class>
 		<class>timetablepuzzle.entities.inputdata.Room</class>
 		<class>timetablepuzzle.entities.inputdata.StudentGroup</class>
-		<class>timetablepuzzle.entities.inputdata.Class</class>
+		<class>timetablepuzzle.entities.Class</class>
 		<class>timetablepuzzle.entities.Solution</class>
 		
 		

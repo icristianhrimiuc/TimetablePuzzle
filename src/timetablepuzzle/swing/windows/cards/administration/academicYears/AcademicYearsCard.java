@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +37,7 @@ import timetablepuzzle.eclipselink.DAO.interfaces.administration.AcademicYearDAO
 import timetablepuzzle.eclipselink.DAO.interfaces.inputdata.StudentGroupDAO;
 import timetablepuzzle.entities.administration.AcademicSession;
 import timetablepuzzle.entities.administration.AcademicYear;
+import timetablepuzzle.entities.administration.Curricula.Term;
 import timetablepuzzle.entities.inputdata.StudentGroup;
 import timetablepuzzle.swing.windows.cards.common.CustomComboBoxModel;
 
@@ -129,17 +131,28 @@ public class AcademicYearsCard extends JPanel {
 	}
 
 	private void RefreshComboBoxFirstAcademicSession() {
-		this.comboBoxFirstAcademicSessionModel.setData(academicSessionDAOService.GetAll());
+		this.comboBoxFirstAcademicSessionModel.setData(FilterByTerm(academicSessionDAOService.GetAll(),Term.FIRST));
 	}
 
 	private void RefreshComboBoxSecondAcademicSession() {
-		this.comboBoxSecondAcademicSessionModel.setData(academicSessionDAOService.GetAll());
+		this.comboBoxSecondAcademicSessionModel.setData(FilterByTerm(academicSessionDAOService.GetAll(),Term.SECOND));
 	}
 
 	private void RefreshComboBoxThirdAcademicSession() {
-		List<AcademicSession> academisSessions = academicSessionDAOService.GetAll();
+		List<AcademicSession> academisSessions = FilterByTerm(academicSessionDAOService.GetAll(),Term.THIRD);
 		academisSessions.add(null);
 		this.comboBoxThirdAcademicSessionModel.setData(academisSessions);
+	}
+
+	private List<AcademicSession> FilterByTerm(List<AcademicSession> academicSessions, Term term) {
+		List<AcademicSession> academicSessionByTerm = new ArrayList<AcademicSession>();
+		for (AcademicSession academicSession : academicSessions) {
+			if (academicSession.getTerm() == term) {
+				academicSessionByTerm.add(academicSession);
+			}
+		}
+
+		return academicSessionByTerm;
 	}
 
 	private void SetAcademicYearsCardComponents() {

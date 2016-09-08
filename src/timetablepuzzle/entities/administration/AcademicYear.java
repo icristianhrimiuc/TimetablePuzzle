@@ -1,5 +1,8 @@
 package timetablepuzzle.entities.administration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
 
 import timetablepuzzle.entities.inputdata.StudentGroup;
@@ -14,20 +17,20 @@ public class AcademicYear {
 
 	@Column(name = "name")
 	private String name;
-	
-	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, optional = false)
+
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
 	@JoinColumn(name = "parent_studentgroup_id", unique = false, nullable = false)
 	private StudentGroup parentStudentGroup;
 
-	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, optional = false)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
 	@JoinColumn(name = "first_academicsession_id", unique = false, nullable = false)
 	private AcademicSession firstAcademicSession;
 
-	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, optional = false)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
 	@JoinColumn(name = "second_academicsession_id", unique = false, nullable = false)
 	private AcademicSession secondAcademicSession;
 
-	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, optional = true)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = true)
 	@JoinColumn(name = "third_academicsession_id", unique = false, nullable = true)
 	private AcademicSession thirdAcademicSession;
 
@@ -46,10 +49,10 @@ public class AcademicYear {
 	}
 
 	/******************** Getters and setters ****************/
-	public int getId(){
+	public int getId() {
 		return this.id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -65,7 +68,7 @@ public class AcademicYear {
 	public void setParentStudentGroup(StudentGroup parentStudentGroup) {
 		this.parentStudentGroup = parentStudentGroup;
 	}
-	
+
 	public AcademicSession getFirstAcademicSession() {
 		return firstAcademicSession;
 	}
@@ -90,7 +93,21 @@ public class AcademicYear {
 		this.thirdAcademicSession = thirdAcademicSession;
 	}
 
-	/******************** Methods that model the class behavior*******************/
+	/************************
+	 * Methods that model the class behavior
+	 ***********************/
+	public List<AcademicSession> getAcademicSessions() {
+		List<AcademicSession> academicSessions = new ArrayList<AcademicSession>();
+		academicSessions.add(this.firstAcademicSession);
+		academicSessions.add(this.secondAcademicSession);
+		academicSessions.add(this.thirdAcademicSession);
+		
+		return academicSessions;
+	}
+
+	/************************
+	 * Overridden methods
+	 ************************/
 	@Override
 	public String toString() {
 		return String.format("%s", this.name);
@@ -101,13 +118,10 @@ public class AcademicYear {
 		boolean equals = (o instanceof AcademicYear);
 		if (equals) {
 			AcademicYear other = (AcademicYear) o;
-			equals = (
-					(this.id == other.getId()) && 
-					(this.name.equals(other.getName())) &&
-					(this.firstAcademicSession.equals(other.getFirstAcademicSession())) &&
-					(this.secondAcademicSession.equals(other.getSecondAcademicSession())) &&
-					(this.thirdAcademicSession.equals(other.thirdAcademicSession))
-					);
+			equals = ((this.id == other.getId()) && (this.name.equals(other.getName()))
+					&& (this.firstAcademicSession.equals(other.getFirstAcademicSession()))
+					&& (this.secondAcademicSession.equals(other.getSecondAcademicSession()))
+					&& (this.thirdAcademicSession.equals(other.thirdAcademicSession)));
 		}
 		return equals;
 	}

@@ -1,4 +1,4 @@
-package timetablepuzzle.entities.inputdata;
+package timetablepuzzle.entities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,10 @@ import javax.persistence.*;
 
 import timetablepuzzle.entities.administration.Curricula.Term;
 import timetablepuzzle.entities.administration.YearOfStudy.CollegeYear;
+import timetablepuzzle.entities.inputdata.Instructor;
+import timetablepuzzle.entities.inputdata.Offering;
+import timetablepuzzle.entities.inputdata.Room;
+import timetablepuzzle.entities.inputdata.StudentGroup;
 
 @Entity
 @Table(name = "classes")
@@ -204,7 +208,7 @@ public class Class {
 	/******************** Overridden methods ************************/
 	@Override
 	public String toString() {
-		return String.format("%s (%s)", this.courseTitle, this.courseAbbreviation);
+		return String.format("%s-%s (%s)",this.departmentName, this.courseTitle, this.courseAbbreviation);
 	}
 
 	@Override
@@ -214,6 +218,10 @@ public class Class {
 			Class other = (Class) o;
 			equals = ((this.id == other.getId()) && (this.courseTitle.equals(other.getCourseTitle()))
 					&& (this.courseAbbreviation.equals(other.getCourseAbbreviation()))
+					&& (this.departmentName.equals(other.getDepartmentName()))
+					&& (this.collegeYear.equals(other.getCollegeYear()))
+					&& (this.subjectAreaName.equals(other.getSubjectAreaName()))
+					&& (this.term.equals(other.getTerm()))
 					&& (this.offering.equals(other.getOffering()))
 					&& (this.assignedRoom.equals(other.getAssignedRoom()))
 					&& (this.assignedInstructor.equals(other.getAssignedInstructor()))

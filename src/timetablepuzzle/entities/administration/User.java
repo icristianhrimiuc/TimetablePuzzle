@@ -6,13 +6,28 @@ import javax.persistence.*;
 @Table(name = "users")
 public class User {
 	public static enum UserType {
-		NOT_ASSIGNED, GUEST, INSTRUCTOR, SECRETARY, ADMIN
+		NOT_ASSIGNED, GUEST, INSTRUCTOR, SECRETARY, ADMIN;
+
+		@Override
+		public String toString() {
+			String name = this.name();
+			name = name.replace('_', ' ');
+			name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+			return name;
+		}
 	};
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+
+	@Column(name = "first_name")
+	private String firstName;
+
+	@Column(name = "last_name")
+	private String lastName;
 
 	@Column(name = "username")
 	private String username;
@@ -23,12 +38,6 @@ public class User {
 	@Column(name = "user_type")
 	@Enumerated(EnumType.STRING)
 	private UserType userType;
-
-	@Column(name = "first_name")
-	private String firstName;
-
-	@Column(name = "last_name")
-	private String lastName;
 
 	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH})
 	@JoinColumn(name = "lastviewed_academicyear_id")

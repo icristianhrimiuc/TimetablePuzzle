@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import timetablepuzzle.entities.Class;
 import timetablepuzzle.entities.Solution;
-import timetablepuzzle.entities.inputdata.Class;
 import timetablepuzzle.entities.inputdata.Offering;
 import timetablepuzzle.solver.constraints.AbstractHardConstraint;
 import timetablepuzzle.solver.constraints.AbstractSoftConstraint;

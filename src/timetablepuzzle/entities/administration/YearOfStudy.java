@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import javax.persistence.*;
 
+import timetablepuzzle.entities.Class;
 import timetablepuzzle.entities.administration.Curricula.Term;
-import timetablepuzzle.entities.inputdata.Class;
 import timetablepuzzle.entities.inputdata.StudentGroup;
 
 @Entity

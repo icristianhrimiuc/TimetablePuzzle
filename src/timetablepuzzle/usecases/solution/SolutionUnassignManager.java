@@ -2,8 +2,8 @@ package timetablepuzzle.usecases.solution;
 
 import java.util.List;
 
+import timetablepuzzle.entities.Class;
 import timetablepuzzle.entities.Solution;
-import timetablepuzzle.entities.inputdata.Class;
 
 public class SolutionUnassignManager {
 	

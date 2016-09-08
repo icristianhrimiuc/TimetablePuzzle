@@ -27,6 +27,7 @@ public class AcademicSessionJPADAOService extends JPADAO<AcademicSession,Integer
 		{
 			this.entityManager.getTransaction().begin();
 			existingAcademicSession.setName(newAcademicSession.getName());
+			existingAcademicSession.setTerm(newAcademicSession.getTerm());
 			existingAcademicSession.setSessionStartDate(newAcademicSession.getSessionStartDate());
 			existingAcademicSession.setClassesEndDate(newAcademicSession.getClassesEndDate());
 			existingAcademicSession.setExamsStartDate(newAcademicSession.getExamsStartDate());

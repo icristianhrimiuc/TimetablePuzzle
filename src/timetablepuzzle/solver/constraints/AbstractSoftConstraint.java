@@ -2,8 +2,8 @@ package timetablepuzzle.solver.constraints;
 
 import timetablepuzzle.usecases.solution.SolutionAssignManager;
 import timetablepuzzle.usecases.solution.SolutionUnassignManager;
+import timetablepuzzle.entities.Class;
 import timetablepuzzle.entities.Solution;
-import timetablepuzzle.entities.inputdata.Class;
 
 public abstract class AbstractSoftConstraint {
 	public static final int DefaultNrOfPenaltyPointsPerViolation = 5;

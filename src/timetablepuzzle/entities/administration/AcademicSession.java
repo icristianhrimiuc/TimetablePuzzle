@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 import javax.persistence.*;
 
 import timetablepuzzle.entities.Solution;
+import timetablepuzzle.entities.administration.Curricula.Term;
 
 @Entity
 @Table(name = "academic_sessions")
@@ -18,6 +19,10 @@ public class AcademicSession {
 
 	@Column(name = "name")
 	private String name;
+
+	@Column(name = "term")
+	@Enumerated(EnumType.STRING)
+	private Term term;
 
 	// When the session starts, the classes also start
 	@Temporal(TemporalType.DATE)
@@ -42,14 +47,15 @@ public class AcademicSession {
 	private Solution acceptedSolution;
 
 	public AcademicSession() {
-		this(0, "NoName", new GregorianCalendar(), new GregorianCalendar(), new GregorianCalendar(),
+		this(0, "NoName", Term.UNASSIGNED, new GregorianCalendar(), new GregorianCalendar(), new GregorianCalendar(),
 				new GregorianCalendar(), new Solution());
 	}
 
-	public AcademicSession(int id, String name, Calendar sessionStartDate, Calendar classesEndDate,
+	public AcademicSession(int id, String name, Term term, Calendar sessionStartDate, Calendar classesEndDate,
 			Calendar examsStartDate, Calendar sessionEndDate, Solution acceptedSolution) {
 		this.id = id;
 		setName(name);
+		setTerm(term);
 		setSessionStartDate(sessionStartDate);
 		setClassesEndDate(classesEndDate);
 		setExamsStartDate(examsStartDate);
@@ -68,6 +74,14 @@ public class AcademicSession {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Term getTerm() {
+		return term;
+	}
+
+	public void setTerm(Term term) {
+		this.term = term;
 	}
 
 	public Calendar getSessionStartDate() {
@@ -128,6 +142,7 @@ public class AcademicSession {
 		if (equals) {
 			AcademicSession other = (AcademicSession) o;
 			equals = ((this.id == other.getId()) && (this.name.equals(other.getName()))
+					&& (this.term.equals(other.getTerm()))
 					&& (this.sessionStartDate.equals(other.getSessionStartDate()))
 					&& (this.classesEndDate.equals(other.getClassesEndDate()))
 					&& (this.examsStartDate.equals(other.getExamsStartDate()))

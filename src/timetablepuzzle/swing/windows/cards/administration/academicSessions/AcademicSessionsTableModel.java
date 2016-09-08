@@ -8,6 +8,7 @@ import javax.swing.table.AbstractTableModel;
 
 import timetablepuzzle.entities.Solution;
 import timetablepuzzle.entities.administration.AcademicSession;
+import timetablepuzzle.entities.administration.Curricula.Term;
 
 class AcademicSessionsTableModel extends AbstractTableModel {
     /**
@@ -17,13 +18,14 @@ class AcademicSessionsTableModel extends AbstractTableModel {
 	
 	private static final int Column_Id = 0;
 	private static final int Column_Name = 1;
-	private static final int Column_Session_Start_Date= 2;
-	private static final int Column_Classes_End_Date = 3;
-	private static final int Column_Exams_Start_Date = 4;
-	private static final int Column_Session_End_Date = 5;
-	private static final int Column_Accepted_Solution = 6;
+	private static final int Column_Term = 2;
+	private static final int Column_Session_Start_Date= 3;
+	private static final int Column_Classes_End_Date = 4;
+	private static final int Column_Exams_Start_Date = 5;
+	private static final int Column_Session_End_Date = 6;
+	private static final int Column_Accepted_Solution = 7;
 
-	private String[] columnNames = {"Id","Name","Session Start Date","Classes End Date","Exams Start Date", "Session End Date","Accepted Solution"};
+	private String[] columnNames = {"Id","Name","Term","Session Start Date","Classes End Date","Exams Start Date", "Session End Date","Accepted Solution"};
     private List<AcademicSession> data;
     
     public AcademicSessionsTableModel(){}
@@ -72,6 +74,9 @@ class AcademicSessionsTableModel extends AbstractTableModel {
             case Column_Name:
             	colummnValue = academicSession.getName();
                 break;
+            case Column_Term:
+            	colummnValue = academicSession.getTerm().toString();
+                break;
             case Column_Session_Start_Date:
             	colummnValue = format.format(academicSession.getSessionStartDate().getTime());
                 break;
@@ -105,6 +110,9 @@ class AcademicSessionsTableModel extends AbstractTableModel {
     	switch (columnIndex) {
         case Column_Name:
         	academicSession.setName((String)value);
+            break;
+        case Column_Term:
+        	academicSession.setTerm((Term)value);
             break;
         case Column_Session_Start_Date:
         	academicSession.setSessionStartDate((Calendar)value);

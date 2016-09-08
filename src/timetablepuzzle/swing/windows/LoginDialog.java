@@ -41,63 +41,71 @@ public class LoginDialog extends JDialog{
     public LoginDialog(final JFrame parentFrame, boolean modal) {
         super(parentFrame, modal);
         this.parentFrame = parentFrame;
-    	InitializeComponentsAndWindow();
+    	initializeComponentsAndWindow();
     }
     
 	public User execute() {
+		refreshAll();
 		this.setVisible(true);
         
 		return loggedUser;
+	}
+
+	private void refreshAll() {
+		this.usernameField.setText("");
+		this.passwordField.setText("");
+		this.statusLabel.setText("");
+		this.isValidUser = false;
 	}
 	
 	public boolean isValidUser() {
 		return isValidUser;
 	}
 	
-	private void InitializeComponentsAndWindow()
+	private void initializeComponentsAndWindow()
 	{
-    	InitializeUsernameFieldWithListener();
-    	InitializePasswordFieldWithListener();
-    	InitializeStatusLabel();
-        InitializeLoginDialogWindow();
+    	initializeUsernameFieldWithListener();
+    	initializePasswordFieldWithListener();
+    	initializeStatusLabel();
+        initializeLoginDialogWindow();
 	}
     
-    private void InitializeUsernameFieldWithListener()
+    private void initializeUsernameFieldWithListener()
     {
     	usernameField = new JTextField(15);
     	usernameField.addActionListener(new ActionListener(){
         	@Override
             public void actionPerformed(ActionEvent e)
             {
-        		CheckCredentials();
+        		checkCredentials();
             }
         });
     }
     
-    private void InitializePasswordFieldWithListener()
+    private void initializePasswordFieldWithListener()
     {
     	passwordField = new JPasswordField();
     	passwordField.addActionListener(new ActionListener(){
         	@Override
             public void actionPerformed(ActionEvent e)
             {
-        		CheckCredentials();
+        		checkCredentials();
             }
         });
     }
     
-    private void InitializeStatusLabel()
+    private void initializeStatusLabel()
     {
     	statusLabel = new JLabel(" ");
     	statusLabel.setForeground(Color.RED);
     	statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
     }
     
-    private void InitializeLoginDialogWindow()
+    private void initializeLoginDialogWindow()
     {
     	this.setLayout(new BorderLayout());
-        this.add(CreateUsernameNPassPanel(), BorderLayout.CENTER);
-        this.add(CreateButtonsAndStatusLabelPanel(), BorderLayout.SOUTH);
+        this.add(createUsernameNPassPanel(), BorderLayout.CENTER);
+        this.add(createButtonsAndStatusLabelPanel(), BorderLayout.SOUTH);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -109,69 +117,69 @@ public class LoginDialog extends JDialog{
         });
     }
     
-    private JPanel CreateUsernameNPassPanel()
+    private JPanel createUsernameNPassPanel()
     {
     	JPanel usernameNPass = new JPanel();
-    	usernameNPass.add(CreateUsernameNPassLabelsPanel());
-    	usernameNPass.add(CreateUsernameNPassTextFieldsPanel());
+    	usernameNPass.add(createUsernameNPassLabelsPanel());
+    	usernameNPass.add(createUsernameNPassTextFieldsPanel());
     	
     	return usernameNPass;
     }
     
-    private JPanel CreateUsernameNPassTextFieldsPanel(){
+    private JPanel createUsernameNPassTextFieldsPanel(){
     	JPanel usernameNPassTextFields = new JPanel(new GridLayout(2, 1));
-    	InitializeUsernameFieldWithListener();
-    	InitializePasswordFieldWithListener();
+    	initializeUsernameFieldWithListener();
+    	initializePasswordFieldWithListener();
     	usernameNPassTextFields.add(usernameField);
     	usernameNPassTextFields.add(passwordField);
     	
     	return usernameNPassTextFields;
     }
     
-    private JPanel CreateUsernameNPassLabelsPanel()
+    private JPanel createUsernameNPassLabelsPanel()
     {
     	JPanel usernameNPassLabels = new JPanel(new GridLayout(2, 1));
-    	usernameNPassLabels.add(new JLabel("Utilizator"));
-    	usernameNPassLabels.add(new JLabel("Parola"));
+    	usernameNPassLabels.add(new JLabel("Username"));
+    	usernameNPassLabels.add(new JLabel("Password"));
     	
     	return usernameNPassLabels;
     }
     
-    private JPanel CreateButtonsAndStatusLabelPanel()
+    private JPanel createButtonsAndStatusLabelPanel()
     {
     	JPanel buttonsNStatusLabel = new JPanel(new BorderLayout());
-    	buttonsNStatusLabel.add(CreateLoginNCancelButtonsPanel(),BorderLayout.CENTER);
+    	buttonsNStatusLabel.add(createLoginNCancelButtonsPanel(),BorderLayout.CENTER);
     	buttonsNStatusLabel.add(statusLabel, BorderLayout.NORTH);
     	
         return buttonsNStatusLabel;
     }
     
-    private JPanel CreateLoginNCancelButtonsPanel()
+    private JPanel createLoginNCancelButtonsPanel()
     {
     	JPanel loginNCancelButtons = new JPanel();
-    	loginNCancelButtons.add(CreateButtonLoginWithListener());
-    	loginNCancelButtons.add(CreateButtonCancelWithListener());
+    	loginNCancelButtons.add(createButtonLoginWithListener());
+    	loginNCancelButtons.add(createButtonCancelWithListener());
     	
     	return loginNCancelButtons;
     }
     
-    private JButton CreateButtonLoginWithListener()
+    private JButton createButtonLoginWithListener()
     {
-    	JButton buttonLogin = new JButton("Logare");
+    	JButton buttonLogin = new JButton("Login");
     	buttonLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-            	CheckCredentials();
+            	checkCredentials();
             }
         });
     	
     	return buttonLogin;
     }
     
-    private JButton CreateButtonCancelWithListener()
+    private JButton createButtonCancelWithListener()
     {
-    	JButton buttonCancel = new JButton("Anuleaza");
+    	JButton buttonCancel = new JButton("Cancel");
     	buttonCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -184,7 +192,7 @@ public class LoginDialog extends JDialog{
     	return buttonCancel;
     }
     
-    private void CheckCredentials()
+    private void checkCredentials()
     {
     	String username = usernameField.getText();
     	User tempUser = userDAOService.findByUsername(username);

@@ -24,6 +24,9 @@ import javax.swing.border.TitledBorder;
 
 import com.sun.xml.internal.ws.util.StringUtils;
 
+import timetablepuzzle.eclipselink.DAO.JPA.services.SolutionJPADAOService;
+import timetablepuzzle.eclipselink.DAO.interfaces.SolutionDAO;
+import timetablepuzzle.entities.Class;
 import timetablepuzzle.entities.Solution;
 import timetablepuzzle.entities.administration.AcademicSession;
 import timetablepuzzle.entities.administration.AcademicYear;
@@ -31,89 +34,32 @@ import timetablepuzzle.entities.administration.Department;
 import timetablepuzzle.entities.administration.Faculty;
 import timetablepuzzle.entities.administration.User;
 import timetablepuzzle.entities.administration.YearOfStudy;
-import timetablepuzzle.entities.inputdata.Class;
 import timetablepuzzle.entities.other.TimePreferences;
 
 public class TimetableCard extends JPanel{
+	/**
+	 * Generated field
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static final SolutionDAO solutionDAO = new SolutionJPADAOService();
 
-	// User required information
-	private User loggedUser;
-	private AcademicYear viewedAcadYear;
-	private AcademicSession viewedAcadSession;
-	private Faculty viewedFaculty;
+	private Color backGroundColor;
 	private Solution acceptedSolution;
-	private Color bgColor;
 	
-	public TimetableCard(User loggerUser, Color bgColor)
+	public TimetableCard(Color backGroundColor, int acceptedSolutionId)
 	{
-		this.setLoggedUser(loggerUser);
-		this.setViewedAcadYear(loggerUser.getLastViewedAcademicYear());
-		this.setViewedAcadSession(loggerUser.getLastViewedAcademicSession());
-		this.setViewedFaculty(loggedUser.getLastViewedFaculty());
-		this.setAcceptedSolution(this.viewedAcadSession.getAcceptedSolution());
-		this.setBgColor(bgColor);
+		this.backGroundColor = backGroundColor;
+		this.acceptedSolution = solutionDAO.findById(acceptedSolutionId);
+		
+		this.setBackground(this.backGroundColor);
 		this.CreateTimetableCardPanel();
-	}
-
-	/******************Getters and setters********************/
-	public User getLoggedUser() {
-		return loggedUser;
-	}
-
-	public void setLoggedUser(User loggedUser) {
-		this.loggedUser = loggedUser;
-	}
-
-	public AcademicYear getViewedAcadYear() {
-		return viewedAcadYear;
-	}
-
-	public void setViewedAcadYear(AcademicYear viewedAcadYear) {
-		this.loggedUser.setLastViewedAcademicYear(viewedAcadYear);
-		this.viewedAcadYear = viewedAcadYear;
-	}
-
-	public AcademicSession getViewedAcadSession() {
-		return viewedAcadSession;
-	}
-
-	public void setViewedAcadSession(AcademicSession viewedAcadSession) {
-		this.loggedUser.setLastViewedAcademicSession(viewedAcadSession);
-		this.viewedAcadSession = viewedAcadSession;
-		this.acceptedSolution = viewedAcadSession.getAcceptedSolution();
-	}
-
-	public Faculty getViewedFaculty() {
-		return viewedFaculty;
-	}
-
-	public void setViewedFaculty(Faculty viewedFaculty) {
-		this.loggedUser.setLastViewedFaculty(viewedFaculty);
-		this.viewedFaculty = viewedFaculty;
-	}
-
-	public Solution getAcceptedSolution() {
-		return acceptedSolution;
-	}
-
-	public void setAcceptedSolution(Solution acceptedSolution) {
-		this.loggedUser.getLastViewedAcademicSession().setAcceptedSolution(acceptedSolution);
-		this.acceptedSolution = acceptedSolution;
-	}
-	
-	public Color getBgColor() {
-		return bgColor;
-	}
-
-	public void setBgColor(Color bgColor) {
-		this.bgColor = bgColor;
 	}
 	
 	/********************Methods that model the class behavior*********************/
 	public JPanel CreateTimetableCardPanel()
     {
-    	this.setBackground(bgColor);
+    	this.setBackground(backGroundColor);
     	this.setLayout(new BorderLayout());
         
         // Create the north panel. It will contain a radio button for each day of the week
@@ -142,7 +88,7 @@ public class TimetableCard extends JPanel{
 
 	private JPanel CreateNorthPanel() {
 		JPanel northPanel = new JPanel();
-        northPanel.setBackground(this.bgColor);
+        northPanel.setBackground(this.backGroundColor);
         northPanel.setLayout(new GridBagLayout());
         TimePreferences.DayOfTheWeek[] daysOfTheWeek = TimePreferences.DayOfTheWeek.values();
         
@@ -157,7 +103,7 @@ public class TimetableCard extends JPanel{
         		jRadioButton.setSelected(true);
         		isAnyDayOfTheWeekSelected = true;
         	}
-        	jRadioButton.setBackground(this.bgColor);
+        	jRadioButton.setBackground(this.backGroundColor);
         	daysOfTheWeekButtonGroup.add(jRadioButton);
         	northPanel.add(jRadioButton);
         }
@@ -167,7 +113,7 @@ public class TimetableCard extends JPanel{
 
 	private JPanel CreateSouthPanel() {
 		JPanel southPanel = new JPanel();
-        southPanel.setBackground(this.bgColor);
+        southPanel.setBackground(this.backGroundColor);
         southPanel.setLayout(new GridBagLayout());
         YearOfStudy.CollegeYear[] yearsOfStudy = YearOfStudy.CollegeYear.values();
         
@@ -184,7 +130,7 @@ public class TimetableCard extends JPanel{
 	        		jRadioButton.setSelected(true);
 	        		isAnyYearOfStudySelected = true;
 	        	}
-	        	jRadioButton.setBackground(bgColor);
+	        	jRadioButton.setBackground(backGroundColor);
 	        	yearsOfStudyButtonGroup.add(jRadioButton);
 	        	southPanel.add(jRadioButton);
         	}
@@ -195,7 +141,7 @@ public class TimetableCard extends JPanel{
 
 	private JPanel CreateWestPanel() {
 		JPanel westPanel = new JPanel();
-        westPanel.setBackground(this.bgColor);
+        westPanel.setBackground(this.backGroundColor);
         westPanel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         List<Department> departments = viewedFaculty.getDepartments();
@@ -211,7 +157,7 @@ public class TimetableCard extends JPanel{
         		jRadioButton.setSelected(true);
         		isAnyDepartmentSelelected = true;
         	}
-        	jRadioButton.setBackground(this.bgColor);
+        	jRadioButton.setBackground(this.backGroundColor);
         	jRadioButton.setHorizontalTextPosition(SwingConstants.CENTER);
         	jRadioButton.setVerticalTextPosition(JRadioButton.TOP);
         	departmentsButtonGroup.add(jRadioButton);
@@ -225,20 +171,20 @@ public class TimetableCard extends JPanel{
 	private JPanel CreateEastPanel() {
 		JPanel eastPanel = new JPanel();
         eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
-        eastPanel.setBackground(this.bgColor);
+        eastPanel.setBackground(this.backGroundColor);
         
         // Create a list with unassigned classes
         List<Class> uClasses = this.acceptedSolution.GetUnassignedClasses();
-        JComponent uScrollPane = CreateScrollableListOfClasses(uClasses, bgColor, " Unassigned classes: " + uClasses.size() + " ");
+        JComponent uScrollPane = CreateScrollableListOfClasses(uClasses, backGroundColor, " Unassigned classes: " + uClasses.size() + " ");
         
         // Create a list with assigned classes
         List<Class> aClasses = this.acceptedSolution.GetAssignedClasses();
-        JComponent aScrollPane = CreateScrollableListOfClasses(aClasses, bgColor, " Assigned classes: " + aClasses.size() + " ");
+        JComponent aScrollPane = CreateScrollableListOfClasses(aClasses, backGroundColor, " Assigned classes: " + aClasses.size() + " ");
         
         // Create a panel for the solver controls
         JPanel solverControls = new JPanel();
         solverControls.setLayout(new BoxLayout(solverControls, BoxLayout.X_AXIS));
-        solverControls.setBackground(bgColor);
+        solverControls.setBackground(backGroundColor);
         solverControls.setBorder(CreateEmptyTitleBorder("Solver controls"));
         solverControls.setMaximumSize(new Dimension(Integer.MAX_VALUE,30));
         

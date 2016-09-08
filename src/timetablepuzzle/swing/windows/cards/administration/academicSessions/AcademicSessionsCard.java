@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +43,7 @@ import timetablepuzzle.eclipselink.DAO.interfaces.SolutionDAO;
 import timetablepuzzle.eclipselink.DAO.interfaces.administration.AcademicSessionDAO;
 import timetablepuzzle.entities.Solution;
 import timetablepuzzle.entities.administration.AcademicSession;
+import timetablepuzzle.entities.administration.Curricula.Term;
 import timetablepuzzle.swing.windows.cards.common.CustomComboBoxModel;
 import timetablepuzzle.swing.windows.cards.common.CustomDateFormatter;
 
@@ -59,6 +61,8 @@ public class AcademicSessionsCard extends JPanel {
 	private JTable academicSessionsTable;
 	private JLabel notificationLabel;
 	private JTextField textFieldName;
+	private CustomComboBoxModel<Term> comboBoxTermModel;
+	private JComboBox<Term> comboBoxTerm;
 	private UtilDateModel datePickerSessionStartDateModel;
 	private JDatePickerImpl datePickerSessionStartDate;
 	private UtilDateModel datePickerClassesEndDateModel;
@@ -81,22 +85,14 @@ public class AcademicSessionsCard extends JPanel {
 		DefaultTableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
 		defaultRenderer.setHorizontalAlignment(JLabel.CENTER);
 		this.academicSessionsTable.setDefaultRenderer(String.class, defaultRenderer);
-		SetColumnsMaxSizes();
 
-		// Notification label
-		this.notificationLabel = new JLabel("  ");
-		this.notificationLabel.setForeground(Color.RED);
-		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-		this.textFieldName = new JTextField(30);
-		this.textFieldName.setHorizontalAlignment(JTextField.CENTER);
-		this.textFieldName.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				CreateAndSaveNew();
-			}
-		});
+		// Property text fields
+		this.textFieldName = CreatePropertyTextField(15);
+		
+		// Term combo box
+		this.comboBoxTermModel = new CustomComboBoxModel<Term>();
+		RefreshComboBoxTerm();
+		this.comboBoxTerm = new JComboBox<Term>(this.comboBoxTermModel);
 
 		// Date pickers
 		this.datePickerSessionStartDateModel = CreateUtilDateModel();
@@ -112,6 +108,12 @@ public class AcademicSessionsCard extends JPanel {
 		this.comboBoxAcceptedSolutionModel = new CustomComboBoxModel<Solution>();
 		RefreshComboBoxAcceptedSolution();
 		this.comboBoxAcceptedSolution = new JComboBox<Solution>(this.comboBoxAcceptedSolutionModel);
+		SetColumnsMaxSizes();
+
+		// Notification label
+		this.notificationLabel = new JLabel("  ");
+		this.notificationLabel.setForeground(Color.RED);
+		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
 
 		this.idOfTheAcademicSessionToUpdate = 0;
 		SetAcademicSessionCardComponents();
@@ -123,6 +125,25 @@ public class AcademicSessionsCard extends JPanel {
 
 	private void SetColumnsMaxSizes() {
 		this.academicSessionsTable.getColumnModel().getColumn(0).setMaxWidth(40);
+	}
+
+	private JTextField CreatePropertyTextField(int width) {
+		JTextField propertyTextField = new JTextField(width);
+		propertyTextField.setHorizontalAlignment(JTextField.CENTER);
+		propertyTextField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CreateAndSaveNew();
+			}
+		});
+
+		return propertyTextField;
+	}
+
+	private void RefreshComboBoxTerm() {
+		this.comboBoxTermModel.setData(Arrays.asList(Term.values()));
+		this.repaint();
 	}
 	
 	private UtilDateModel CreateUtilDateModel(){
@@ -170,6 +191,7 @@ public class AcademicSessionsCard extends JPanel {
 		propertiesPanel.setLayout(new BoxLayout(propertiesPanel, BoxLayout.Y_AXIS));
 		
 		propertiesPanel.add(CreatePropertyPanel("Name", this.textFieldName));
+		propertiesPanel.add(CreatePropertyPanel("Term", this.comboBoxTerm));
 		propertiesPanel.add(CreatePropertyPanel("Session Start Date", this.datePickerSessionStartDate));
 		propertiesPanel.add(CreatePropertyPanel("Classes End Date  ", this.datePickerClassesEndDate));
 		propertiesPanel.add(CreatePropertyPanel("Exams Start Date  ", this.datePickerExamsStartDate));
@@ -246,18 +268,19 @@ public class AcademicSessionsCard extends JPanel {
 
 	private void CreateAndSaveNew() {
 		String name = this.textFieldName.getText();
+		Term term = (Term) this.comboBoxTerm.getSelectedItem();
 		Calendar sessionStartDate = DateToCalendar((Date)this.datePickerSessionStartDate.getModel().getValue());
 		Calendar classesEndDate = DateToCalendar((Date)this.datePickerClassesEndDate.getModel().getValue());
 		Calendar examsStartDate = DateToCalendar((Date)this.datePickerExamsStartDate.getModel().getValue());
 		Calendar sessionEndDate = DateToCalendar((Date)this.datePickerSessionEndDate.getModel().getValue());
 		Solution acceptedSolution = (Solution) this.comboBoxAcceptedSolution.getSelectedItem();
 
-		if (name.isEmpty()) {
+		if (name.isEmpty() || (term == null)) {
 			this.notificationLabel.setText("Please make sure that all the property fields are filled!");
 			LOGGER.log(Level.WARNING, "Attempt to create a new academicSession with empty property field.");
 		} else {
 			try {
-				AcademicSession academicSession = new AcademicSession(this.idOfTheAcademicSessionToUpdate, name, sessionStartDate,
+				AcademicSession academicSession = new AcademicSession(this.idOfTheAcademicSessionToUpdate, name, term, sessionStartDate,
 						classesEndDate, examsStartDate, sessionEndDate, acceptedSolution);
 				
 				// Save the academicSession to the database
@@ -302,6 +325,7 @@ public class AcademicSessionsCard extends JPanel {
 			AcademicSession existingAcademicSession = this.academicSessionsTableModel.elementAt(selecteRow);
 			this.idOfTheAcademicSessionToUpdate = existingAcademicSession.getId();
 			this.textFieldName.setText(existingAcademicSession.getName());
+			this.comboBoxTerm.setSelectedItem(existingAcademicSession.getTerm());
 			this.datePickerSessionStartDateModel.setValue(existingAcademicSession.getSessionStartDate().getTime());
 			this.datePickerClassesEndDateModel.setValue(existingAcademicSession.getClassesEndDate().getTime());
 			this.datePickerExamsStartDateModel.setValue(existingAcademicSession.getExamsStartDate().getTime());
