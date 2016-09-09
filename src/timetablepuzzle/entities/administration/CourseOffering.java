@@ -29,11 +29,11 @@ public class CourseOffering {
 	private String abbreviation;
 
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
-	@JoinColumn(name = "lecture_offering_id", unique = true, nullable = false, updatable = false)
+	@JoinColumn(name = "lecture_offering_id", unique = false, nullable = false)
 	private Offering lecture;
 
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
-	@JoinColumn(name = "individualMeetings_offering_id", unique = true, nullable = false, updatable = false)
+	@JoinColumn(name = "individualMeetings_offering_id", unique = false, nullable = false)
 	private Offering individualMeetings;
 
 	public CourseOffering() {
@@ -130,7 +130,7 @@ public class CourseOffering {
 		List<Class> individualMeetingsClasses = new ArrayList<Class>();
 		List<StudentGroup> studentGroups = getIndividualStudentGroups(parentStudentGroup);
 
-		if (this.individualMeetings.getTotalNumberOfMeetings() == studentGroups.size()) {
+		if (this.individualMeetings.getTotalNumberOfMeetings() == studentGroups.size() || this.individualMeetings.getTotalNumberOfMeetings() == 0) {
 			int studentGroupIndex = 0;
 			List<InstructorMeetings> instructorMeetings = this.individualMeetings.getNrOfMeetingsPerInstructor();
 			for (InstructorMeetings meetings : instructorMeetings) {

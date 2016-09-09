@@ -166,7 +166,11 @@ public class MainWindow implements ActionListener {
 			this.viewedFaculty = loggedUser.getLastViewedFaculty();
 			this.viewedAcademicYear = loggedUser.getLastViewedAcademicYear();
 			this.viewedAcademicSession = loggedUser.getLastViewedAcademicSession();
-			this.acceptedSolution = this.viewedAcademicSession.getAcceptedSolution();
+			if (this.viewedAcademicSession != null) {
+				this.acceptedSolution = this.viewedAcademicSession.getAcceptedSolution();
+			} else {
+				this.acceptedSolution = new Solution();
+			}
 			this.frame.setJMenuBar(CreateMenuBar(this.loggedUser.getUserType()));
 			FillComboBoxes();
 
@@ -270,7 +274,7 @@ public class MainWindow implements ActionListener {
 		this.comboBoxViewedAcademicSession.setFocusable(false);
 		this.comboBoxViewedAcademicSession.setUI(new BasicComboBoxUI());
 		((JLabel) this.comboBoxViewedAcademicSession.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
-		this.comboBoxViewedAcademicYear.addActionListener(new ActionListener() {
+		this.comboBoxViewedAcademicSession.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				viewedAcademicSession = (AcademicSession) comboBoxViewedAcademicSession.getSelectedItem();
 				RefreshComboBoxViewedAcademicSession();
@@ -325,6 +329,8 @@ public class MainWindow implements ActionListener {
 					SolutionCreator solutionCreator = new SolutionCreator(solutionName, classes);
 					this.viewedAcademicSession.setAcceptedSolution(solutionCreator.CreateNewSolution());
 					academicSessionDAO.merge(this.viewedAcademicSession);
+				} else {
+					this.acceptedSolution = new Solution();
 				}
 			}
 		}
@@ -577,7 +583,7 @@ public class MainWindow implements ActionListener {
 			cardsPanel.add(cards.get(cardName), cardName);
 		}
 		cardLayout = (CardLayout) cardsPanel.getLayout();
-		cardLayout.show(cardsPanel, TIMETABLE_CARD);
+		cardLayout.show(cardsPanel, HOME_CARD);
 
 		mainPanel.add(cardsPanel, BorderLayout.CENTER);
 

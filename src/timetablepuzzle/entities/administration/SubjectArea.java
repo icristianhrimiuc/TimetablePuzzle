@@ -135,8 +135,10 @@ public class SubjectArea {
 			SubjectArea other = (SubjectArea) o;
 			equals = ((this.id == other.getId()) && (this.name.equals(other.getName()))
 					&& (this.firstTermCurricula.equals(other.getCurriculaToStudyByTerm(Term.FIRST)))
-					&& (this.secondTermCurricula.equals(other.getCurriculaToStudyByTerm(Term.SECOND)))
-					&& (this.thirdTermCurricula.equals(other.getCurriculaToStudyByTerm(Term.THIRD))));
+					&& (this.secondTermCurricula.equals(other.getCurriculaToStudyByTerm(Term.SECOND))));
+			if(this.thirdTermCurricula != null){
+				equals &= (this.thirdTermCurricula.equals(other.getCurriculaToStudyByTerm(Term.THIRD)));
+			}
 		}
 
 		return equals;

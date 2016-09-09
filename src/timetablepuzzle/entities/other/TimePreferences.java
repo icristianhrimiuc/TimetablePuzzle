@@ -1,6 +1,7 @@
 package timetablepuzzle.entities.other;
 
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.persistence.*;
 
@@ -11,7 +12,7 @@ import timetablepuzzle.usecases.solution.TimeslotPattern;
 public class TimePreferences {
 	public static enum DayOfTheWeek {
 		MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;
-		
+
 		@Override
 		public String toString() {
 			String name = this.name();
@@ -24,7 +25,7 @@ public class TimePreferences {
 
 	public static enum TimePreference {
 		PROHIBITED, STRONGLY_DISCOURAGED, DISCOURAGED, NEUTRAL, PREFFERED, STRONGLY_PREFFERED, REQUIRED;
-		
+
 		@Override
 		public String toString() {
 			String name = this.name();
@@ -336,6 +337,21 @@ public class TimePreferences {
 		}
 
 		return week;
+	}
+
+	public static TimePreferences generateRandomTimePreferences() {
+		TimePreferences timePreferences = new TimePreferences();
+
+		for (int i = 0; i < TimeslotPattern.NrOfDays; i++) {
+			for (int j = 0; j < TimeslotPattern.NrOfTimeSlotsPerDay; j++) {
+				DayOfTheWeek day = DayOfTheWeek.values()[i];
+				int index = ThreadLocalRandom.current().nextInt(0, TimePreference.values().length);
+				TimePreference preference = TimePreference.values()[index];
+				timePreferences.setPreferencesByDayAndTime(day, preference, j);
+			}
+		}
+
+		return timePreferences;
 	}
 
 	/******************************

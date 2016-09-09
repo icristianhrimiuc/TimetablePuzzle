@@ -45,6 +45,7 @@ import timetablepuzzle.entities.administration.YearOfStudy;
 import timetablepuzzle.entities.inputdata.StudentGroup;
 import timetablepuzzle.entities.other.TimePreferences;
 import timetablepuzzle.entities.other.TimePreferences.DayOfTheWeek;
+import timetablepuzzle.usecases.solution.SolutionCreator;
 import timetablepuzzle.usecases.solution.TimeslotPattern;
 
 public class TimetableCard extends JPanel {
@@ -60,6 +61,7 @@ public class TimetableCard extends JPanel {
 	private List<Department> departments;
 	private StudentGroup parentStudentGroup;
 	private Solution acceptedSolution;
+	private SolutionCreator solutionCreator;
 	// A collection of easy retrievable cards
 	private HashMap<String, JPanel> cards;
 	private JPanel cardsPanel;
@@ -73,6 +75,7 @@ public class TimetableCard extends JPanel {
 			AcademicSession viewedAcademicSession) {
 		this.backGroundColor = backGroundColor;
 		this.setBackground(this.backGroundColor);
+		this.solutionCreator = new SolutionCreator("", new ArrayList<Class>());
 		setData(viewedFaculty, viewedAcademicYear, viewedAcademicSession);
 	}
 
@@ -94,7 +97,7 @@ public class TimetableCard extends JPanel {
 			this.departments = this.viewedFaculty.getDepartments();
 		}
 		this.parentStudentGroup = new StudentGroup();
-		this.acceptedSolution = new Solution();
+		this.acceptedSolution = this.solutionCreator.CreateNewSolution();
 	}
 
 	private void setViewedAcademicYear(AcademicYear viewedAcademicYear) {
@@ -104,13 +107,13 @@ public class TimetableCard extends JPanel {
 		} else {
 			this.parentStudentGroup = this.viewedAcademicYear.getParentStudentGroup();
 		}
-		this.acceptedSolution = new Solution();
+		this.acceptedSolution = this.solutionCreator.CreateNewSolution();
 	}
 
 	private void setViewedAcademicSession(AcademicSession viewedAcademicSession) {
 		this.viewedAcademicSession = viewedAcademicSession;
 		if (this.viewedAcademicSession == null) {
-			this.acceptedSolution = new Solution();
+			this.acceptedSolution = this.solutionCreator.CreateNewSolution();
 		} else {
 			this.acceptedSolution = this.viewedAcademicSession.getAcceptedSolution();
 		}
@@ -260,12 +263,22 @@ public class TimetableCard extends JPanel {
 		eastPanel.setBackground(this.backGroundColor);
 
 		// Create a list with unassigned classes
-		List<Class> uClasses = this.acceptedSolution.GetUnassignedClasses();
+		List<Class> uClasses;
+		if(this.acceptedSolution != null){
+			uClasses = this.acceptedSolution.GetUnassignedClasses();
+		}else{
+			uClasses = new ArrayList<Class>();
+		}
 		JComponent uScrollPane = CreateScrollableListOfClasses(uClasses, backGroundColor,
 				" Unassigned classes: " + uClasses.size() + " ");
 
 		// Create a list with assigned classes
-		List<Class> aClasses = this.acceptedSolution.GetAssignedClasses();
+		List<Class> aClasses;
+		if(this.acceptedSolution != null){
+			aClasses = this.acceptedSolution.GetAssignedClasses();
+		}else{
+			aClasses = new ArrayList<Class>();
+		}
 		JComponent aScrollPane = CreateScrollableListOfClasses(aClasses, backGroundColor,
 				" Assigned classes: " + aClasses.size() + " ");
 

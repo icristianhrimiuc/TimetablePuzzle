@@ -59,7 +59,7 @@ public class Solution {
 	@CollectionTable(name = "solution_fixedClasses", joinColumns = @JoinColumn(name = "solution_id"))
 	private Map<Integer, Boolean> fixedClasses;
 
-	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH}, targetEntity = Class.class)
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, targetEntity = Class.class)
 	@JoinTable(name = "solution_classes", joinColumns = @JoinColumn(name = "solution_id"), inverseJoinColumns = @JoinColumn(name = "class_id"))
 	private List<Class> listOfClasses;
 
@@ -204,7 +204,10 @@ public class Solution {
 	}
 
 	public boolean IsStudentGroupInSolution(int studentGroupId) {
-		return this.studentGroupssAssignments.containsKey(studentGroupId);
+		if (this.studentGroupssAssignments != null) {
+			return this.studentGroupssAssignments.containsKey(studentGroupId);
+		}
+		return false;
 	}
 
 	private String[] GetStudentGroupAssignments(int studentGroupId) {
@@ -252,9 +255,12 @@ public class Solution {
 
 	public List<Class> GetAssignedClasses() {
 		List<Class> assignedClasses = new ArrayList<Class>();
-		for (Integer classId : this.assignedDayAndTimeSlot.keySet()) {
-			if (this.assignedDayAndTimeSlot.get(classId) != TimeslotPattern.FreeTimeSlot) {
-				assignedClasses.add(this.classes.get(classId));
+
+		if (this.assignedDayAndTimeSlot != null) {
+			for (Integer classId : this.assignedDayAndTimeSlot.keySet()) {
+				if (this.assignedDayAndTimeSlot.get(classId) != TimeslotPattern.FreeTimeSlot) {
+					assignedClasses.add(this.classes.get(classId));
+				}
 			}
 		}
 
@@ -263,9 +269,11 @@ public class Solution {
 
 	public List<Class> GetUnassignedClasses() {
 		List<Class> unassignedClasses = new ArrayList<Class>();
-		for (Integer classId : this.assignedDayAndTimeSlot.keySet()) {
-			if (this.assignedDayAndTimeSlot.get(classId) == TimeslotPattern.FreeTimeSlot) {
-				unassignedClasses.add(this.classes.get(classId));
+		if (this.assignedDayAndTimeSlot != null) {
+			for (Integer classId : this.assignedDayAndTimeSlot.keySet()) {
+				if (this.assignedDayAndTimeSlot.get(classId) == TimeslotPattern.FreeTimeSlot) {
+					unassignedClasses.add(this.classes.get(classId));
+				}
 			}
 		}
 

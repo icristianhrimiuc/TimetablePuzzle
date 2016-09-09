@@ -95,8 +95,11 @@ public class YearOfStudy {
 	private List<CourseOffering> determineCommonCoursesByTerm(Term term) {
 		HashMap<CourseOffering, Integer> countedCourses = new HashMap<CourseOffering, Integer>();
 		for (SubjectArea area : this.subjectAreas) {
-			for (CourseOffering course : area.getCurriculaToStudyByTerm(term).getCourses()) {
-				incrementNrOfAppearances(countedCourses, course);
+			Curricula curriculaToStudy = area.getCurriculaToStudyByTerm(term);
+			if (curriculaToStudy != null) {
+				for (CourseOffering course : curriculaToStudy.getCourses()) {
+					incrementNrOfAppearances(countedCourses, course);
+				}
 			}
 		}
 

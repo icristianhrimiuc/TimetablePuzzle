@@ -52,8 +52,11 @@ public class User {
 	private Faculty lastViewedFaculty;
 
 	public User() {
-		this(0, "NoFirstName", "NoLastName", "NoUsername", "NoToken", UserType.NOT_ASSIGNED, null,
-				null, null);
+		this(0, "NoFirstName", "NoLastName", "NoUsername", "NoToken", UserType.NOT_ASSIGNED);
+	}
+	
+	public User(int id, String firstName, String lastName, String username, String passwordToken, UserType userType){
+		this(0, firstName, lastName, username, passwordToken, userType, null, null, null);
 	}
 
 	public User(int id, String firstName, String lastName, String username, String passwordToken, UserType userType,

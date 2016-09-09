@@ -113,7 +113,7 @@
 //				academicYear, academicYear, academicYear));
 //
 //		System.out.println(String.format(
-//				"StudentGroupDAO studentGroupDAO = new StudentGroupJPADAOService();\nstudentGroupDAO.persist(academicYear%s);",
+//				"StudentGroupDAO studentGroupDAO = new StudentGroupJPADAOService();\nstudentGroupDAO.merge(academicYear%s);",
 //				academicYear));
 //	}
 //}

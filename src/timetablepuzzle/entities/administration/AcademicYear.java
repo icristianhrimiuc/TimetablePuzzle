@@ -45,7 +45,7 @@ public class AcademicYear {
 		setParentStudentGroup(parentStudentGroup);
 		setFirstAcademicSession(firstAcademicSession);
 		setSecondAcademicSession(secondAcademicSession);
-		setThirdAcademicSession(secondAcademicSession);
+		setThirdAcademicSession(null);
 	}
 
 	/******************** Getters and setters ****************/
@@ -100,8 +100,10 @@ public class AcademicYear {
 		List<AcademicSession> academicSessions = new ArrayList<AcademicSession>();
 		academicSessions.add(this.firstAcademicSession);
 		academicSessions.add(this.secondAcademicSession);
-		academicSessions.add(this.thirdAcademicSession);
-		
+		if (thirdAcademicSession != null) {
+			academicSessions.add(this.thirdAcademicSession);
+		}
+
 		return academicSessions;
 	}
 
@@ -120,8 +122,10 @@ public class AcademicYear {
 			AcademicYear other = (AcademicYear) o;
 			equals = ((this.id == other.getId()) && (this.name.equals(other.getName()))
 					&& (this.firstAcademicSession.equals(other.getFirstAcademicSession()))
-					&& (this.secondAcademicSession.equals(other.getSecondAcademicSession()))
-					&& (this.thirdAcademicSession.equals(other.thirdAcademicSession)));
+					&& (this.secondAcademicSession.equals(other.getSecondAcademicSession())));
+			if (this.thirdAcademicSession != null) {
+				equals &= (this.thirdAcademicSession.equals(other.thirdAcademicSession));
+			}
 		}
 		return equals;
 	}

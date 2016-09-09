@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -92,10 +93,13 @@ public class ClassesCard extends JPanel {
 
 	private void RefreshTable() {
 		Solution solution = solutionDAO.findById(this.acceptedSolutionId);
+		if(solution != null){
 		if (this.assigned) {
 			this.classesTableModel.setData(solution.GetAssignedClasses());
 		} else {
 			this.classesTableModel.setData(solution.GetUnassignedClasses());
+		}}else{
+			this.classesTableModel.setData(new ArrayList<Class>());
 		}
 	}
 

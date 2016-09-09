@@ -48,7 +48,7 @@ public class AcademicSession {
 
 	public AcademicSession() {
 		this(0, "NoName", Term.UNASSIGNED, new GregorianCalendar(), new GregorianCalendar(), new GregorianCalendar(),
-				new GregorianCalendar(), new Solution());
+				new GregorianCalendar(), null);
 	}
 
 	public AcademicSession(int id, String name, Term term, Calendar sessionStartDate, Calendar classesEndDate,
@@ -146,8 +146,11 @@ public class AcademicSession {
 					&& (this.sessionStartDate.equals(other.getSessionStartDate()))
 					&& (this.classesEndDate.equals(other.getClassesEndDate()))
 					&& (this.examsStartDate.equals(other.getExamsStartDate()))
-					&& (this.sessionEndDate.equals(other.getSessionEndDate()))
-					&& (this.acceptedSolution.equals(other.getAcceptedSolution())));
+					&& (this.sessionEndDate.equals(other.getSessionEndDate())));
+			if(this.acceptedSolution != null)
+			{
+				equals &= (this.acceptedSolution.equals(other.getAcceptedSolution()));
+			}
 		}
 
 		return equals;
