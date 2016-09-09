@@ -1,4 +1,4 @@
-package timetablepuzzle.swing.windows.cards.courseTimetabling;
+package timetablepuzzle.swing.windows.cards.courseTimetabling.classes;
 
 import java.awt.Color;
 import java.awt.Dimension;

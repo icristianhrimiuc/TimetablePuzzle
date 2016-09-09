@@ -52,18 +52,18 @@ public class User {
 	private Faculty lastViewedFaculty;
 
 	public User() {
-		this(0, "NoUsername", "NoToken", UserType.NOT_ASSIGNED, "NoFirstName", "NoLastName", new AcademicYear(),
-				new AcademicSession(), new Faculty());
+		this(0, "NoFirstName", "NoLastName", "NoUsername", "NoToken", UserType.NOT_ASSIGNED, null,
+				null, null);
 	}
 
-	public User(int id, String username, String passwordToken, UserType userType, String firstName, String lastName,
+	public User(int id, String firstName, String lastName, String username, String passwordToken, UserType userType,
 			AcademicYear lastViewedAcademicYear, AcademicSession lastViewedAcademicSession, Faculty lastViewedFaculty) {
 		this.id = id;
-		this.setUsername(username);
-		this.setToken(passwordToken);
-		this.setUserType(userType);
 		this.setFirstName(firstName);
 		this.setLastName(lastName);
+		this.setUsername(username);
+		this.setPasswordToken(passwordToken);
+		this.setUserType(userType);
 		this.setLastViewedAcademicYear(lastViewedAcademicYear);
 		this.setLastViewedAcademicSession(lastViewedAcademicSession);
 		this.setLastViewedFaculty(lastViewedFaculty);
@@ -86,7 +86,7 @@ public class User {
 		return passwordToken;
 	}
 
-	public void setToken(String passwordToken) {
+	public void setPasswordToken(String passwordToken) {
 		this.passwordToken = passwordToken;
 	}
 

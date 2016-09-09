@@ -1,4 +1,4 @@
-package timetablepuzzle.swing.windows.cards;
+package timetablepuzzle.swing.windows.cards.courseTimetabling.timetable;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -166,15 +166,15 @@ public class TimetableCard extends JPanel {
 			jRadioButton.setHorizontalTextPosition(SwingConstants.CENTER);
 			jRadioButton.setVerticalTextPosition(JRadioButton.TOP);
 			jRadioButton.addItemListener(new ItemListener() {
-				
+
 				@Override
 				public void itemStateChanged(ItemEvent e) {
-					if(e.getStateChange() == ItemEvent.SELECTED){
+					if (e.getStateChange() == ItemEvent.SELECTED) {
 						ShowCardByName();
-					}					
+					}
 				}
 			});
-			
+
 			departmentsButtonGroup.add(jRadioButton);
 			c.gridy = i;
 			westPanel.add(jRadioButton, c);
@@ -201,15 +201,15 @@ public class TimetableCard extends JPanel {
 				}
 				jRadioButton.setBackground(backGroundColor);
 				jRadioButton.addItemListener(new ItemListener() {
-					
+
 					@Override
 					public void itemStateChanged(ItemEvent e) {
-						if(e.getStateChange() == ItemEvent.SELECTED){
+						if (e.getStateChange() == ItemEvent.SELECTED) {
 							ShowCardByName();
-						}					
+						}
 					}
 				});
-				
+
 				yearsOfStudyButtonGroup.add(jRadioButton);
 				southPanel.add(jRadioButton);
 			}
@@ -235,15 +235,15 @@ public class TimetableCard extends JPanel {
 			}
 			jRadioButton.setBackground(this.backGroundColor);
 			jRadioButton.addItemListener(new ItemListener() {
-				
+
 				@Override
 				public void itemStateChanged(ItemEvent e) {
-					if(e.getStateChange() == ItemEvent.SELECTED){
+					if (e.getStateChange() == ItemEvent.SELECTED) {
 						ShowCardByName();
-					}					
+					}
 				}
 			});
-			
+
 			daysOfTheWeekButtonGroup.add(jRadioButton);
 			northPanel.add(jRadioButton);
 		}
@@ -328,10 +328,10 @@ public class TimetableCard extends JPanel {
 		CreateCardsPanel();
 
 		JPanel centerPanel = new JPanel();
-		centerPanel.setLayout(new GridBagLayout());
+		centerPanel.setLayout(new GridLayout());
 		centerPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		centerPanel.add(cardsPanel);
-		
+
 		return centerPanel;
 	}
 
@@ -339,6 +339,7 @@ public class TimetableCard extends JPanel {
 		CreateAllCards();
 		// Create the panel that contains the "cards".
 		this.cardsPanel = new JPanel(new CardLayout());
+		this.cardsPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 		for (String cardName : this.cards.keySet()) {
 			this.cardsPanel.add(this.cards.get(cardName), cardName);
 		}
@@ -354,7 +355,7 @@ public class TimetableCard extends JPanel {
 			for (StudentGroup yearOfStudygroup : yearOfStudyGroups) {
 				for (int dayIndex = 0; dayIndex < TimeslotPattern.NrOfDays; dayIndex++) {
 					String cardName = GetCardName(departmentGroup.getCode(), yearOfStudygroup.getCode(), dayIndex);
-					JPanel tablePanel = CreateTablePanel(cardName, departmentGroup, dayIndex);
+					JPanel tablePanel = CreateTablePanel(cardName, yearOfStudygroup, dayIndex);
 					this.cards.put(cardName, tablePanel);
 				}
 			}
@@ -370,42 +371,42 @@ public class TimetableCard extends JPanel {
 		JTable table = new JTable(tableModel);
 		ConfigureTable(table);
 
-		JPanel panel = new JPanel(new GridLayout(2, 1));
-		panel.add(new JLabel(cardName));
-		panel.add(table);
+		JScrollPane tableScrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JPanel panel = new JPanel();
+		panel.add(tableScrollPane);
+		panel.setBorder(BorderFactory.createLineBorder(Color.RED));
 
 		return panel;
 	}
 
 	private void ConfigureTable(JTable table) {
-		table.setRowHeight(32);
-		for (int i = 0; i <= 12; i++) {
-			table.getColumnModel().getColumn(i).setMaxWidth(36);
-		}
 		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
 		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
 		table.setDefaultRenderer(String.class, cellRenderer);
 		table.setRowSelectionAllowed(false);
 		table.setColumnSelectionAllowed(false);
+		table.setTableHeader(null);
+		table.setBorder(BorderFactory.createEmptyBorder());
 	}
-	
-	private void ShowCardByName(){
+
+	private void ShowCardByName() {
 		String departmentName = getSelectedButtonText(this.departmentsButtonGroup);
-		String yearOfStudy = getSelectedButtonText(this.yearsOfStudyButtonGroup);
+		String yearOfStudy = String.format("%s_%s", getSelectedButtonText(this.yearsOfStudyButtonGroup), departmentName);
 		int dayIndex = DayOfTheWeek.valueOf(getSelectedButtonText(daysOfTheWeekButtonGroup)).ordinal();
 		String nameOfTheCardToShow = GetCardName(departmentName, yearOfStudy, dayIndex);
-		this.cardLayout.show(cardsPanel, nameOfTheCardToShow);		
+		this.cardLayout.show(cardsPanel, nameOfTheCardToShow);
 	}
-	
-    private String getSelectedButtonText(ButtonGroup buttonGroup) {
-        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
-            AbstractButton button = buttons.nextElement();
 
-            if (button.isSelected()) {
-                return button.getText();
-            }
-        }
+	private String getSelectedButtonText(ButtonGroup buttonGroup) {
+		for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+			AbstractButton button = buttons.nextElement();
 
-        return null;
-    }
+			if (button.isSelected()) {
+				return button.getText();
+			}
+		}
+
+		return null;
+	}
 }

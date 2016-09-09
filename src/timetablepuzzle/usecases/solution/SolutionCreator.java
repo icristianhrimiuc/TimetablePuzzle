@@ -10,10 +10,10 @@ public class SolutionCreator {
 	private List<Class> classes;
 	private Solution solution;
 	
-	public SolutionCreator(List<Class> classes)
+	public SolutionCreator(String name, List<Class> classes)
 	{
 		this.classes = classes;
-		this.solution = new Solution(this.classes);
+		this.solution = new Solution(0,name, this.classes);
 		InitializeRoomAssignments();
 		InitializeInstructorAssignments();
 		InitializeStudentGroupsAssignments();

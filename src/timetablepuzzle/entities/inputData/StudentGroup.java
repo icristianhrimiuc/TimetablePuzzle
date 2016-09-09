@@ -21,20 +21,40 @@ public class StudentGroup {
 	@Column(name = "nrofstudents")
 	private int nrOfStudents;
 
-	@OneToMany(targetEntity = StudentGroup.class)
+	@OneToMany(cascade={CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH},targetEntity = StudentGroup.class)
 	@JoinTable(name = "studentgroup_studentgroups", joinColumns = @JoinColumn(name = "parent_studentgroup_id"), inverseJoinColumns = @JoinColumn(name = "child_studentgroup_id"))
 	private List<StudentGroup> composingGroups;
 
 	public StudentGroup() {
-		this(0, "NoCode", "NoName", 0, new ArrayList<StudentGroup>());
+		this(0, "NoName", "NoCode", 0);
 	}
 
-	public StudentGroup(int id, String name, String code, int nrOfStudents, List<StudentGroup> composingGroups) {
-		this.id = id;
-		setName(name);
-		setCode(code);
-		setNrOfStudents(nrOfStudents);
-		this.composingGroups = composingGroups;
+	public StudentGroup(int id, String name, String code, int nrOfStudents) {
+		try {
+			this.id = id;
+			setName(name);
+			setCode(code);
+			setNrOfStudents(nrOfStudents);
+			setComposingGroups(new ArrayList<StudentGroup>());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public StudentGroup(int id, String name, String code, List<StudentGroup> composingGroups) {
+		try {
+			this.id = id;
+			setName(name);
+			setCode(code);
+			setComposingGroups(composingGroups);
+			if (this.composingGroups.isEmpty()) {
+				setNrOfStudents(0);
+			} else {
+				setNrOfStudents(calculaterOfStudents());
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	/***************** Getters and setters **************/
@@ -75,20 +95,28 @@ public class StudentGroup {
 	}
 
 	/**************** Methods that model class behavior ******************/
+	public int calculaterOfStudents() {
+		int totalNrOFStudents = 0;
+		for (StudentGroup composingGroup : this.composingGroups) {
+			totalNrOFStudents += composingGroup.getNrOfStudents();
+		}
+
+		return totalNrOFStudents;
+	}
+
 	public List<StudentGroup> getLeafGroups() {
 		List<StudentGroup> leafGroups = new ArrayList<StudentGroup>();
-		if((this.composingGroups == null) || (this.composingGroups.isEmpty()))
-		{
+		if ((this.composingGroups == null) || (this.composingGroups.isEmpty())) {
 			leafGroups.add(this);
-		}else{
-			for(StudentGroup composingGroup : this.composingGroups){
+		} else {
+			for (StudentGroup composingGroup : this.composingGroups) {
 				leafGroups.addAll(composingGroup.getLeafGroups());
 			}
 		}
 
 		return leafGroups;
 	}
-	
+
 	public List<StudentGroup> getAllComposingGroupsHierachically() {
 		List<StudentGroup> allComposingGroups = new ArrayList<StudentGroup>();
 		allComposingGroups.addAll(this.composingGroups);

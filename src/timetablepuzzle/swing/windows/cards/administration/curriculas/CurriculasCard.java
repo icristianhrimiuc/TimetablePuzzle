@@ -345,11 +345,11 @@ public class CurriculasCard extends JPanel {
 	}
 
 	private Component CreateCurriculaCoursesPanel() {		
-		JPanel instructorMeetingsPanel = new JPanel();
-		instructorMeetingsPanel.setLayout(new BoxLayout(instructorMeetingsPanel, BoxLayout.Y_AXIS));
-		instructorMeetingsPanel.add(this.transferableItemsControl);
+		JPanel curriculasCoursesPanel = new JPanel();
+		curriculasCoursesPanel.setLayout(new BoxLayout(curriculasCoursesPanel, BoxLayout.Y_AXIS));
+		curriculasCoursesPanel.add(this.transferableItemsControl);
 		
-		JPanel adjustmentPanel = CreateAdjustmentPanel(instructorMeetingsPanel);
+		JPanel adjustmentPanel = CreateAdjustmentPanel(curriculasCoursesPanel);
 		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Curricula's Course Offerings"));
 		
 		return adjustmentPanel;

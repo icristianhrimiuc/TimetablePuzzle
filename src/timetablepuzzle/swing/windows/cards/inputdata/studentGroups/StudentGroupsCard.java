@@ -55,7 +55,7 @@ public class StudentGroupsCard extends JPanel {
 
 	public StudentGroupsCard(Color backgroundColor) {
 		this.setBackground(backgroundColor);
-		
+
 		// Strudent Groups table
 		this.studentGroupTableModel = new StudentGroupsTableModel();
 		RefreshTable();
@@ -64,23 +64,23 @@ public class StudentGroupsCard extends JPanel {
 		defaultRenderer.setHorizontalAlignment(JLabel.CENTER);
 		this.studentGroupsTable.setDefaultRenderer(String.class, defaultRenderer);
 		SetColumnsMaxSizes();
-		
+
 		// Notification label
 		this.notificationLabel = new JLabel("  ");
 		this.notificationLabel.setForeground(Color.RED);
 		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
-		
+
 		// Property text fields
 		this.textFieldName = CreatePropertyTextField(30);
-		this.textFieldCode =  CreatePropertyTextField(10);
+		this.textFieldCode = CreatePropertyTextField(10);
 		this.textFieldNrOfStudents = CreatePropertyTextField(10);
 		AddDocumentListener(this.textFieldNrOfStudents);
-		
+
 		// Transferable items control
-		this.transferableItemsControl = new ListBoxesWithTransferableItems(new Object[]{}, new Object[]{},
+		this.transferableItemsControl = new ListBoxesWithTransferableItems(new Object[] {}, new Object[] {},
 				"Possible student groups", "Added student groups");
 		RefreshTransferableItemsControl(new StudentGroup());
-		
+
 		this.idOfTheStudentGroupToUpdate = 0;
 		SetStudentGroupCardComponents();
 	}
@@ -139,8 +139,7 @@ public class StudentGroupsCard extends JPanel {
 				Integer.parseInt(textContent);
 				this.notificationLabel.setText("  ");
 			} catch (NumberFormatException e) {
-				this.notificationLabel
-						.setText("Please make sure that the Nr. of students field contains only digits.");
+				this.notificationLabel.setText("Please make sure that the Nr. of students field contains only digits.");
 			}
 		}
 	}
@@ -148,25 +147,26 @@ public class StudentGroupsCard extends JPanel {
 	private void RefreshTransferableItemsControl(StudentGroup studentGroup) {
 		List<StudentGroup> leftListStudentGroups = studentGroupDAOService.GetAll();
 		List<StudentGroup> rightListStudentGroups = new ArrayList<StudentGroup>();
-		
-		leftListStudentGroups.remove(studentGroup);		
-		for(StudentGroup addedStudentGroup : studentGroup.getAllComposingGroupsHierachically()){
+
+		leftListStudentGroups.remove(studentGroup);
+		for (StudentGroup addedStudentGroup : studentGroup.getAllComposingGroupsHierachically()) {
 			leftListStudentGroups.remove(addedStudentGroup);
 			rightListStudentGroups.add(addedStudentGroup);
 		}
 		leftListStudentGroups.sort(Comparator.comparing(StudentGroup::toString));
 		rightListStudentGroups.sort(Comparator.comparing(StudentGroup::toString));
-		this.transferableItemsControl.ReInitializeLists(leftListStudentGroups.toArray(), rightListStudentGroups.toArray());
+		this.transferableItemsControl.ReInitializeLists(leftListStudentGroups.toArray(),
+				rightListStudentGroups.toArray());
 	}
 
 	private void SetStudentGroupCardComponents() {
-		this.setLayout(new GridLayout(2,1));
+		this.setLayout(new GridLayout(2, 1));
 		this.add(CreateCreateNewStudentGroupPanel());
 		this.add(CreateViewAllStudentGroupsPanel());
 	}
 
 	private JPanel CreateCreateNewStudentGroupPanel() {
-		JPanel createNewStudentGroupPanel = new JPanel(new GridLayout(1,2));
+		JPanel createNewStudentGroupPanel = new JPanel(new GridLayout(1, 2));
 		createNewStudentGroupPanel.add(CreatePropertiesPanel());
 		createNewStudentGroupPanel.add(CreateAddStudentGroupsPanel());
 
@@ -185,7 +185,7 @@ public class StudentGroupsCard extends JPanel {
 		// Adjust properties on center
 		JPanel adjustmentPanel = CreateAdjustmentPanel(propertiesPanel);
 		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Create/Update Student Group"));
-		
+
 		return adjustmentPanel;
 	}
 
@@ -244,7 +244,8 @@ public class StudentGroupsCard extends JPanel {
 		String name = this.textFieldName.getText();
 		String code = this.textFieldCode.getText();
 		String number = this.textFieldNrOfStudents.getText();
-		List<StudentGroup> composingGroups = ConvertToListOfStudentGroups(this.transferableItemsControl.GetRightListElements());
+		List<StudentGroup> composingGroups = ConvertToListOfStudentGroups(
+				this.transferableItemsControl.GetRightListElements());
 
 		if (name.isEmpty() || code.isEmpty() || (number.isEmpty() && composingGroups.isEmpty())) {
 			this.notificationLabel.setText("Please make sure that all the property fields are filled!");
@@ -253,14 +254,19 @@ public class StudentGroupsCard extends JPanel {
 			try {
 				// Get info
 				int nrOfStudents;
-				if(composingGroups.isEmpty()){
+				if (composingGroups.isEmpty()) {
 					nrOfStudents = Integer.parseInt(number);
-				}else{
+				} else {
 					nrOfStudents = CalculateTheNumberOfStudents(composingGroups);
-				}				
-				
+				}
+
 				// Create new entity
-				StudentGroup studentGroup = new StudentGroup(this.idOfTheStudentGroupToUpdate, name, code, nrOfStudents, composingGroups);
+				StudentGroup studentGroup;
+				if (composingGroups.isEmpty()) {
+					studentGroup = new StudentGroup(this.idOfTheStudentGroupToUpdate, name, code, nrOfStudents);
+				} else {
+					studentGroup = new StudentGroup(this.idOfTheStudentGroupToUpdate, name, code, composingGroups);
+				}
 
 				// Save the entity to the database
 				if (this.idOfTheStudentGroupToUpdate != 0) {
@@ -287,23 +293,22 @@ public class StudentGroupsCard extends JPanel {
 			}
 		}
 	}
-	
-	private int CalculateTheNumberOfStudents(List<StudentGroup> composingGroups){
+
+	private int CalculateTheNumberOfStudents(List<StudentGroup> composingGroups) {
 		int nrOfStudents = 0;
-		for(StudentGroup studentGroup : composingGroups){
+		for (StudentGroup studentGroup : composingGroups) {
 			nrOfStudents += studentGroup.getNrOfStudents();
 		}
-		
+
 		return nrOfStudents;
 	}
 
 	private List<StudentGroup> ConvertToListOfStudentGroups(List<Object> elements) {
 		List<StudentGroup> studentGroups = new ArrayList<StudentGroup>();
-		for(Object element : elements)
-		{
-			studentGroups.add((StudentGroup)element);
+		for (Object element : elements) {
+			studentGroups.add((StudentGroup) element);
 		}
-		
+
 		return studentGroups;
 	}
 
@@ -337,25 +342,28 @@ public class StudentGroupsCard extends JPanel {
 				LOGGER.log(Level.FINE, "Delete performed on studentGroup with id {0} and named {1}. ",
 						new Object[] { existingStudentGroup.getId(), existingStudentGroup.getName() });
 			} catch (Exception e) {
-				this.notificationLabel.setText("An error occured. Please make sure that nothing else depends on this studentGroup."
-						+ " Check log files for more info.");
-				LOGGER.log(Level.SEVERE, "Exception occured on deleting studentGroup. Please make sure that nothing else depends on this studentGroup."
-						+ e.toString(), e);
+				this.notificationLabel
+						.setText("An error occured. Please make sure that nothing else depends on this studentGroup."
+								+ " Check log files for more info.");
+				LOGGER.log(Level.SEVERE,
+						"Exception occured on deleting studentGroup. Please make sure that nothing else depends on this studentGroup."
+								+ e.toString(),
+						e);
 			}
 		}
 	}
-	
-	private JPanel CreateAddStudentGroupsPanel(){
+
+	private JPanel CreateAddStudentGroupsPanel() {
 		JPanel addStudentGroupsPanel = new JPanel();
 		addStudentGroupsPanel.setLayout(new BoxLayout(addStudentGroupsPanel, BoxLayout.Y_AXIS));
-		
+
 		JPanel transferableItemsPanel = new JPanel();
 		transferableItemsPanel.add(this.transferableItemsControl);
 		addStudentGroupsPanel.add(transferableItemsPanel);
-		
+
 		JPanel adjustmentPanel = CreateAdjustmentPanel(addStudentGroupsPanel);
 		adjustmentPanel.setBorder(CreateRaisedBevelTitledBorder("Add Room Features"));
-		
+
 		return adjustmentPanel;
 	}
 
@@ -368,15 +376,17 @@ public class StudentGroupsCard extends JPanel {
 		RefreshTransferableItemsControl(new StudentGroup());
 		RefreshTable();
 	}
-	
-	private JPanel CreateAdjustmentPanel(JPanel componentPanel){
+
+	private JPanel CreateAdjustmentPanel(JPanel componentPanel) {
 		JPanel adjustmentPanel = new JPanel();
 		adjustmentPanel.add(componentPanel);
 		SpringLayout layout = new SpringLayout();
-		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, componentPanel, 0, SpringLayout.HORIZONTAL_CENTER, adjustmentPanel);
-		layout.putConstraint(SpringLayout.VERTICAL_CENTER, componentPanel, 0, SpringLayout.VERTICAL_CENTER, adjustmentPanel);
+		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, componentPanel, 0, SpringLayout.HORIZONTAL_CENTER,
+				adjustmentPanel);
+		layout.putConstraint(SpringLayout.VERTICAL_CENTER, componentPanel, 0, SpringLayout.VERTICAL_CENTER,
+				adjustmentPanel);
 		adjustmentPanel.setLayout(layout);
-		
+
 		return adjustmentPanel;
 	}
 
@@ -403,4 +413,3 @@ public class StudentGroupsCard extends JPanel {
 		return raisedBevelTitledBorder;
 	}
 }
-

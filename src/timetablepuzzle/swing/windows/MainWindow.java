@@ -47,7 +47,6 @@ import timetablepuzzle.entities.administration.User;
 import timetablepuzzle.entities.administration.User.UserType;
 import timetablepuzzle.entities.inputdata.StudentGroup;
 import timetablepuzzle.swing.windows.cards.TextCard;
-import timetablepuzzle.swing.windows.cards.TimetableCard;
 import timetablepuzzle.swing.windows.cards.administration.academicSessions.AcademicSessionsCard;
 import timetablepuzzle.swing.windows.cards.administration.academicYears.AcademicYearsCard;
 import timetablepuzzle.swing.windows.cards.administration.courseOfferings.CourseOfferingsCard;
@@ -55,9 +54,12 @@ import timetablepuzzle.swing.windows.cards.administration.curriculas.CurriculasC
 import timetablepuzzle.swing.windows.cards.administration.departments.DepartmentsCard;
 import timetablepuzzle.swing.windows.cards.administration.faculties.FacultiesCard;
 import timetablepuzzle.swing.windows.cards.administration.subjectAreas.SubjectAreasCard;
+import timetablepuzzle.swing.windows.cards.administration.users.UsersCard;
 import timetablepuzzle.swing.windows.cards.administration.yearsOfStudy.YearsOfStudyCard;
 import timetablepuzzle.swing.windows.cards.common.CustomComboBoxModel;
-import timetablepuzzle.swing.windows.cards.courseTimetabling.ClassesCard;
+import timetablepuzzle.swing.windows.cards.courseTimetabling.classes.ClassesCard;
+import timetablepuzzle.swing.windows.cards.courseTimetabling.solutions.SolutionsCard;
+import timetablepuzzle.swing.windows.cards.courseTimetabling.timetable.TimetableCard;
 import timetablepuzzle.swing.windows.cards.inputdata.instructorMeetings.InstructorMeetingsCard;
 import timetablepuzzle.swing.windows.cards.inputdata.instructors.InstructorsCard;
 import timetablepuzzle.swing.windows.cards.inputdata.offerings.OfferingsCard;
@@ -66,6 +68,7 @@ import timetablepuzzle.swing.windows.cards.inputdata.studentGroups.StudentGroups
 import timetablepuzzle.swing.windows.cards.other.buildings.BuildingsCard;
 import timetablepuzzle.swing.windows.cards.other.roomTypes.RoomTypesCard;
 import timetablepuzzle.swing.windows.cards.other.timePreferences.TimePreferencesCard;
+import timetablepuzzle.usecases.solution.SolutionCreator;
 
 public class MainWindow implements ActionListener {
 	/***************** Static properties ****************/
@@ -75,6 +78,7 @@ public class MainWindow implements ActionListener {
 	final static String TIMETABLE_CARD = "Timetable";
 	final static String ASSIGNED_CLASSES_CARD = "Assigned Classses";
 	final static String UNASSIGNED_CLASSES_CARD = "Unassigned Classses";
+	final static String SOLUTIONS_CARD = "Saved TimeTables";
 
 	// Administration menu
 	final static String ACADEMIC_SESSIONS_CARD = "Academic Sessions";
@@ -101,9 +105,12 @@ public class MainWindow implements ActionListener {
 	// Help menu
 	final static String ABOUT_CARD = "About";
 
+	// Header section
+	final static String USERS_CARD = "Users";
+
 	private static final FacultyDAO facultyDAO = new FacultyJPADAOService();
-    private static final UserDAO userDAO = new UserJPADAOService();
-    private static final AcademicSessionDAO academicSessionDAO = new AcademicSessionJPADAOService();
+	private static final UserDAO userDAO = new UserJPADAOService();
+	private static final AcademicSessionDAO academicSessionDAO = new AcademicSessionJPADAOService();
 
 	/****************** Regular properties *************/
 	// Main window fields
@@ -168,10 +175,12 @@ public class MainWindow implements ActionListener {
 			this.cards.put(HOME_CARD,
 					new TextCard("src\\resources\\homeBackground.png", "src\\resources\\homeText.txt"));
 			// Course Timetabling menu
-			this.cards.put(TIMETABLE_CARD, new TimetableCard(bgColor, this.viewedFaculty, this.viewedAcademicYear, this.viewedAcademicSession));
+			this.cards.put(TIMETABLE_CARD, new TimetableCard(bgColor, this.viewedFaculty, this.viewedAcademicYear,
+					this.viewedAcademicSession));
 			this.cards.put(ASSIGNED_CLASSES_CARD, new ClassesCard(this.bgColor, this.acceptedSolution.getId(), true));
 			this.cards.put(UNASSIGNED_CLASSES_CARD,
 					new ClassesCard(this.bgColor, this.acceptedSolution.getId(), false));
+			this.cards.put(SOLUTIONS_CARD, new SolutionsCard(bgColor));
 			// Administration menu
 			this.cards.put(ACADEMIC_SESSIONS_CARD, new AcademicSessionsCard(this.bgColor));
 			this.cards.put(ACADEMIC_YEARS_CARD, new AcademicYearsCard(this.bgColor));
@@ -194,6 +203,9 @@ public class MainWindow implements ActionListener {
 			// Help menu
 			this.cards.put(ABOUT_CARD,
 					new TextCard("src\\resources\\homeBackground.png", "src\\resources\\aboutText.txt"));
+
+			// Header section
+			this.cards.put(USERS_CARD, new UsersCard(bgColor));
 
 			// Add components to the content pane
 			this.AddComponentToPane(frame.getContentPane());
@@ -276,7 +288,7 @@ public class MainWindow implements ActionListener {
 	private void RefreshComboBoxViewedAcademicYear() {
 		if (this.viewedFaculty != null) {
 			this.comboBoxViewedAcademicYearModel.setData(this.viewedFaculty.getAcademicYears());
-		}else{
+		} else {
 			this.comboBoxViewedAcademicYearModel.setData(new ArrayList<AcademicYear>());
 			this.viewedAcademicYear = null;
 		}
@@ -287,7 +299,7 @@ public class MainWindow implements ActionListener {
 	private void RefreshComboBoxViewedAcademicSession() {
 		if (this.viewedAcademicYear != null) {
 			this.comboBoxViewedAcademicSessionModel.setData(this.viewedAcademicYear.getAcademicSessions());
-		}else{
+		} else {
 
 			this.comboBoxViewedAcademicSessionModel.setData(new ArrayList<AcademicSession>());
 			this.viewedAcademicSession = null;
@@ -307,19 +319,23 @@ public class MainWindow implements ActionListener {
 				if (dialogResult == JOptionPane.YES_OPTION) {
 					Term term = this.viewedAcademicSession.getTerm();
 					StudentGroup parentStudentGroup = this.viewedAcademicYear.getParentStudentGroup();
+					String solutionName = String.format("Generated solution. AcademicYear:%s. AcademicSession:%s",
+							this.viewedAcademicYear.getName(), this.viewedAcademicSession.getName());
 					List<Class> classes = this.viewedFaculty.getClasses(term, parentStudentGroup);
-					this.viewedAcademicSession.setAcceptedSolution(new Solution(classes));
+					SolutionCreator solutionCreator = new SolutionCreator(solutionName, classes);
+					this.viewedAcademicSession.setAcceptedSolution(solutionCreator.CreateNewSolution());
 					academicSessionDAO.merge(this.viewedAcademicSession);
 				}
 			}
 		}
 		RefreshTimeTableCard();
-		((ClassesCard)this.cards.get(ASSIGNED_CLASSES_CARD)).setNewSolution(this.acceptedSolution.getId());
-		((ClassesCard)this.cards.get(UNASSIGNED_CLASSES_CARD)).setNewSolution(this.acceptedSolution.getId());
+		((ClassesCard) this.cards.get(ASSIGNED_CLASSES_CARD)).setNewSolution(this.acceptedSolution.getId());
+		((ClassesCard) this.cards.get(UNASSIGNED_CLASSES_CARD)).setNewSolution(this.acceptedSolution.getId());
 	}
-	
-	private void RefreshTimeTableCard(){
-		((TimetableCard)this.cards.get(TIMETABLE_CARD)).setData(this.viewedFaculty, this.viewedAcademicYear, this.viewedAcademicSession);
+
+	private void RefreshTimeTableCard() {
+		((TimetableCard) this.cards.get(TIMETABLE_CARD)).setData(this.viewedFaculty, this.viewedAcademicYear,
+				this.viewedAcademicSession);
 	}
 
 	private JMenuBar CreateMenuBar(UserType userType) {
@@ -422,12 +438,13 @@ public class MainWindow implements ActionListener {
 		JMenuItem mntmTimetable = new JMenuItem(TIMETABLE_CARD);
 		JMenuItem mntmAssignedClasses = new JMenuItem(ASSIGNED_CLASSES_CARD);
 		JMenuItem mntmUnassignedClasses = new JMenuItem(UNASSIGNED_CLASSES_CARD);
-		JMenuItem mntmSavedTimetables = new JMenuItem("Saved Timetables");
+		JMenuItem mntmSavedTimetables = new JMenuItem(SOLUTIONS_CARD);
 
 		// Add action listeners
 		mntmTimetable.addActionListener(this);
 		mntmAssignedClasses.addActionListener(this);
 		mntmUnassignedClasses.addActionListener(this);
+		mntmSavedTimetables.addActionListener(this);
 
 		// Add menu items
 		mnCourseTimetabling.add(mntmTimetable);
@@ -574,7 +591,7 @@ public class MainWindow implements ActionListener {
 		headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
 
 		// Create header sections
-		JPanel hUserSection = CreateButtonHeaderSection("User Name&Type:", loggedUser.toString(), "Show all users");
+		JPanel hUserSection = CreateButtonUserHeaderSection("User Name&Type:", loggedUser.toString(), "Show all users");
 		JPanel hViewedFaculty = CreateFacultyHeaderSection("Faculty:", viewedFaculty, "Change faculty");
 		JPanel hViewedAcademicYear = CreateAcademicYearHeaderSection("Academic year:", viewedAcademicYear,
 				"Change year");
@@ -590,7 +607,7 @@ public class MainWindow implements ActionListener {
 		return headerPanel;
 	}
 
-	private JPanel CreateButtonHeaderSection(String jLabelText, String jButtonText, String jButtonToolTipText) {
+	private JPanel CreateButtonUserHeaderSection(String jLabelText, String jButtonText, String jButtonToolTipText) {
 		JPanel headerSection = new JPanel();
 		headerSection.setLayout(new BoxLayout(headerSection, BoxLayout.Y_AXIS));
 		// Create a button to appear like a label
@@ -605,6 +622,13 @@ public class MainWindow implements ActionListener {
 		jButton.setContentAreaFilled(false);
 		jButton.setBorderPainted(false);
 		jButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		jButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(cardsPanel, USERS_CARD);
+			}
+		});
 
 		headerSection.add(jLabel);
 		headerSection.add(jButton);

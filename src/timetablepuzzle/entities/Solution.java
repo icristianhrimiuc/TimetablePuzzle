@@ -67,11 +67,7 @@ public class Solution {
 	private Map<Integer, Class> classes;
 
 	public Solution() {
-		this(new ArrayList<Class>());
-	}
-
-	public Solution(List<Class> classes) {
-		this(0, "No Name", classes);
+		this(0, "No Name", new ArrayList<Class>());
 	}
 
 	public Solution(int id, String name, List<Class> classes) {
