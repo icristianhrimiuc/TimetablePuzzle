@@ -157,8 +157,8 @@
 //      roomDAO.persist(room10);   
 //
 //      // Insert StudentGroups here
-//      StudentGroup semigrupa1101A = new StudentGroup(0, "Semigrupa", "1101A", 22);
-//      StudentGroup semigrupa1101B = new StudentGroup(0, "Semigrupa", "1101B", 28);
+//      StudentGroup semigrupa1101A = new StudentGroup(0, "Semigrupa", "1101A", 25);
+//      StudentGroup semigrupa1101B = new StudentGroup(0, "Semigrupa", "1101B", 30);
 //      List<StudentGroup> comp1101 = new ArrayList<StudentGroup>();
 //      comp1101.add(semigrupa1101A);
 //      comp1101.add(semigrupa1101B);
@@ -166,8 +166,8 @@
 //      StudentGroup grupa1101 = new StudentGroup(0, "Grupa", "1101", comp1101);
 //
 //
-//      StudentGroup semigrupa1102A = new StudentGroup(0, "Semigrupa", "1102A", 27);
-//      StudentGroup semigrupa1102B = new StudentGroup(0, "Semigrupa", "1102B", 25);
+//      StudentGroup semigrupa1102A = new StudentGroup(0, "Semigrupa", "1102A", 25);
+//      StudentGroup semigrupa1102B = new StudentGroup(0, "Semigrupa", "1102B", 21);
 //      List<StudentGroup> comp1102 = new ArrayList<StudentGroup>();
 //      comp1102.add(semigrupa1102A);
 //      comp1102.add(semigrupa1102B);
@@ -175,7 +175,7 @@
 //      StudentGroup grupa1102 = new StudentGroup(0, "Grupa", "1102", comp1102);
 //
 //
-//      StudentGroup semigrupa1103A = new StudentGroup(0, "Semigrupa", "1103A", 28);
+//      StudentGroup semigrupa1103A = new StudentGroup(0, "Semigrupa", "1103A", 29);
 //      StudentGroup semigrupa1103B = new StudentGroup(0, "Semigrupa", "1103B", 28);
 //      List<StudentGroup> comp1103 = new ArrayList<StudentGroup>();
 //      comp1103.add(semigrupa1103A);
@@ -184,8 +184,8 @@
 //      StudentGroup grupa1103 = new StudentGroup(0, "Grupa", "1103", comp1103);
 //
 //
-//      StudentGroup semigrupa1104A = new StudentGroup(0, "Semigrupa", "1104A", 22);
-//      StudentGroup semigrupa1104B = new StudentGroup(0, "Semigrupa", "1104B", 30);
+//      StudentGroup semigrupa1104A = new StudentGroup(0, "Semigrupa", "1104A", 29);
+//      StudentGroup semigrupa1104B = new StudentGroup(0, "Semigrupa", "1104B", 23);
 //      List<StudentGroup> comp1104 = new ArrayList<StudentGroup>();
 //      comp1104.add(semigrupa1104A);
 //      comp1104.add(semigrupa1104B);
@@ -202,8 +202,8 @@
 //      StudentGroup yearOfStudyFIRST_IS = new StudentGroup(0, "YearOfStudy", "FIRST_IS", compFIRST_IS);
 //
 //
-//      StudentGroup semigrupa1201A = new StudentGroup(0, "Semigrupa", "1201A", 24);
-//      StudentGroup semigrupa1201B = new StudentGroup(0, "Semigrupa", "1201B", 29);
+//      StudentGroup semigrupa1201A = new StudentGroup(0, "Semigrupa", "1201A", 30);
+//      StudentGroup semigrupa1201B = new StudentGroup(0, "Semigrupa", "1201B", 23);
 //      List<StudentGroup> comp1201 = new ArrayList<StudentGroup>();
 //      comp1201.add(semigrupa1201A);
 //      comp1201.add(semigrupa1201B);
@@ -212,7 +212,7 @@
 //
 //
 //      StudentGroup semigrupa1202A = new StudentGroup(0, "Semigrupa", "1202A", 25);
-//      StudentGroup semigrupa1202B = new StudentGroup(0, "Semigrupa", "1202B", 24);
+//      StudentGroup semigrupa1202B = new StudentGroup(0, "Semigrupa", "1202B", 30);
 //      List<StudentGroup> comp1202 = new ArrayList<StudentGroup>();
 //      comp1202.add(semigrupa1202A);
 //      comp1202.add(semigrupa1202B);
@@ -220,8 +220,8 @@
 //      StudentGroup grupa1202 = new StudentGroup(0, "Grupa", "1202", comp1202);
 //
 //
-//      StudentGroup semigrupa1203A = new StudentGroup(0, "Semigrupa", "1203A", 26);
-//      StudentGroup semigrupa1203B = new StudentGroup(0, "Semigrupa", "1203B", 29);
+//      StudentGroup semigrupa1203A = new StudentGroup(0, "Semigrupa", "1203A", 20);
+//      StudentGroup semigrupa1203B = new StudentGroup(0, "Semigrupa", "1203B", 24);
 //      List<StudentGroup> comp1203 = new ArrayList<StudentGroup>();
 //      comp1203.add(semigrupa1203A);
 //      comp1203.add(semigrupa1203B);
@@ -229,8 +229,8 @@
 //      StudentGroup grupa1203 = new StudentGroup(0, "Grupa", "1203", comp1203);
 //
 //
-//      StudentGroup semigrupa1204A = new StudentGroup(0, "Semigrupa", "1204A", 26);
-//      StudentGroup semigrupa1204B = new StudentGroup(0, "Semigrupa", "1204B", 27);
+//      StudentGroup semigrupa1204A = new StudentGroup(0, "Semigrupa", "1204A", 22);
+//      StudentGroup semigrupa1204B = new StudentGroup(0, "Semigrupa", "1204B", 23);
 //      List<StudentGroup> comp1204 = new ArrayList<StudentGroup>();
 //      comp1204.add(semigrupa1204A);
 //      comp1204.add(semigrupa1204B);
@@ -247,8 +247,8 @@
 //      StudentGroup yearOfStudySECOND_IS = new StudentGroup(0, "YearOfStudy", "SECOND_IS", compSECOND_IS);
 //
 //
-//      StudentGroup semigrupa1301A = new StudentGroup(0, "Semigrupa", "1301A", 26);
-//      StudentGroup semigrupa1301B = new StudentGroup(0, "Semigrupa", "1301B", 29);
+//      StudentGroup semigrupa1301A = new StudentGroup(0, "Semigrupa", "1301A", 20);
+//      StudentGroup semigrupa1301B = new StudentGroup(0, "Semigrupa", "1301B", 28);
 //      List<StudentGroup> comp1301 = new ArrayList<StudentGroup>();
 //      comp1301.add(semigrupa1301A);
 //      comp1301.add(semigrupa1301B);
@@ -256,8 +256,8 @@
 //      StudentGroup grupa1301 = new StudentGroup(0, "Grupa", "1301", comp1301);
 //
 //
-//      StudentGroup semigrupa1302A = new StudentGroup(0, "Semigrupa", "1302A", 22);
-//      StudentGroup semigrupa1302B = new StudentGroup(0, "Semigrupa", "1302B", 24);
+//      StudentGroup semigrupa1302A = new StudentGroup(0, "Semigrupa", "1302A", 30);
+//      StudentGroup semigrupa1302B = new StudentGroup(0, "Semigrupa", "1302B", 21);
 //      List<StudentGroup> comp1302 = new ArrayList<StudentGroup>();
 //      comp1302.add(semigrupa1302A);
 //      comp1302.add(semigrupa1302B);
@@ -265,8 +265,8 @@
 //      StudentGroup grupa1302 = new StudentGroup(0, "Grupa", "1302", comp1302);
 //
 //
-//      StudentGroup semigrupa1303A = new StudentGroup(0, "Semigrupa", "1303A", 25);
-//      StudentGroup semigrupa1303B = new StudentGroup(0, "Semigrupa", "1303B", 28);
+//      StudentGroup semigrupa1303A = new StudentGroup(0, "Semigrupa", "1303A", 21);
+//      StudentGroup semigrupa1303B = new StudentGroup(0, "Semigrupa", "1303B", 22);
 //      List<StudentGroup> comp1303 = new ArrayList<StudentGroup>();
 //      comp1303.add(semigrupa1303A);
 //      comp1303.add(semigrupa1303B);
@@ -274,8 +274,8 @@
 //      StudentGroup grupa1303 = new StudentGroup(0, "Grupa", "1303", comp1303);
 //
 //
-//      StudentGroup semigrupa1304A = new StudentGroup(0, "Semigrupa", "1304A", 28);
-//      StudentGroup semigrupa1304B = new StudentGroup(0, "Semigrupa", "1304B", 30);
+//      StudentGroup semigrupa1304A = new StudentGroup(0, "Semigrupa", "1304A", 26);
+//      StudentGroup semigrupa1304B = new StudentGroup(0, "Semigrupa", "1304B", 20);
 //      List<StudentGroup> comp1304 = new ArrayList<StudentGroup>();
 //      comp1304.add(semigrupa1304A);
 //      comp1304.add(semigrupa1304B);
@@ -292,8 +292,8 @@
 //      StudentGroup yearOfStudyTHIRD_IS = new StudentGroup(0, "YearOfStudy", "THIRD_IS", compTHIRD_IS);
 //
 //
-//      StudentGroup semigrupa1401A = new StudentGroup(0, "Semigrupa", "1401A", 21);
-//      StudentGroup semigrupa1401B = new StudentGroup(0, "Semigrupa", "1401B", 24);
+//      StudentGroup semigrupa1401A = new StudentGroup(0, "Semigrupa", "1401A", 24);
+//      StudentGroup semigrupa1401B = new StudentGroup(0, "Semigrupa", "1401B", 28);
 //      List<StudentGroup> comp1401 = new ArrayList<StudentGroup>();
 //      comp1401.add(semigrupa1401A);
 //      comp1401.add(semigrupa1401B);
@@ -301,7 +301,7 @@
 //      StudentGroup grupa1401 = new StudentGroup(0, "Grupa", "1401", comp1401);
 //
 //
-//      StudentGroup semigrupa1402A = new StudentGroup(0, "Semigrupa", "1402A", 25);
+//      StudentGroup semigrupa1402A = new StudentGroup(0, "Semigrupa", "1402A", 20);
 //      StudentGroup semigrupa1402B = new StudentGroup(0, "Semigrupa", "1402B", 29);
 //      List<StudentGroup> comp1402 = new ArrayList<StudentGroup>();
 //      comp1402.add(semigrupa1402A);
@@ -310,8 +310,8 @@
 //      StudentGroup grupa1402 = new StudentGroup(0, "Grupa", "1402", comp1402);
 //
 //
-//      StudentGroup semigrupa1403A = new StudentGroup(0, "Semigrupa", "1403A", 21);
-//      StudentGroup semigrupa1403B = new StudentGroup(0, "Semigrupa", "1403B", 29);
+//      StudentGroup semigrupa1403A = new StudentGroup(0, "Semigrupa", "1403A", 26);
+//      StudentGroup semigrupa1403B = new StudentGroup(0, "Semigrupa", "1403B", 21);
 //      List<StudentGroup> comp1403 = new ArrayList<StudentGroup>();
 //      comp1403.add(semigrupa1403A);
 //      comp1403.add(semigrupa1403B);
@@ -319,8 +319,8 @@
 //      StudentGroup grupa1403 = new StudentGroup(0, "Grupa", "1403", comp1403);
 //
 //
-//      StudentGroup semigrupa1404A = new StudentGroup(0, "Semigrupa", "1404A", 29);
-//      StudentGroup semigrupa1404B = new StudentGroup(0, "Semigrupa", "1404B", 21);
+//      StudentGroup semigrupa1404A = new StudentGroup(0, "Semigrupa", "1404A", 24);
+//      StudentGroup semigrupa1404B = new StudentGroup(0, "Semigrupa", "1404B", 27);
 //      List<StudentGroup> comp1404 = new ArrayList<StudentGroup>();
 //      comp1404.add(semigrupa1404A);
 //      comp1404.add(semigrupa1404B);
@@ -337,8 +337,8 @@
 //      StudentGroup yearOfStudyFOURTH_IS = new StudentGroup(0, "YearOfStudy", "FOURTH_IS", compFOURTH_IS);
 //
 //
-//      StudentGroup semigrupa1501A = new StudentGroup(0, "Semigrupa", "1501A", 25);
-//      StudentGroup semigrupa1501B = new StudentGroup(0, "Semigrupa", "1501B", 20);
+//      StudentGroup semigrupa1501A = new StudentGroup(0, "Semigrupa", "1501A", 22);
+//      StudentGroup semigrupa1501B = new StudentGroup(0, "Semigrupa", "1501B", 23);
 //      List<StudentGroup> comp1501 = new ArrayList<StudentGroup>();
 //      comp1501.add(semigrupa1501A);
 //      comp1501.add(semigrupa1501B);
@@ -346,8 +346,8 @@
 //      StudentGroup grupa1501 = new StudentGroup(0, "Grupa", "1501", comp1501);
 //
 //
-//      StudentGroup semigrupa1502A = new StudentGroup(0, "Semigrupa", "1502A", 26);
-//      StudentGroup semigrupa1502B = new StudentGroup(0, "Semigrupa", "1502B", 24);
+//      StudentGroup semigrupa1502A = new StudentGroup(0, "Semigrupa", "1502A", 21);
+//      StudentGroup semigrupa1502B = new StudentGroup(0, "Semigrupa", "1502B", 20);
 //      List<StudentGroup> comp1502 = new ArrayList<StudentGroup>();
 //      comp1502.add(semigrupa1502A);
 //      comp1502.add(semigrupa1502B);
@@ -355,8 +355,8 @@
 //      StudentGroup grupa1502 = new StudentGroup(0, "Grupa", "1502", comp1502);
 //
 //
-//      StudentGroup semigrupa1503A = new StudentGroup(0, "Semigrupa", "1503A", 23);
-//      StudentGroup semigrupa1503B = new StudentGroup(0, "Semigrupa", "1503B", 21);
+//      StudentGroup semigrupa1503A = new StudentGroup(0, "Semigrupa", "1503A", 25);
+//      StudentGroup semigrupa1503B = new StudentGroup(0, "Semigrupa", "1503B", 22);
 //      List<StudentGroup> comp1503 = new ArrayList<StudentGroup>();
 //      comp1503.add(semigrupa1503A);
 //      comp1503.add(semigrupa1503B);
@@ -364,8 +364,8 @@
 //      StudentGroup grupa1503 = new StudentGroup(0, "Grupa", "1503", comp1503);
 //
 //
-//      StudentGroup semigrupa1504A = new StudentGroup(0, "Semigrupa", "1504A", 25);
-//      StudentGroup semigrupa1504B = new StudentGroup(0, "Semigrupa", "1504B", 23);
+//      StudentGroup semigrupa1504A = new StudentGroup(0, "Semigrupa", "1504A", 22);
+//      StudentGroup semigrupa1504B = new StudentGroup(0, "Semigrupa", "1504B", 21);
 //      List<StudentGroup> comp1504 = new ArrayList<StudentGroup>();
 //      comp1504.add(semigrupa1504A);
 //      comp1504.add(semigrupa1504B);
@@ -382,8 +382,8 @@
 //      StudentGroup yearOfStudyFIFTH_IS = new StudentGroup(0, "YearOfStudy", "FIFTH_IS", compFIFTH_IS);
 //
 //
-//      StudentGroup semigrupa1601A = new StudentGroup(0, "Semigrupa", "1601A", 21);
-//      StudentGroup semigrupa1601B = new StudentGroup(0, "Semigrupa", "1601B", 27);
+//      StudentGroup semigrupa1601A = new StudentGroup(0, "Semigrupa", "1601A", 22);
+//      StudentGroup semigrupa1601B = new StudentGroup(0, "Semigrupa", "1601B", 25);
 //      List<StudentGroup> comp1601 = new ArrayList<StudentGroup>();
 //      comp1601.add(semigrupa1601A);
 //      comp1601.add(semigrupa1601B);
@@ -391,8 +391,8 @@
 //      StudentGroup grupa1601 = new StudentGroup(0, "Grupa", "1601", comp1601);
 //
 //
-//      StudentGroup semigrupa1602A = new StudentGroup(0, "Semigrupa", "1602A", 29);
-//      StudentGroup semigrupa1602B = new StudentGroup(0, "Semigrupa", "1602B", 30);
+//      StudentGroup semigrupa1602A = new StudentGroup(0, "Semigrupa", "1602A", 30);
+//      StudentGroup semigrupa1602B = new StudentGroup(0, "Semigrupa", "1602B", 27);
 //      List<StudentGroup> comp1602 = new ArrayList<StudentGroup>();
 //      comp1602.add(semigrupa1602A);
 //      comp1602.add(semigrupa1602B);
@@ -400,7 +400,7 @@
 //      StudentGroup grupa1602 = new StudentGroup(0, "Grupa", "1602", comp1602);
 //
 //
-//      StudentGroup semigrupa1603A = new StudentGroup(0, "Semigrupa", "1603A", 24);
+//      StudentGroup semigrupa1603A = new StudentGroup(0, "Semigrupa", "1603A", 22);
 //      StudentGroup semigrupa1603B = new StudentGroup(0, "Semigrupa", "1603B", 24);
 //      List<StudentGroup> comp1603 = new ArrayList<StudentGroup>();
 //      comp1603.add(semigrupa1603A);
@@ -410,7 +410,7 @@
 //
 //
 //      StudentGroup semigrupa1604A = new StudentGroup(0, "Semigrupa", "1604A", 27);
-//      StudentGroup semigrupa1604B = new StudentGroup(0, "Semigrupa", "1604B", 27);
+//      StudentGroup semigrupa1604B = new StudentGroup(0, "Semigrupa", "1604B", 28);
 //      List<StudentGroup> comp1604 = new ArrayList<StudentGroup>();
 //      comp1604.add(semigrupa1604A);
 //      comp1604.add(semigrupa1604B);
@@ -438,8 +438,8 @@
 //      StudentGroup departmentIS = new StudentGroup(0, "Department", "IS", compIS);
 //
 //
-//      StudentGroup semigrupa1105A = new StudentGroup(0, "Semigrupa", "1105A", 26);
-//      StudentGroup semigrupa1105B = new StudentGroup(0, "Semigrupa", "1105B", 21);
+//      StudentGroup semigrupa1105A = new StudentGroup(0, "Semigrupa", "1105A", 30);
+//      StudentGroup semigrupa1105B = new StudentGroup(0, "Semigrupa", "1105B", 29);
 //      List<StudentGroup> comp1105 = new ArrayList<StudentGroup>();
 //      comp1105.add(semigrupa1105A);
 //      comp1105.add(semigrupa1105B);
@@ -447,8 +447,8 @@
 //      StudentGroup grupa1105 = new StudentGroup(0, "Grupa", "1105", comp1105);
 //
 //
-//      StudentGroup semigrupa1106A = new StudentGroup(0, "Semigrupa", "1106A", 27);
-//      StudentGroup semigrupa1106B = new StudentGroup(0, "Semigrupa", "1106B", 20);
+//      StudentGroup semigrupa1106A = new StudentGroup(0, "Semigrupa", "1106A", 23);
+//      StudentGroup semigrupa1106B = new StudentGroup(0, "Semigrupa", "1106B", 29);
 //      List<StudentGroup> comp1106 = new ArrayList<StudentGroup>();
 //      comp1106.add(semigrupa1106A);
 //      comp1106.add(semigrupa1106B);
@@ -456,8 +456,8 @@
 //      StudentGroup grupa1106 = new StudentGroup(0, "Grupa", "1106", comp1106);
 //
 //
-//      StudentGroup semigrupa1107A = new StudentGroup(0, "Semigrupa", "1107A", 25);
-//      StudentGroup semigrupa1107B = new StudentGroup(0, "Semigrupa", "1107B", 20);
+//      StudentGroup semigrupa1107A = new StudentGroup(0, "Semigrupa", "1107A", 21);
+//      StudentGroup semigrupa1107B = new StudentGroup(0, "Semigrupa", "1107B", 26);
 //      List<StudentGroup> comp1107 = new ArrayList<StudentGroup>();
 //      comp1107.add(semigrupa1107A);
 //      comp1107.add(semigrupa1107B);
@@ -465,8 +465,8 @@
 //      StudentGroup grupa1107 = new StudentGroup(0, "Grupa", "1107", comp1107);
 //
 //
-//      StudentGroup semigrupa1108A = new StudentGroup(0, "Semigrupa", "1108A", 23);
-//      StudentGroup semigrupa1108B = new StudentGroup(0, "Semigrupa", "1108B", 26);
+//      StudentGroup semigrupa1108A = new StudentGroup(0, "Semigrupa", "1108A", 24);
+//      StudentGroup semigrupa1108B = new StudentGroup(0, "Semigrupa", "1108B", 25);
 //      List<StudentGroup> comp1108 = new ArrayList<StudentGroup>();
 //      comp1108.add(semigrupa1108A);
 //      comp1108.add(semigrupa1108B);
@@ -483,8 +483,8 @@
 //      StudentGroup yearOfStudyFIRST_CTI = new StudentGroup(0, "YearOfStudy", "FIRST_CTI", compFIRST_CTI);
 //
 //
-//      StudentGroup semigrupa1205A = new StudentGroup(0, "Semigrupa", "1205A", 30);
-//      StudentGroup semigrupa1205B = new StudentGroup(0, "Semigrupa", "1205B", 26);
+//      StudentGroup semigrupa1205A = new StudentGroup(0, "Semigrupa", "1205A", 24);
+//      StudentGroup semigrupa1205B = new StudentGroup(0, "Semigrupa", "1205B", 21);
 //      List<StudentGroup> comp1205 = new ArrayList<StudentGroup>();
 //      comp1205.add(semigrupa1205A);
 //      comp1205.add(semigrupa1205B);
@@ -492,8 +492,8 @@
 //      StudentGroup grupa1205 = new StudentGroup(0, "Grupa", "1205", comp1205);
 //
 //
-//      StudentGroup semigrupa1206A = new StudentGroup(0, "Semigrupa", "1206A", 26);
-//      StudentGroup semigrupa1206B = new StudentGroup(0, "Semigrupa", "1206B", 24);
+//      StudentGroup semigrupa1206A = new StudentGroup(0, "Semigrupa", "1206A", 24);
+//      StudentGroup semigrupa1206B = new StudentGroup(0, "Semigrupa", "1206B", 25);
 //      List<StudentGroup> comp1206 = new ArrayList<StudentGroup>();
 //      comp1206.add(semigrupa1206A);
 //      comp1206.add(semigrupa1206B);
@@ -502,7 +502,7 @@
 //
 //
 //      StudentGroup semigrupa1207A = new StudentGroup(0, "Semigrupa", "1207A", 24);
-//      StudentGroup semigrupa1207B = new StudentGroup(0, "Semigrupa", "1207B", 24);
+//      StudentGroup semigrupa1207B = new StudentGroup(0, "Semigrupa", "1207B", 20);
 //      List<StudentGroup> comp1207 = new ArrayList<StudentGroup>();
 //      comp1207.add(semigrupa1207A);
 //      comp1207.add(semigrupa1207B);
@@ -510,8 +510,8 @@
 //      StudentGroup grupa1207 = new StudentGroup(0, "Grupa", "1207", comp1207);
 //
 //
-//      StudentGroup semigrupa1208A = new StudentGroup(0, "Semigrupa", "1208A", 24);
-//      StudentGroup semigrupa1208B = new StudentGroup(0, "Semigrupa", "1208B", 21);
+//      StudentGroup semigrupa1208A = new StudentGroup(0, "Semigrupa", "1208A", 25);
+//      StudentGroup semigrupa1208B = new StudentGroup(0, "Semigrupa", "1208B", 24);
 //      List<StudentGroup> comp1208 = new ArrayList<StudentGroup>();
 //      comp1208.add(semigrupa1208A);
 //      comp1208.add(semigrupa1208B);
@@ -528,8 +528,8 @@
 //      StudentGroup yearOfStudySECOND_CTI = new StudentGroup(0, "YearOfStudy", "SECOND_CTI", compSECOND_CTI);
 //
 //
-//      StudentGroup semigrupa1305A = new StudentGroup(0, "Semigrupa", "1305A", 27);
-//      StudentGroup semigrupa1305B = new StudentGroup(0, "Semigrupa", "1305B", 21);
+//      StudentGroup semigrupa1305A = new StudentGroup(0, "Semigrupa", "1305A", 24);
+//      StudentGroup semigrupa1305B = new StudentGroup(0, "Semigrupa", "1305B", 26);
 //      List<StudentGroup> comp1305 = new ArrayList<StudentGroup>();
 //      comp1305.add(semigrupa1305A);
 //      comp1305.add(semigrupa1305B);
@@ -537,8 +537,8 @@
 //      StudentGroup grupa1305 = new StudentGroup(0, "Grupa", "1305", comp1305);
 //
 //
-//      StudentGroup semigrupa1306A = new StudentGroup(0, "Semigrupa", "1306A", 29);
-//      StudentGroup semigrupa1306B = new StudentGroup(0, "Semigrupa", "1306B", 27);
+//      StudentGroup semigrupa1306A = new StudentGroup(0, "Semigrupa", "1306A", 26);
+//      StudentGroup semigrupa1306B = new StudentGroup(0, "Semigrupa", "1306B", 24);
 //      List<StudentGroup> comp1306 = new ArrayList<StudentGroup>();
 //      comp1306.add(semigrupa1306A);
 //      comp1306.add(semigrupa1306B);
@@ -546,8 +546,8 @@
 //      StudentGroup grupa1306 = new StudentGroup(0, "Grupa", "1306", comp1306);
 //
 //
-//      StudentGroup semigrupa1307A = new StudentGroup(0, "Semigrupa", "1307A", 25);
-//      StudentGroup semigrupa1307B = new StudentGroup(0, "Semigrupa", "1307B", 23);
+//      StudentGroup semigrupa1307A = new StudentGroup(0, "Semigrupa", "1307A", 27);
+//      StudentGroup semigrupa1307B = new StudentGroup(0, "Semigrupa", "1307B", 29);
 //      List<StudentGroup> comp1307 = new ArrayList<StudentGroup>();
 //      comp1307.add(semigrupa1307A);
 //      comp1307.add(semigrupa1307B);
@@ -555,7 +555,7 @@
 //      StudentGroup grupa1307 = new StudentGroup(0, "Grupa", "1307", comp1307);
 //
 //
-//      StudentGroup semigrupa1308A = new StudentGroup(0, "Semigrupa", "1308A", 25);
+//      StudentGroup semigrupa1308A = new StudentGroup(0, "Semigrupa", "1308A", 21);
 //      StudentGroup semigrupa1308B = new StudentGroup(0, "Semigrupa", "1308B", 22);
 //      List<StudentGroup> comp1308 = new ArrayList<StudentGroup>();
 //      comp1308.add(semigrupa1308A);
@@ -573,8 +573,8 @@
 //      StudentGroup yearOfStudyTHIRD_CTI = new StudentGroup(0, "YearOfStudy", "THIRD_CTI", compTHIRD_CTI);
 //
 //
-//      StudentGroup semigrupa1405A = new StudentGroup(0, "Semigrupa", "1405A", 22);
-//      StudentGroup semigrupa1405B = new StudentGroup(0, "Semigrupa", "1405B", 23);
+//      StudentGroup semigrupa1405A = new StudentGroup(0, "Semigrupa", "1405A", 29);
+//      StudentGroup semigrupa1405B = new StudentGroup(0, "Semigrupa", "1405B", 26);
 //      List<StudentGroup> comp1405 = new ArrayList<StudentGroup>();
 //      comp1405.add(semigrupa1405A);
 //      comp1405.add(semigrupa1405B);
@@ -582,8 +582,8 @@
 //      StudentGroup grupa1405 = new StudentGroup(0, "Grupa", "1405", comp1405);
 //
 //
-//      StudentGroup semigrupa1406A = new StudentGroup(0, "Semigrupa", "1406A", 24);
-//      StudentGroup semigrupa1406B = new StudentGroup(0, "Semigrupa", "1406B", 23);
+//      StudentGroup semigrupa1406A = new StudentGroup(0, "Semigrupa", "1406A", 25);
+//      StudentGroup semigrupa1406B = new StudentGroup(0, "Semigrupa", "1406B", 22);
 //      List<StudentGroup> comp1406 = new ArrayList<StudentGroup>();
 //      comp1406.add(semigrupa1406A);
 //      comp1406.add(semigrupa1406B);
@@ -591,8 +591,8 @@
 //      StudentGroup grupa1406 = new StudentGroup(0, "Grupa", "1406", comp1406);
 //
 //
-//      StudentGroup semigrupa1407A = new StudentGroup(0, "Semigrupa", "1407A", 28);
-//      StudentGroup semigrupa1407B = new StudentGroup(0, "Semigrupa", "1407B", 23);
+//      StudentGroup semigrupa1407A = new StudentGroup(0, "Semigrupa", "1407A", 20);
+//      StudentGroup semigrupa1407B = new StudentGroup(0, "Semigrupa", "1407B", 28);
 //      List<StudentGroup> comp1407 = new ArrayList<StudentGroup>();
 //      comp1407.add(semigrupa1407A);
 //      comp1407.add(semigrupa1407B);
@@ -600,8 +600,8 @@
 //      StudentGroup grupa1407 = new StudentGroup(0, "Grupa", "1407", comp1407);
 //
 //
-//      StudentGroup semigrupa1408A = new StudentGroup(0, "Semigrupa", "1408A", 23);
-//      StudentGroup semigrupa1408B = new StudentGroup(0, "Semigrupa", "1408B", 24);
+//      StudentGroup semigrupa1408A = new StudentGroup(0, "Semigrupa", "1408A", 24);
+//      StudentGroup semigrupa1408B = new StudentGroup(0, "Semigrupa", "1408B", 21);
 //      List<StudentGroup> comp1408 = new ArrayList<StudentGroup>();
 //      comp1408.add(semigrupa1408A);
 //      comp1408.add(semigrupa1408B);
@@ -618,7 +618,7 @@
 //      StudentGroup yearOfStudyFOURTH_CTI = new StudentGroup(0, "YearOfStudy", "FOURTH_CTI", compFOURTH_CTI);
 //
 //
-//      StudentGroup semigrupa1505A = new StudentGroup(0, "Semigrupa", "1505A", 26);
+//      StudentGroup semigrupa1505A = new StudentGroup(0, "Semigrupa", "1505A", 30);
 //      StudentGroup semigrupa1505B = new StudentGroup(0, "Semigrupa", "1505B", 20);
 //      List<StudentGroup> comp1505 = new ArrayList<StudentGroup>();
 //      comp1505.add(semigrupa1505A);
@@ -628,7 +628,7 @@
 //
 //
 //      StudentGroup semigrupa1506A = new StudentGroup(0, "Semigrupa", "1506A", 28);
-//      StudentGroup semigrupa1506B = new StudentGroup(0, "Semigrupa", "1506B", 20);
+//      StudentGroup semigrupa1506B = new StudentGroup(0, "Semigrupa", "1506B", 28);
 //      List<StudentGroup> comp1506 = new ArrayList<StudentGroup>();
 //      comp1506.add(semigrupa1506A);
 //      comp1506.add(semigrupa1506B);
@@ -636,8 +636,8 @@
 //      StudentGroup grupa1506 = new StudentGroup(0, "Grupa", "1506", comp1506);
 //
 //
-//      StudentGroup semigrupa1507A = new StudentGroup(0, "Semigrupa", "1507A", 29);
-//      StudentGroup semigrupa1507B = new StudentGroup(0, "Semigrupa", "1507B", 26);
+//      StudentGroup semigrupa1507A = new StudentGroup(0, "Semigrupa", "1507A", 21);
+//      StudentGroup semigrupa1507B = new StudentGroup(0, "Semigrupa", "1507B", 23);
 //      List<StudentGroup> comp1507 = new ArrayList<StudentGroup>();
 //      comp1507.add(semigrupa1507A);
 //      comp1507.add(semigrupa1507B);
@@ -645,8 +645,8 @@
 //      StudentGroup grupa1507 = new StudentGroup(0, "Grupa", "1507", comp1507);
 //
 //
-//      StudentGroup semigrupa1508A = new StudentGroup(0, "Semigrupa", "1508A", 29);
-//      StudentGroup semigrupa1508B = new StudentGroup(0, "Semigrupa", "1508B", 27);
+//      StudentGroup semigrupa1508A = new StudentGroup(0, "Semigrupa", "1508A", 20);
+//      StudentGroup semigrupa1508B = new StudentGroup(0, "Semigrupa", "1508B", 29);
 //      List<StudentGroup> comp1508 = new ArrayList<StudentGroup>();
 //      comp1508.add(semigrupa1508A);
 //      comp1508.add(semigrupa1508B);
@@ -663,8 +663,8 @@
 //      StudentGroup yearOfStudyFIFTH_CTI = new StudentGroup(0, "YearOfStudy", "FIFTH_CTI", compFIFTH_CTI);
 //
 //
-//      StudentGroup semigrupa1605A = new StudentGroup(0, "Semigrupa", "1605A", 28);
-//      StudentGroup semigrupa1605B = new StudentGroup(0, "Semigrupa", "1605B", 27);
+//      StudentGroup semigrupa1605A = new StudentGroup(0, "Semigrupa", "1605A", 20);
+//      StudentGroup semigrupa1605B = new StudentGroup(0, "Semigrupa", "1605B", 25);
 //      List<StudentGroup> comp1605 = new ArrayList<StudentGroup>();
 //      comp1605.add(semigrupa1605A);
 //      comp1605.add(semigrupa1605B);
@@ -672,8 +672,8 @@
 //      StudentGroup grupa1605 = new StudentGroup(0, "Grupa", "1605", comp1605);
 //
 //
-//      StudentGroup semigrupa1606A = new StudentGroup(0, "Semigrupa", "1606A", 28);
-//      StudentGroup semigrupa1606B = new StudentGroup(0, "Semigrupa", "1606B", 29);
+//      StudentGroup semigrupa1606A = new StudentGroup(0, "Semigrupa", "1606A", 24);
+//      StudentGroup semigrupa1606B = new StudentGroup(0, "Semigrupa", "1606B", 20);
 //      List<StudentGroup> comp1606 = new ArrayList<StudentGroup>();
 //      comp1606.add(semigrupa1606A);
 //      comp1606.add(semigrupa1606B);
@@ -682,7 +682,7 @@
 //
 //
 //      StudentGroup semigrupa1607A = new StudentGroup(0, "Semigrupa", "1607A", 30);
-//      StudentGroup semigrupa1607B = new StudentGroup(0, "Semigrupa", "1607B", 23);
+//      StudentGroup semigrupa1607B = new StudentGroup(0, "Semigrupa", "1607B", 29);
 //      List<StudentGroup> comp1607 = new ArrayList<StudentGroup>();
 //      comp1607.add(semigrupa1607A);
 //      comp1607.add(semigrupa1607B);
@@ -690,8 +690,8 @@
 //      StudentGroup grupa1607 = new StudentGroup(0, "Grupa", "1607", comp1607);
 //
 //
-//      StudentGroup semigrupa1608A = new StudentGroup(0, "Semigrupa", "1608A", 21);
-//      StudentGroup semigrupa1608B = new StudentGroup(0, "Semigrupa", "1608B", 29);
+//      StudentGroup semigrupa1608A = new StudentGroup(0, "Semigrupa", "1608A", 22);
+//      StudentGroup semigrupa1608B = new StudentGroup(0, "Semigrupa", "1608B", 24);
 //      List<StudentGroup> comp1608 = new ArrayList<StudentGroup>();
 //      comp1608.add(semigrupa1608A);
 //      comp1608.add(semigrupa1608B);
@@ -728,6 +728,7 @@
 //
 //      StudentGroupDAO studentGroupDAO = new StudentGroupJPADAOService();
 //      studentGroupDAO.persist(academicYear2016_2017);
+//
 //
 //
 //

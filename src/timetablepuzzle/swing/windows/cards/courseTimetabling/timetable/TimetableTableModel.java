@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import timetablepuzzle.entities.inputdata.StudentGroup;
+import timetablepuzzle.entities.other.TimePreferences;
 import timetablepuzzle.usecases.solution.TimeslotPattern;
 import timetablepuzzle.entities.Solution;
 import timetablepuzzle.entities.Class;
@@ -83,7 +84,7 @@ public class TimetableTableModel extends AbstractTableModel {
 				if ((columnIndex > 0) && (columnIndex < getColumnCount())) {
 					columnValue = this.columnNames[columnIndex];
 				} else {
-					columnValue = "";
+					columnValue = TimePreferences.DayOfTheWeek.values()[this.dayIndex];
 				}
 			} else {
 				if ((columnIndex > 0) && (columnIndex < getColumnCount())) {

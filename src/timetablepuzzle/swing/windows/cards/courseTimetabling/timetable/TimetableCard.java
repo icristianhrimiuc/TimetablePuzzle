@@ -136,6 +136,7 @@ public class TimetableCard extends JPanel {
 		JPanel eastPanel = CreateEastPanel();
 		// Create the center panel. It will hold off the tables as cards
 		JPanel centerPanel = CreateCenterPanel();
+		ShowCardByName();
 
 		// Add components to panel
 		this.add(westPanel, BorderLayout.WEST);
@@ -228,24 +229,26 @@ public class TimetableCard extends JPanel {
 		this.daysOfTheWeekButtonGroup = new ButtonGroup();
 		boolean isAnyDayOfTheWeekSelected = false;
 		for (TimePreferences.DayOfTheWeek dayOfTheWeek : daysOfTheWeek) {
-			JRadioButton jRadioButton = new JRadioButton(StringUtils.capitalize(dayOfTheWeek.name()));
-			if (!isAnyDayOfTheWeekSelected) {
-				jRadioButton.setSelected(true);
-				isAnyDayOfTheWeekSelected = true;
-			}
-			jRadioButton.setBackground(this.backGroundColor);
-			jRadioButton.addItemListener(new ItemListener() {
-
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					if (e.getStateChange() == ItemEvent.SELECTED) {
-						ShowCardByName();
-					}
+			if (dayOfTheWeek != DayOfTheWeek.SATURDAY && dayOfTheWeek != DayOfTheWeek.SUNDAY) {
+				JRadioButton jRadioButton = new JRadioButton(StringUtils.capitalize(dayOfTheWeek.name()));
+				if (!isAnyDayOfTheWeekSelected) {
+					jRadioButton.setSelected(true);
+					isAnyDayOfTheWeekSelected = true;
 				}
-			});
+				jRadioButton.setBackground(this.backGroundColor);
+				jRadioButton.addItemListener(new ItemListener() {
 
-			daysOfTheWeekButtonGroup.add(jRadioButton);
-			northPanel.add(jRadioButton);
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						if (e.getStateChange() == ItemEvent.SELECTED) {
+							ShowCardByName();
+						}
+					}
+				});
+
+				daysOfTheWeekButtonGroup.add(jRadioButton);
+				northPanel.add(jRadioButton);
+			}
 		}
 
 		return northPanel;
@@ -355,7 +358,8 @@ public class TimetableCard extends JPanel {
 			for (StudentGroup yearOfStudygroup : yearOfStudyGroups) {
 				for (int dayIndex = 0; dayIndex < TimeslotPattern.NrOfDays; dayIndex++) {
 					String cardName = GetCardName(departmentGroup.getCode(), yearOfStudygroup.getCode(), dayIndex);
-					JPanel tablePanel = CreateTablePanel(cardName, yearOfStudygroup, dayIndex);
+					String cardHeaderText = GetCardHeaderText(departmentGroup, yearOfStudygroup, dayIndex);
+					JPanel tablePanel = CreateTablePanel(cardName, cardHeaderText, yearOfStudygroup, dayIndex);
 					this.cards.put(cardName, tablePanel);
 				}
 			}
@@ -366,15 +370,24 @@ public class TimetableCard extends JPanel {
 		return String.format("%s/%s/%d", departmentName, yearOfStudy, dayIndex);
 	}
 
-	private JPanel CreateTablePanel(String cardName, StudentGroup departmentGroup, int dayIndex) {
+	private String GetCardHeaderText(StudentGroup departmentGroup, StudentGroup yearOfStudygroup, int dayIndex) {
+		return String.format("Timetable for Dep: %s; Year: %s; Day: %s; ", departmentGroup.getCode(),
+				yearOfStudygroup.getCode(), TimePreferences.DayOfTheWeek.values()[dayIndex].toString());
+	}
+
+	private JPanel CreateTablePanel(String cardName, String cardHeaderText, StudentGroup departmentGroup,
+			int dayIndex) {
 		TimetableTableModel tableModel = new TimetableTableModel(this.acceptedSolution, departmentGroup, dayIndex);
 		JTable table = new JTable(tableModel);
 		ConfigureTable(table);
 
 		JScrollPane tableScrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		JPanel panel = new JPanel();
-		panel.add(tableScrollPane);
+		JPanel panel = new JPanel(new BorderLayout());
+		JLabel label = new JLabel(cardHeaderText);
+		label.setHorizontalAlignment(JLabel.CENTER);
+		panel.add(label, BorderLayout.NORTH);
+		panel.add(tableScrollPane, BorderLayout.CENTER);
 		panel.setBorder(BorderFactory.createLineBorder(Color.RED));
 
 		return panel;
@@ -386,13 +399,16 @@ public class TimetableCard extends JPanel {
 		table.setDefaultRenderer(String.class, cellRenderer);
 		table.setRowSelectionAllowed(false);
 		table.setColumnSelectionAllowed(false);
+		table.setFillsViewportHeight(true);
 		table.setTableHeader(null);
-		table.setBorder(BorderFactory.createEmptyBorder());
+		table.setBorder(null);
+		table.setRowHeight(43);
 	}
 
 	private void ShowCardByName() {
 		String departmentName = getSelectedButtonText(this.departmentsButtonGroup);
-		String yearOfStudy = String.format("%s_%s", getSelectedButtonText(this.yearsOfStudyButtonGroup), departmentName);
+		String yearOfStudy = String.format("%s_%s", getSelectedButtonText(this.yearsOfStudyButtonGroup),
+				departmentName);
 		int dayIndex = DayOfTheWeek.valueOf(getSelectedButtonText(daysOfTheWeekButtonGroup)).ordinal();
 		String nameOfTheCardToShow = GetCardName(departmentName, yearOfStudy, dayIndex);
 		this.cardLayout.show(cardsPanel, nameOfTheCardToShow);
