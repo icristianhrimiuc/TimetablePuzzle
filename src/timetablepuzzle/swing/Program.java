@@ -13,6 +13,7 @@ public class Program {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					MainWindow mainWindow = new MainWindow(Color.LIGHT_GRAY);
 				} catch (Exception e) {
 					e.printStackTrace();

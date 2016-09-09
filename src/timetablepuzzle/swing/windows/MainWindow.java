@@ -168,8 +168,6 @@ public class MainWindow implements ActionListener {
 			this.viewedAcademicSession = loggedUser.getLastViewedAcademicSession();
 			if (this.viewedAcademicSession != null) {
 				this.acceptedSolution = this.viewedAcademicSession.getAcceptedSolution();
-			} else {
-				this.acceptedSolution = new Solution();
 			}
 			this.frame.setJMenuBar(CreateMenuBar(this.loggedUser.getUserType()));
 			FillComboBoxes();
@@ -181,9 +179,8 @@ public class MainWindow implements ActionListener {
 			// Course Timetabling menu
 			this.cards.put(TIMETABLE_CARD, new TimetableCard(bgColor, this.viewedFaculty, this.viewedAcademicYear,
 					this.viewedAcademicSession));
-			this.cards.put(ASSIGNED_CLASSES_CARD, new ClassesCard(this.bgColor, this.acceptedSolution.getId(), true));
-			this.cards.put(UNASSIGNED_CLASSES_CARD,
-					new ClassesCard(this.bgColor, this.acceptedSolution.getId(), false));
+			this.cards.put(ASSIGNED_CLASSES_CARD, new ClassesCard(this.bgColor, this.acceptedSolution, true));
+			this.cards.put(UNASSIGNED_CLASSES_CARD, new ClassesCard(this.bgColor, this.acceptedSolution, false));
 			this.cards.put(SOLUTIONS_CARD, new SolutionsCard(bgColor));
 			// Administration menu
 			this.cards.put(ACADEMIC_SESSIONS_CARD, new AcademicSessionsCard(this.bgColor));
@@ -329,19 +326,18 @@ public class MainWindow implements ActionListener {
 					SolutionCreator solutionCreator = new SolutionCreator(solutionName, classes);
 					this.viewedAcademicSession.setAcceptedSolution(solutionCreator.CreateNewSolution());
 					academicSessionDAO.merge(this.viewedAcademicSession);
-				} else {
-					this.acceptedSolution = new Solution();
 				}
 			}
 		}
 		RefreshTimeTableCard();
-		((ClassesCard) this.cards.get(ASSIGNED_CLASSES_CARD)).setNewSolution(this.acceptedSolution.getId());
-		((ClassesCard) this.cards.get(UNASSIGNED_CLASSES_CARD)).setNewSolution(this.acceptedSolution.getId());
+		((ClassesCard) this.cards.get(ASSIGNED_CLASSES_CARD)).setNewSolution(this.acceptedSolution);
+		((ClassesCard) this.cards.get(UNASSIGNED_CLASSES_CARD)).setNewSolution(this.acceptedSolution);
 	}
 
 	private void RefreshTimeTableCard() {
-		((TimetableCard) this.cards.get(TIMETABLE_CARD)).setData(this.viewedFaculty, this.viewedAcademicYear,
-				this.viewedAcademicSession);
+		this.cardLayout.show(this.cardsPanel, HOME_CARD);
+		this.cards.put(TIMETABLE_CARD, new TimetableCard(this.bgColor, this.viewedFaculty, this.viewedAcademicYear,
+				this.viewedAcademicSession));
 	}
 
 	private JMenuBar CreateMenuBar(UserType userType) {

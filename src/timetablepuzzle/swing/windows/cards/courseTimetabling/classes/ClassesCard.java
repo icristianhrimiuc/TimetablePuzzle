@@ -56,9 +56,13 @@ public class ClassesCard extends JPanel {
 	private JTextField textFieldAssignedParentStudentGroup;
 	private JLabel notificationLabel;
 
-	public ClassesCard(Color backgroundColor, int acceptedSolutionId, boolean assigned) {
+	public ClassesCard(Color backgroundColor, Solution acceptedSolution, boolean assigned) {
 		this.setBackground(backgroundColor);
-		this.acceptedSolutionId = acceptedSolutionId;
+		if(acceptedSolution != null){
+			this.acceptedSolutionId = acceptedSolution.getId();
+		}else{
+			this.acceptedSolutionId = 0;
+		}
 		this.assigned = assigned;
 		this.assignedText = this.assigned ? "Assigned" : "Unassigned";
 
@@ -274,8 +278,13 @@ public class ClassesCard extends JPanel {
 		return raisedBevelTitledBorder;
 	}
 	
-	public void setNewSolution(int newSolutionId){
-		this.acceptedSolutionId = newSolutionId;
+	public void setNewSolution(Solution newSolution){
+		if(newSolution != null)
+		{
+			this.acceptedSolutionId = newSolution.getId();
+		}else{
+			this.acceptedSolutionId = 0;
+		}
 		RefreshAllFields();
 	}
 }

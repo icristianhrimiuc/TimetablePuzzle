@@ -132,7 +132,7 @@ public class YearOfStudy {
 			List<StudentGroup> studentGroups = parentStudentGroup.getComposingGroups();
 			if (studentGroups.size() == this.subjectAreas.size()) {
 				for (StudentGroup studentGroup : studentGroups) {
-					SubjectArea subjectArea = getSubjectAreaByName(studentGroup.getCode());
+					SubjectArea subjectArea = getSubjectAreaByAbbreviation(studentGroup.getCode());
 					if (subjectArea != null) {
 						classes.addAll(subjectArea.getClasses(term, studentGroup, departmentName, collegeYear,
 								subjectArea.getName()));
@@ -144,10 +144,10 @@ public class YearOfStudy {
 		return classes;
 	}
 
-	private SubjectArea getSubjectAreaByName(String name) {
+	private SubjectArea getSubjectAreaByAbbreviation(String abbreviation) {
 		SubjectArea searchedSubjectArea = null;
 		for (SubjectArea subjectArea : this.subjectAreas) {
-			if (subjectArea.getName().toLowerCase().equals(name.toLowerCase())) {
+			if (subjectArea.getAbbreviation().toLowerCase().equals(abbreviation.toLowerCase())) {
 				searchedSubjectArea = subjectArea;
 				break;
 			}

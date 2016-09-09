@@ -87,6 +87,7 @@ public class TimetableCard extends JPanel {
 		setViewedAcademicYear(viewedAcademicYear);
 		setViewedAcademicSession(viewedAcademicSession);
 		CreateTimetableCardPanel();
+		this.repaint();
 	}
 
 	private void setViewedFaculty(Faculty viewedFaculty) {
@@ -368,11 +369,11 @@ public class TimetableCard extends JPanel {
 		List<StudentGroup> departmentGroups = this.parentStudentGroup.getComposingGroups();
 		for (StudentGroup departmentGroup : departmentGroups) {
 			List<StudentGroup> yearOfStudyGroups = departmentGroup.getComposingGroups();
-			for (StudentGroup yearOfStudygroup : yearOfStudyGroups) {
+			for (StudentGroup yearOfStudyGroup : yearOfStudyGroups) {
 				for (int dayIndex = 0; dayIndex < TimeslotPattern.NrOfDays; dayIndex++) {
-					String cardName = GetCardName(departmentGroup.getCode(), yearOfStudygroup.getCode(), dayIndex);
-					String cardHeaderText = GetCardHeaderText(departmentGroup, yearOfStudygroup, dayIndex);
-					JPanel tablePanel = CreateTablePanel(cardName, cardHeaderText, yearOfStudygroup, dayIndex);
+					String cardName = GetCardName(departmentGroup.getCode(), yearOfStudyGroup.getCode(), dayIndex);
+					String cardHeaderText = GetCardHeaderText(departmentGroup, yearOfStudyGroup, dayIndex);
+					JPanel tablePanel = CreateTablePanel(cardName, cardHeaderText, yearOfStudyGroup, dayIndex);
 					this.cards.put(cardName, tablePanel);
 				}
 			}

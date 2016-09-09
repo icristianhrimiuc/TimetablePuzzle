@@ -50,8 +50,8 @@ public class Department {
 	public List<YearOfStudy> getYearsOfStudy() {
 		return this.yearsOfStudy;
 	}
-	
-	public void setYearsOfStudy(List<YearOfStudy> yearsOfStudy){
+
+	public void setYearsOfStudy(List<YearOfStudy> yearsOfStudy) {
 		this.yearsOfStudy = yearsOfStudy;
 	}
 
@@ -62,13 +62,11 @@ public class Department {
 		List<Class> classes = new ArrayList<Class>();
 		if (parentStudentGroup != null) {
 			List<StudentGroup> studentGroups = parentStudentGroup.getComposingGroups();
-			if (studentGroups.size() == this.yearsOfStudy.size()) {
-				for (StudentGroup studentGroup : studentGroups) {
-					YearOfStudy yearOfStudy = getYearOfStudyByCollegeYear(studentGroup.getCode());
-					if (yearOfStudy != null) {
-						classes.addAll(yearOfStudy.getClasses(term, studentGroup, departmentName,
-								yearOfStudy.getCollegeYear()));
-					}
+			for (StudentGroup studentGroup : studentGroups) {
+				YearOfStudy yearOfStudy = getYearOfStudyByCollegeYear(studentGroup.getCode());
+				if (yearOfStudy != null) {
+					classes.addAll(
+							yearOfStudy.getClasses(term, studentGroup, departmentName, yearOfStudy.getCollegeYear()));
 				}
 			}
 		}

@@ -89,14 +89,18 @@ public class TimetableTableModel extends AbstractTableModel {
 			} else {
 				if ((columnIndex > 0) && (columnIndex < getColumnCount())) {
 					// here is where i should write the class data
-					int dayAndTimeSlot = this.dayIndex * TimeslotPattern.NrOfTimeSlotsPerDay + rowIndex - 1;
-					int studentGroupId = this.sortedStudentGroups.get(columnIndex - 1).getId();
-					int classId = this.data.GetStudentGroupAssignment(studentGroupId, dayAndTimeSlot);
-					Class aClass = this.data.GetClassById(classId);
-					if (aClass == null) {
+					if (this.data != null) {
+						int dayAndTimeSlot = this.dayIndex * TimeslotPattern.NrOfTimeSlotsPerDay + rowIndex - 1;
+						int studentGroupId = this.sortedStudentGroups.get(columnIndex - 1).getId();
+						int classId = this.data.GetStudentGroupAssignment(studentGroupId, dayAndTimeSlot);
+						Class aClass = this.data.GetClassById(classId);
+						if (aClass == null) {
+							columnValue = "";
+						} else {
+							columnValue = aClass.getDisplayName();
+						}
+					}else{
 						columnValue = "";
-					} else {
-						columnValue = aClass.getDisplayName();
 					}
 				} else {
 					columnValue = this.rowNames[rowIndex];

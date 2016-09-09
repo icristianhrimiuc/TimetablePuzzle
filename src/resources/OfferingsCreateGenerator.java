@@ -246,43 +246,43 @@ public class OfferingsCreateGenerator {
 		
 		// Subject areas
 		System.out.println("SubjectAreaDAO subjectAreaDAO = new SubjectAreaJPADAOService();\n");
-		createSubjectArea("AnulPatruC","C-IV","AnulPatruSemIC","AnulPatruSemIIC");
-		createSubjectArea("AnulPatruTI","TI-IV","AnulPatruSemITI","AnulPatruSemIITI");
+		createSubjectArea("AnulPatruC","C","AnulPatruSemIC","AnulPatruSemIIC");
+		createSubjectArea("AnulPatruTI","TI","AnulPatruSemITI","AnulPatruSemIITI");
 
-		createSubjectArea("AnulTreiC","C-III","AnulTreiSemIC","AnulTreiSemIIC");
-		createSubjectArea("AnulTreiTI","TI-III","AnulTreiSemITI","AnulTreiSemIITI");
+		createSubjectArea("AnulTreiC","C","AnulTreiSemIC","AnulTreiSemIIC");
+		createSubjectArea("AnulTreiTI","TI","AnulTreiSemITI","AnulTreiSemIITI");
 
-		createSubjectArea("AnulDoiCTI","CTI-II","AnulDoiSemICTI","AnulDoiSemIICTI");
+		createSubjectArea("AnulDoiCTI","CTI","AnulDoiSemICTI","AnulDoiSemIICTI");
 		
-		createSubjectArea("AnulIntaiCTI","CTI-I","AnulIntaiSemICTI","AnulIntaiSemIICTI");
+		createSubjectArea("AnulIntaiCTI","CTI","AnulIntaiSemICTI","AnulIntaiSemIICTI");
 		
 		// Years Of Study
 		System.out.println("YearOfStudyDAO yearOfStudyDAO = new YearOfStudyJPADAOService();\n");
 		List<String> anulPatru = new ArrayList<String>();
 		anulPatru.add("AnulPatruC");
 		anulPatru.add("AnulPatruTI");
-		createYearOfStudy("AnulPatru" , "FOURTH", anulPatru);
+		createYearOfStudy("FOURTH_CTI" , "FOURTH", anulPatru);
 		
 		List<String> anulTrei = new ArrayList<String>();
 		anulTrei.add("AnulTreiC");
 		anulTrei.add("AnulTreiTI");
-		createYearOfStudy("AnulTrei" , "THIRD", anulTrei);
+		createYearOfStudy("THIRD_CTI" , "THIRD", anulTrei);
 
 		List<String> anulDoi = new ArrayList<String>();
 		anulDoi.add("AnulDoiCTI");
-		createYearOfStudy("AnulDoi" , "SECOND", anulDoi);
+		createYearOfStudy("SECOND_CTI" , "SECOND", anulDoi);
 
 		List<String> anulIntai = new ArrayList<String>();
 		anulIntai.add("AnulIntaiCTI");
-		createYearOfStudy("AnulIntai" , "FIRST", anulIntai);
+		createYearOfStudy("FIRST_CTI" , "FIRST", anulIntai);
 		
 		// Departments 
 		System.out.println("DepartmentDAO departmentDAO = new DepartmentJPADAOService();\n");
 		List<String> calculatoare = new ArrayList<String>();
-		calculatoare.add("AnulPatru");
-		calculatoare.add("AnulTrei");
-		calculatoare.add("AnulDoi");
-		calculatoare.add("AnulIntai");
+		calculatoare.add("FOURTH_CTI");
+		calculatoare.add("THIRD_CTI");
+		calculatoare.add("SECOND_CTI");
+		calculatoare.add("FIRST_CTI");
 		createDepartment("CTI", calculatoare);
 		List<String> automatica = new ArrayList<String>();
 		createDepartment("IS", automatica);

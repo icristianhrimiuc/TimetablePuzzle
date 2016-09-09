@@ -75,6 +75,13 @@ public class Solution {
 		this.name = name;
 		this.listOfClasses = classes;
 		this.classes = ConvertListToMapById(classes);
+		
+		this.roomsAssignments = new HashMap<Integer,String>();
+		this.instructorsAssignments = new HashMap<Integer,String>();
+		this.studentGroupssAssignments = new HashMap<Integer,String>();
+		this.assignedDayAndTimeSlot = new HashMap<Integer,Integer>();
+		this.nrOfRemovals = new HashMap<Integer,Integer>();
+		this.fixedClasses = new HashMap<Integer,Boolean>();
 	}
 
 	private Map<Integer, Class> ConvertListToMapById(List<Class> listOfClasses) {
@@ -123,7 +130,11 @@ public class Solution {
 	}
 
 	public boolean IsRoomInSolution(int roomId) {
-		return this.roomsAssignments.containsKey(roomId);
+		if (this.roomsAssignments == null) {
+			return false;
+		} else {
+			return this.roomsAssignments.containsKey(roomId);
+		}
 	}
 
 	private String[] GetRoomAssignments(int roomId) {
@@ -163,7 +174,11 @@ public class Solution {
 	}
 
 	public boolean IsInstructorInSolution(int instructorId) {
-		return this.instructorsAssignments.containsKey(instructorId);
+		if (this.instructorsAssignments == null) {
+			return false;
+		} else {
+			return this.instructorsAssignments.containsKey(instructorId);
+		}
 	}
 
 	private String[] GetInstructorAssignments(int instructorId) {

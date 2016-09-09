@@ -24,7 +24,7 @@ public final class TimeslotPattern {
 
 	public static String GenerateFreeWeek() {
 		String[] freeWeek = new String[NrOfDays*NrOfTimeSlotsPerDay];
-		Arrays.fill(freeWeek, FreeTimeSlot);
+		Arrays.fill(freeWeek, Integer.toString(FreeTimeSlot));
 
 		return ConvertToStringAssignments(freeWeek);
 	}

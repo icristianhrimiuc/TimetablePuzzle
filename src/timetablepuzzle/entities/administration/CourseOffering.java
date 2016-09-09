@@ -134,7 +134,13 @@ public class CourseOffering {
 			int studentGroupIndex = 0;
 			List<InstructorMeetings> instructorMeetings = this.individualMeetings.getNrOfMeetingsPerInstructor();
 			for (InstructorMeetings meetings : instructorMeetings) {
-				int nrOfMeetings = meetings.getNrOfMeetings();
+				int nrOfMeetings;
+				if(this.individualMeetings.getTotalNumberOfMeetings() == 0)
+				{
+					nrOfMeetings = studentGroups.size();
+				}else{
+					nrOfMeetings = meetings.getNrOfMeetings();
+				}
 				Room assignedRoom = meetings.getRoom();
 				Instructor assignedInstructor = meetings.getInstructor();
 				for (int i = 0; i < nrOfMeetings; i++) {
@@ -158,7 +164,7 @@ public class CourseOffering {
 			}
 		}
 
-		return null;
+		return individualMeetingsClasses;
 	}
 
 	private List<StudentGroup> getIndividualStudentGroups(StudentGroup parentStudentGroup) {
