@@ -30,9 +30,8 @@ class ClassesTableModel extends AbstractTableModel {
 	private static final int Column_Assigned_Instructor = 9;
 	private static final int Column_Assigned_Parent_Student_Group = 10;
 
-	private String[] columnNames = { "Id", "Course Title", "Course Abbreviation", "Department Name",
-			"College Year", "Subject Area Name", "Term", "Offering", "Assigned Room", "Assigned Instructor",
-			"Assigned Student Group" };
+	private String[] columnNames = { "Id", "Course Title", "Course Abbreviation", "Department Name", "College Year",
+			"Subject Area Name", "Term", "Offering", "Assigned Room", "Assigned Instructor", "Assigned Student Group" };
 	private List<Class> data;
 
 	public ClassesTableModel() {
@@ -72,62 +71,67 @@ class ClassesTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Class aClass = data.get(rowIndex);
 		Object columnValue = null;
-		switch (columnIndex) {
-		case Column_Id:
-			columnValue = aClass.getId();
-			break;
-		case Column_Course_Title:
-			columnValue = aClass.getCourseTitle();
-			break;
-		case Column_Course_Abbreviation:
-			columnValue = aClass.getCourseAbbreviation();
-			break;
-		case Column_Department_Name:
-			columnValue = aClass.getDepartmentName();
-			break;
-		case Column_College_Year:
-			columnValue = aClass.getCollegeYear().toString();
-			break;
-		case Column_Subject_Area_Name:
-			columnValue = aClass.getSubjectAreaName();
-			break;
-		case Column_Term:
-			columnValue = aClass.getTerm().toString();
-			break;
-		case Column_Offering:
-			Offering offering = aClass.getOffering();
-			if (offering != null) {
-				columnValue = offering.toString();
-			} else {
-				columnValue = "";
+
+		if (aClass != null) {
+			switch (columnIndex) {
+			case Column_Id:
+				columnValue = aClass.getId();
+				break;
+			case Column_Course_Title:
+				columnValue = aClass.getCourseTitle();
+				break;
+			case Column_Course_Abbreviation:
+				columnValue = aClass.getCourseAbbreviation();
+				break;
+			case Column_Department_Name:
+				columnValue = aClass.getDepartmentName();
+				break;
+			case Column_College_Year:
+				columnValue = aClass.getCollegeYear().toString();
+				break;
+			case Column_Subject_Area_Name:
+				columnValue = aClass.getSubjectAreaName();
+				break;
+			case Column_Term:
+				columnValue = aClass.getTerm().toString();
+				break;
+			case Column_Offering:
+				Offering offering = aClass.getOffering();
+				if (offering != null) {
+					columnValue = offering.toString();
+				} else {
+					columnValue = "";
+				}
+				break;
+			case Column_Assigned_Room:
+				Room assignedRoom = aClass.getAssignedRoom();
+				if (assignedRoom != null) {
+					columnValue = assignedRoom.toString();
+				} else {
+					columnValue = "";
+				}
+				break;
+			case Column_Assigned_Instructor:
+				Instructor assignedInstructor = aClass.getAssignedInstructor();
+				if (assignedInstructor != null) {
+					columnValue = assignedInstructor.toString();
+				} else {
+					columnValue = "";
+				}
+				break;
+			case Column_Assigned_Parent_Student_Group:
+				StudentGroup assignedParentStudentGroup = aClass.getAssignedParentStudentGroup();
+				if (assignedParentStudentGroup != null) {
+					columnValue = assignedParentStudentGroup.toString();
+				} else {
+					columnValue = "";
+				}
+				break;
+			default:
+				break;
 			}
-			break;
-		case Column_Assigned_Room:
-			Room assignedRoom = aClass.getAssignedRoom();
-			if (assignedRoom != null) {
-				columnValue = assignedRoom.toString();
-			} else {
-				columnValue = "";
-			}
-			break;
-		case Column_Assigned_Instructor:
-			Instructor assignedInstructor = aClass.getAssignedInstructor();
-			if (assignedInstructor != null) {
-				columnValue = assignedInstructor.toString();
-			} else {
-				columnValue = "";
-			}
-			break;
-		case Column_Assigned_Parent_Student_Group:
-			StudentGroup assignedParentStudentGroup = aClass.getAssignedParentStudentGroup();
-			if (assignedParentStudentGroup != null) {
-				columnValue = assignedParentStudentGroup.toString();
-			} else {
-				columnValue = "";
-			}
-			break;
-		default:
-			break;
+		}else{
+			columnValue = "";
 		}
 
 		return columnValue;

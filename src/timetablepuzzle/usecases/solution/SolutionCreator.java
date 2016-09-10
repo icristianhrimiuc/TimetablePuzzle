@@ -3,22 +3,30 @@ package timetablepuzzle.usecases.solution;
 import java.util.ArrayList;
 import java.util.List;
 
+import timetablepuzzle.eclipselink.DAO.JPA.services.SolutionJPADAOService;
+import timetablepuzzle.eclipselink.DAO.interfaces.SolutionDAO;
 import timetablepuzzle.entities.Class;
 import timetablepuzzle.entities.Solution;
 
 public class SolutionCreator {
+	private static final SolutionDAO solutionDAO = new SolutionJPADAOService();
+	
 	private List<Class> classes;
 	private Solution solution;
 	
 	public SolutionCreator(String name, List<Class> classes)
 	{
-		this.classes = classes;
-		this.solution = new Solution(0,name, this.classes);
+		this.solution = new Solution(0,name, classes);
+		int solutionId = solutionDAO.MergeAndReturnId(solution);
+		this.solution = solutionDAO.findById(solutionId);
+		this.classes = this.solution.getListOfClasses();
+		this.solution.setListOfClasses(this.classes);
 		InitializeRoomAssignments();
 		InitializeInstructorAssignments();
 		InitializeStudentGroupsAssignments();
 		InitializeAssignedDayAndTimeSlots();
 		InitializeNumberOfRemovals();
+		InitializeFixedClasses();
 	}
 	
 	public Solution CreateNewSolution()
@@ -57,7 +65,12 @@ public class SolutionCreator {
 	private void InitializeStudentGroupsAssignments() {
 		List<Integer> studentGroupsIds = new ArrayList<Integer>();
 		for (Class aClass : this.classes) {
-			studentGroupsIds.addAll(aClass.getAssignedStudentGroupsIds());			
+			List<Integer> ids = aClass.getAssignedStudentGroupsIds();
+			for(Integer studentGroupId : ids){
+				if(!studentGroupsIds.contains(studentGroupId)){
+					studentGroupsIds.add(studentGroupId);
+				}
+			}		
 		}
 		
 		for(Integer studentGroupId : studentGroupsIds)
@@ -75,6 +88,12 @@ public class SolutionCreator {
 	private void InitializeNumberOfRemovals() {
 		for (Class aClass : this.classes) {
 			this.solution.ResetNrOfRemovals(aClass.getId());
+		}
+	}
+
+	private void InitializeFixedClasses() {
+		for (Class aClass : this.classes) {
+			this.solution.SetClassFixed(aClass.getId(), false);
 		}
 	}
 }

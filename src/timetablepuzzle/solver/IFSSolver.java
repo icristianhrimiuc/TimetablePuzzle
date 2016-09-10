@@ -291,7 +291,7 @@ public class IFSSolver {
         	
         	for(Class selClass : selClasses)
         	{
-            	int nrOfRemovals = currentSol.getNrOfRemovals(selClass.getId());
+            	int nrOfRemovals = currentSol.GetNrOfRemovals(selClass.getId());
             	// Each class has one dependency to each of the groups that should assist
             	// this is known as parallel dependency
             	int nrOfDependencies = selClass.getAssignedStudentGroups().size();

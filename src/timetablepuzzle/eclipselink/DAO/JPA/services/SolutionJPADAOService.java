@@ -29,4 +29,15 @@ public class SolutionJPADAOService extends JPADAO<Solution,Integer> implements S
 			this.entityManager.getTransaction().commit();
 		}
 	}
+
+	@Override
+	public int MergeAndReturnId(Solution solution) {
+		this.entityManager.getTransaction().begin();
+		this.entityManager.persist(solution);
+		this.entityManager.flush();
+		int newId = solution.getId();
+		this.entityManager.getTransaction().commit();
+		
+		return newId;
+	}	
 }

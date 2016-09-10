@@ -45,7 +45,6 @@ import timetablepuzzle.entities.administration.YearOfStudy;
 import timetablepuzzle.entities.inputdata.StudentGroup;
 import timetablepuzzle.entities.other.TimePreferences;
 import timetablepuzzle.entities.other.TimePreferences.DayOfTheWeek;
-import timetablepuzzle.usecases.solution.SolutionCreator;
 import timetablepuzzle.usecases.solution.TimeslotPattern;
 
 public class TimetableCard extends JPanel {
@@ -61,7 +60,6 @@ public class TimetableCard extends JPanel {
 	private List<Department> departments;
 	private StudentGroup parentStudentGroup;
 	private Solution acceptedSolution;
-	private SolutionCreator solutionCreator;
 	// A collection of easy retrievable cards
 	private HashMap<String, JPanel> cards;
 	private JPanel cardsPanel;
@@ -75,7 +73,6 @@ public class TimetableCard extends JPanel {
 			AcademicSession viewedAcademicSession) {
 		this.backGroundColor = backGroundColor;
 		this.setBackground(this.backGroundColor);
-		this.solutionCreator = new SolutionCreator("", new ArrayList<Class>());
 		setData(viewedFaculty, viewedAcademicYear, viewedAcademicSession);
 	}
 
@@ -98,7 +95,7 @@ public class TimetableCard extends JPanel {
 			this.departments = this.viewedFaculty.getDepartments();
 		}
 		this.parentStudentGroup = new StudentGroup();
-		this.acceptedSolution = this.solutionCreator.CreateNewSolution();
+		this.acceptedSolution = new Solution();
 	}
 
 	private void setViewedAcademicYear(AcademicYear viewedAcademicYear) {
@@ -108,13 +105,13 @@ public class TimetableCard extends JPanel {
 		} else {
 			this.parentStudentGroup = this.viewedAcademicYear.getParentStudentGroup();
 		}
-		this.acceptedSolution = this.solutionCreator.CreateNewSolution();
+		this.acceptedSolution = new Solution();
 	}
 
 	private void setViewedAcademicSession(AcademicSession viewedAcademicSession) {
 		this.viewedAcademicSession = viewedAcademicSession;
 		if (this.viewedAcademicSession == null) {
-			this.acceptedSolution = this.solutionCreator.CreateNewSolution();
+			this.acceptedSolution = new Solution();
 		} else {
 			this.acceptedSolution = this.viewedAcademicSession.getAcceptedSolution();
 		}
@@ -265,9 +262,9 @@ public class TimetableCard extends JPanel {
 
 		// Create a list with unassigned classes
 		List<Class> uClasses;
-		if(this.acceptedSolution != null){
+		if (this.acceptedSolution != null) {
 			uClasses = this.acceptedSolution.GetUnassignedClasses();
-		}else{
+		} else {
 			uClasses = new ArrayList<Class>();
 		}
 		JComponent uScrollPane = CreateScrollableListOfClasses(uClasses, backGroundColor,
@@ -275,9 +272,9 @@ public class TimetableCard extends JPanel {
 
 		// Create a list with assigned classes
 		List<Class> aClasses;
-		if(this.acceptedSolution != null){
+		if (this.acceptedSolution != null) {
 			aClasses = this.acceptedSolution.GetAssignedClasses();
-		}else{
+		} else {
 			aClasses = new ArrayList<Class>();
 		}
 		JComponent aScrollPane = CreateScrollableListOfClasses(aClasses, backGroundColor,
@@ -315,13 +312,15 @@ public class TimetableCard extends JPanel {
 	private JComponent CreateScrollableListOfClasses(Collection<Class> classes, Color bgColor, String borderText) {
 		DefaultListModel<String> classListModel = new DefaultListModel<String>();
 		for (Class oneClass : classes) {
-			String className = oneClass.getOffering().getName();
-			int nrOfRemovals = acceptedSolution.getNrOfRemovals(oneClass.getId());
-			classListModel.addElement(className + "(" + nrOfRemovals + ")");
+			if (oneClass != null) {
+				String className = oneClass.getOffering().getName();
+				int nrOfRemovals = acceptedSolution.GetNrOfRemovals(oneClass.getId());
+				classListModel.addElement(className + "(" + nrOfRemovals + ")");
+			}
 		}
 		JList<String> jListClasses = new JList<String>(classListModel);
 		jListClasses.setVisibleRowCount(10);
-		jListClasses.setFixedCellWidth(10);
+		jListClasses.setFixedCellWidth(15);
 		JScrollPane scrollPane = new JScrollPane(jListClasses);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -421,8 +420,7 @@ public class TimetableCard extends JPanel {
 
 	private void ShowCardByName() {
 		String departmentName = getSelectedButtonText(this.departmentsButtonGroup);
-		String yearOfStudy = String.format("%s_%s", getSelectedButtonText(this.yearsOfStudyButtonGroup),
-				departmentName);
+		String yearOfStudy = getSelectedButtonText(this.yearsOfStudyButtonGroup);
 		int dayIndex = DayOfTheWeek.valueOf(getSelectedButtonText(daysOfTheWeekButtonGroup)).ordinal();
 		String nameOfTheCardToShow = GetCardName(departmentName, yearOfStudy, dayIndex);
 		this.cardLayout.show(cardsPanel, nameOfTheCardToShow);

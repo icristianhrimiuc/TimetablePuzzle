@@ -23,47 +23,49 @@ public class Solution {
 	@Column(name = "name")
 	private String name;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyColumn(name = "room_id")
 	@Column(name = "roomassignments")
 	@CollectionTable(name = "solution_roomassignments", joinColumns = @JoinColumn(name = "solution_id"))
 	private Map<Integer, String> roomsAssignments;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyColumn(name = "instructor_id")
 	@Column(name = "instructorassignments")
 	@CollectionTable(name = "solution_instructorassignments", joinColumns = @JoinColumn(name = "solution_id"))
 	private Map<Integer, String> instructorsAssignments;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyColumn(name = "studentgroup_id")
 	@Column(name = "studentgroupassignments")
 	@CollectionTable(name = "solution_studentgroupassignments", joinColumns = @JoinColumn(name = "solution_id"))
 	private Map<Integer, String> studentGroupssAssignments;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyColumn(name = "class_id")
 	@Column(name = "dayAndTimeSlot")
 	@CollectionTable(name = "solution_assignedClasses", joinColumns = @JoinColumn(name = "solution_id"))
 	private Map<Integer, Integer> assignedDayAndTimeSlot;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyColumn(name = "class_id")
 	@Column(name = "nrofremovals")
 	@CollectionTable(name = "solution_nrofremovals", joinColumns = @JoinColumn(name = "solution_id"))
 	private Map<Integer, Integer> nrOfRemovals;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyColumn(name = "class_id")
 	@Column(name = "isFixed")
 	@CollectionTable(name = "solution_fixedClasses", joinColumns = @JoinColumn(name = "solution_id"))
 	private Map<Integer, Boolean> fixedClasses;
 
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, targetEntity = Class.class)
-	@JoinTable(name = "solution_classes", joinColumns = @JoinColumn(name = "solution_id"), inverseJoinColumns = @JoinColumn(name = "class_id"))
+	@OneToMany(fetch = FetchType.EAGER,cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, targetEntity = Class.class)
+	@JoinTable(name = "solution_listofclasses", joinColumns = @JoinColumn(name = "solution_id"), inverseJoinColumns = @JoinColumn(name = "class_id"))
 	private List<Class> listOfClasses;
 
-	@Transient
+	@OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="solution_classes", joinColumns=@JoinColumn(name="solution_id"))
+	@MapKeyColumn(name="class_id", table="solution_classes")
 	private Map<Integer, Class> classes;
 
 	public Solution() {
@@ -73,27 +75,14 @@ public class Solution {
 	public Solution(int id, String name, List<Class> classes) {
 		this.id = id;
 		this.name = name;
-		this.listOfClasses = classes;
-		this.classes = ConvertListToMapById(classes);
-		
-		this.roomsAssignments = new HashMap<Integer,String>();
-		this.instructorsAssignments = new HashMap<Integer,String>();
-		this.studentGroupssAssignments = new HashMap<Integer,String>();
-		this.assignedDayAndTimeSlot = new HashMap<Integer,Integer>();
-		this.nrOfRemovals = new HashMap<Integer,Integer>();
-		this.fixedClasses = new HashMap<Integer,Boolean>();
-	}
+		setListOfClasses(classes);
 
-	private Map<Integer, Class> ConvertListToMapById(List<Class> listOfClasses) {
-		Map<Integer, Class> classes = new HashMap<Integer, Class>();
-		for (Class aClass : listOfClasses) {
-			int aClassId = aClass.getId();
-			if (!classes.containsKey(aClassId)) {
-				classes.put(aClassId, aClass);
-			}
-		}
-
-		return classes;
+		this.roomsAssignments = new HashMap<Integer, String>();
+		this.instructorsAssignments = new HashMap<Integer, String>();
+		this.studentGroupssAssignments = new HashMap<Integer, String>();
+		this.assignedDayAndTimeSlot = new HashMap<Integer, Integer>();
+		this.nrOfRemovals = new HashMap<Integer, Integer>();
+		this.fixedClasses = new HashMap<Integer, Boolean>();
 	}
 
 	/*********************** Getter and Setter ********************/
@@ -109,8 +98,75 @@ public class Solution {
 		this.name = name;
 	}
 
-	public int getNrOfRemovals(Integer classId) {
-		return this.nrOfRemovals.get(classId);
+	public Map<Integer, String> getRoomsAssignments() {
+		return roomsAssignments;
+	}
+
+	public void setRoomsAssignments(Map<Integer, String> roomsAssignments) {
+		this.roomsAssignments = roomsAssignments;
+	}
+
+	public Map<Integer, String> getInstructorsAssignments() {
+		return instructorsAssignments;
+	}
+
+	public void setInstructorsAssignments(Map<Integer, String> instructorsAssignments) {
+		this.instructorsAssignments = instructorsAssignments;
+	}
+
+	public Map<Integer, String> getStudentGroupssAssignments() {
+		return studentGroupssAssignments;
+	}
+
+	public void setStudentGroupssAssignments(Map<Integer, String> studentGroupssAssignments) {
+		this.studentGroupssAssignments = studentGroupssAssignments;
+	}
+
+	public Map<Integer, Integer> getAssignedDayAndTimeSlot() {
+		return assignedDayAndTimeSlot;
+	}
+
+	public void setAssignedDayAndTimeSlot(Map<Integer, Integer> assignedDayAndTimeSlot) {
+		this.assignedDayAndTimeSlot = assignedDayAndTimeSlot;
+	}
+
+	public Map<Integer, Integer> getNrOfRemovals() {
+		return nrOfRemovals;
+	}
+
+	public void setNrOfRemovals(Map<Integer, Integer> nrOfRemovals) {
+		this.nrOfRemovals = nrOfRemovals;
+	}
+
+	public Map<Integer, Boolean> getFixedClasses() {
+		return fixedClasses;
+	}
+
+	public void setFixedClasses(Map<Integer, Boolean> fixedClasses) {
+		this.fixedClasses = fixedClasses;
+	}
+
+	public List<Class> getListOfClasses() {
+		return listOfClasses;
+	}
+
+	public void setListOfClasses(List<Class> listOfClasses) {
+		this.listOfClasses = listOfClasses;
+		this.classes = ConvertListToMapById(listOfClasses);
+	}
+
+	private Map<Integer, Class> ConvertListToMapById(List<Class> listOfClasses) {
+		Map<Integer, Class> classes = new HashMap<Integer, Class>();
+		if (listOfClasses != null) {
+			for (Class aClass : listOfClasses) {
+				int aClassId = aClass.getId();
+				if (!classes.containsKey(aClassId)) {
+					classes.put(aClassId, aClass);
+				}
+			}
+		}
+
+		return classes;
 	}
 
 	/***********************
@@ -146,13 +202,13 @@ public class Solution {
 				&& TimeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot)) {
 			String[] weekAssignments = GetRoomAssignments(roomId);
 			weekAssignments[dayAndTimeSlot] = Integer.toString(classId);
-			this.roomsAssignments.replace(roomId, TimeslotPattern.ConvertToStringAssignments(weekAssignments));
+			this.roomsAssignments.put(roomId, TimeslotPattern.ConvertToStringAssignments(weekAssignments));
 		}
 	}
 
 	public void AssignWeekToRoom(int roomId, String weekAssignments) {
-		if (IsRoomInSolution(roomId) && TimeslotPattern.IsValidWeek(weekAssignments)) {
-			this.roomsAssignments.replace(roomId, weekAssignments);
+		if (TimeslotPattern.IsValidWeek(weekAssignments)) {
+			this.roomsAssignments.put(roomId, weekAssignments);
 		}
 	}
 
@@ -190,14 +246,13 @@ public class Solution {
 				&& TimeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot)) {
 			String[] weekAssignments = GetInstructorAssignments(instructorId);
 			weekAssignments[dayAndTimeSlot] = Integer.toString(classId);
-			this.instructorsAssignments.replace(instructorId,
-					TimeslotPattern.ConvertToStringAssignments(weekAssignments));
+			this.instructorsAssignments.put(instructorId, TimeslotPattern.ConvertToStringAssignments(weekAssignments));
 		}
 	}
 
 	public void AssignWeekToInstructor(int instructorId, String weekAssignments) {
-		if (IsInstructorInSolution(instructorId) && TimeslotPattern.IsValidWeek(weekAssignments)) {
-			this.instructorsAssignments.replace(instructorId, weekAssignments);
+		if (TimeslotPattern.IsValidWeek(weekAssignments)) {
+			this.instructorsAssignments.put(instructorId, weekAssignments);
 		}
 	}
 
@@ -234,14 +289,14 @@ public class Solution {
 				&& TimeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot)) {
 			String[] weekAssignments = GetStudentGroupAssignments(studentGroupId);
 			weekAssignments[dayAndTimeSlot] = Integer.toString(classId);
-			this.studentGroupssAssignments.replace(studentGroupId,
+			this.studentGroupssAssignments.put(studentGroupId,
 					TimeslotPattern.ConvertToStringAssignments(weekAssignments));
 		}
 	}
 
 	public void AssignWeekToStudentGroup(int studentGroupId, String weekAssignments) {
-		if (IsStudentGroupInSolution(studentGroupId) && TimeslotPattern.IsValidWeek(weekAssignments)) {
-			this.studentGroupssAssignments.replace(studentGroupId, weekAssignments);
+		if (TimeslotPattern.IsValidWeek(weekAssignments)) {
+			this.studentGroupssAssignments.put(studentGroupId, weekAssignments);
 		}
 	}
 
@@ -260,7 +315,7 @@ public class Solution {
 
 	public void SetAssignedDayAndTimeSlot(int classId, int dayAndTimeSlot) {
 		if (IsClassInSolution(classId) && TimeslotPattern.IsValidDayAndTimeSlot(dayAndTimeSlot)) {
-			this.assignedDayAndTimeSlot.replace(classId, dayAndTimeSlot);
+			this.assignedDayAndTimeSlot.put(classId, dayAndTimeSlot);
 		}
 	}
 
@@ -273,7 +328,7 @@ public class Solution {
 
 		if (this.assignedDayAndTimeSlot != null) {
 			for (Integer classId : this.assignedDayAndTimeSlot.keySet()) {
-				if (this.assignedDayAndTimeSlot.get(classId) != TimeslotPattern.FreeTimeSlot) {
+				if (this.assignedDayAndTimeSlot.get(classId) != TimeslotPattern.UnassignedTimeSlot) {
 					assignedClasses.add(this.classes.get(classId));
 				}
 			}
@@ -286,7 +341,7 @@ public class Solution {
 		List<Class> unassignedClasses = new ArrayList<Class>();
 		if (this.assignedDayAndTimeSlot != null) {
 			for (Integer classId : this.assignedDayAndTimeSlot.keySet()) {
-				if (this.assignedDayAndTimeSlot.get(classId) == TimeslotPattern.FreeTimeSlot) {
+				if (this.assignedDayAndTimeSlot.get(classId) == TimeslotPattern.UnassignedTimeSlot) {
 					unassignedClasses.add(this.classes.get(classId));
 				}
 			}
@@ -308,13 +363,13 @@ public class Solution {
 		if (IsClassInSolution(classId)) {
 			int nrOfRemovals = GetNrOfRemovals(classId);
 			nrOfRemovals++;
-			this.nrOfRemovals.replace(classId, nrOfRemovals);
+			this.nrOfRemovals.put(classId, nrOfRemovals);
 		}
 	}
 
 	public void ResetNrOfRemovals(int classId) {
 		if (IsClassInSolution(classId)) {
-			this.nrOfRemovals.replace(classId, 0);
+			this.nrOfRemovals.put(classId, 0);
 		}
 	}
 
@@ -329,6 +384,12 @@ public class Solution {
 		}
 
 		return false;
+	}
+
+	public void SetClassFixed(int classId, boolean fixed) {
+		if (IsClassInSolution(classId)) {
+			this.fixedClasses.put(classId, fixed);
+		}
 	}
 
 	public boolean IsRoomClassFixed(int roomId, int dayAndTimeSlot) {

@@ -324,7 +324,8 @@ public class MainWindow implements ActionListener {
 							this.viewedAcademicYear.getName(), this.viewedAcademicSession.getName());
 					List<Class> classes = this.viewedFaculty.getClasses(term, parentStudentGroup);
 					SolutionCreator solutionCreator = new SolutionCreator(solutionName, classes);
-					this.viewedAcademicSession.setAcceptedSolution(solutionCreator.CreateNewSolution());
+					this.acceptedSolution  = solutionCreator.CreateNewSolution();
+					this.viewedAcademicSession.setAcceptedSolution(this.acceptedSolution);
 					academicSessionDAO.merge(this.viewedAcademicSession);
 				}
 			}

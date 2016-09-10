@@ -58,9 +58,9 @@ public class ClassesCard extends JPanel {
 
 	public ClassesCard(Color backgroundColor, Solution acceptedSolution, boolean assigned) {
 		this.setBackground(backgroundColor);
-		if(acceptedSolution != null){
+		if (acceptedSolution != null) {
 			this.acceptedSolutionId = acceptedSolution.getId();
-		}else{
+		} else {
 			this.acceptedSolutionId = 0;
 		}
 		this.assigned = assigned;
@@ -97,12 +97,13 @@ public class ClassesCard extends JPanel {
 
 	private void RefreshTable() {
 		Solution solution = solutionDAO.findById(this.acceptedSolutionId);
-		if(solution != null){
-		if (this.assigned) {
-			this.classesTableModel.setData(solution.GetAssignedClasses());
+		if (solution != null) {
+			if (this.assigned) {
+				this.classesTableModel.setData(solution.GetAssignedClasses());
+			} else {
+				this.classesTableModel.setData(solution.GetUnassignedClasses());
+			}
 		} else {
-			this.classesTableModel.setData(solution.GetUnassignedClasses());
-		}}else{
 			this.classesTableModel.setData(new ArrayList<Class>());
 		}
 	}
@@ -211,17 +212,22 @@ public class ClassesCard extends JPanel {
 			LOGGER.log(Level.WARNING, "An attempt was made to edit a class while no row was selected.");
 		} else {
 			Class existingClass = this.classesTableModel.elementAt(selecteRow);
-			this.textFieldCourseTitle.setText(existingClass.getCourseTitle());
-			this.textFieldCourseAbbreviation.setText(existingClass.getCourseAbbreviation());
-			this.textFieldDepartmentName.setText(existingClass.getDepartmentName());
-			this.textFieldCollegeYear.setText(existingClass.getCollegeYear().toString());
-			this.textFieldSubjectAreaName.setText(existingClass.getSubjectAreaName());
-			this.textFieldTerm.setText(existingClass.getTerm().toString());
-			this.textFieldOffering.setText(existingClass.getOffering().toString());
-			this.textFieldAssignedRoom.setText(existingClass.getAssignedRoom().toString());
-			this.textFieldAssignedInstructor.setText(existingClass.getAssignedInstructor().toString());
-			this.textFieldAssignedParentStudentGroup.setText(existingClass.getAssignedParentStudentGroup().toString());
-			this.notificationLabel.setText("  ");
+			if (existingClass != null) {
+				this.textFieldCourseTitle.setText(existingClass.getCourseTitle());
+				this.textFieldCourseAbbreviation.setText(existingClass.getCourseAbbreviation());
+				this.textFieldDepartmentName.setText(existingClass.getDepartmentName());
+				this.textFieldCollegeYear.setText(existingClass.getCollegeYear().toString());
+				this.textFieldSubjectAreaName.setText(existingClass.getSubjectAreaName());
+				this.textFieldTerm.setText(existingClass.getTerm().toString());
+				this.textFieldOffering.setText(existingClass.getOffering().toString());
+				this.textFieldAssignedRoom.setText(existingClass.getAssignedRoom().toString());
+				this.textFieldAssignedInstructor.setText(existingClass.getAssignedInstructor().toString());
+				this.textFieldAssignedParentStudentGroup
+						.setText(existingClass.getAssignedParentStudentGroup().toString());
+				this.notificationLabel.setText("  ");
+			}else{
+				RefreshAllFields();
+			}
 		}
 	}
 
@@ -238,6 +244,7 @@ public class ClassesCard extends JPanel {
 		this.textFieldAssignedParentStudentGroup.setText("");
 		this.notificationLabel.setText("  ");
 		RefreshTable();
+		this.repaint();
 	}
 
 	private JPanel CreateAdjustmentPanel(JPanel componentPanel) {
@@ -262,13 +269,12 @@ public class ClassesCard extends JPanel {
 		this.classesTable.setFillsViewportHeight(true);
 		JScrollPane scrollPane = new JScrollPane(this.classesTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		//this.classesTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		// this.classesTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 		viewAllClassesPanel.add(scrollPane);
 
 		return viewAllClassesPanel;
 	}
-	
 
 	private TitledBorder CreateRaisedBevelTitledBorder(String title) {
 		Border raisedBevelBorder = BorderFactory.createRaisedBevelBorder();
@@ -277,12 +283,11 @@ public class ClassesCard extends JPanel {
 
 		return raisedBevelTitledBorder;
 	}
-	
-	public void setNewSolution(Solution newSolution){
-		if(newSolution != null)
-		{
+
+	public void setNewSolution(Solution newSolution) {
+		if (newSolution != null) {
 			this.acceptedSolutionId = newSolution.getId();
-		}else{
+		} else {
 			this.acceptedSolutionId = 0;
 		}
 		RefreshAllFields();
