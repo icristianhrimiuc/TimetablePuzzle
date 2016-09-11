@@ -2,13 +2,26 @@ package timetablepuzzle.usecases.solution;
 
 import java.util.List;
 
+import timetablepuzzle.eclipselink.DAO.JPA.services.SolutionJPADAOService;
+import timetablepuzzle.eclipselink.DAO.interfaces.SolutionDAO;
 import timetablepuzzle.entities.Class;
 import timetablepuzzle.entities.Solution;
 
 public class SolutionAssignManager {
 	public static enum Message {
-		CLASS_NOT_FOUND, UNASSIGNED, ASIGGN_SUCCESSFULL, ROOM_IS_UNAVAILABLE, INSTRUCTOR_IS_UNAVAILABLE, STUDENTGROUP_IS_UNAVAILABLE
+		CLASS_NOT_FOUND, UNASSIGNED, ASIGGN_SUCCESSFULL, ROOM_IS_UNAVAILABLE, INSTRUCTOR_IS_UNAVAILABLE, STUDENTGROUP_IS_UNAVAILABLE;
+
+		@Override
+		public String toString() {
+			String name = this.name();
+			name = name.replace('_', ' ');
+			name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+			return name;
+		}
 	};
+	
+	private static final SolutionDAO solutionDAO = new SolutionJPADAOService();
 	
 	private Solution solution;
 	
@@ -66,7 +79,9 @@ public class SolutionAssignManager {
 			solution.SetAssignedDayAndTimeSlot(classId, dayAndTimeSlot);
 			status = Message.ASIGGN_SUCCESSFULL;
 		}
-
+		
+		solutionDAO.merge(solution);
+		
 		return status;
 	}
 }

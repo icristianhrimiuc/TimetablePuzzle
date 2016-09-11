@@ -7,21 +7,23 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JComponent;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -35,6 +37,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.sun.xml.internal.ws.util.StringUtils;
 
+import timetablepuzzle.eclipselink.DAO.JPA.services.SolutionJPADAOService;
+import timetablepuzzle.eclipselink.DAO.interfaces.SolutionDAO;
 import timetablepuzzle.entities.Class;
 import timetablepuzzle.entities.Solution;
 import timetablepuzzle.entities.administration.AcademicSession;
@@ -45,6 +49,9 @@ import timetablepuzzle.entities.administration.YearOfStudy;
 import timetablepuzzle.entities.inputdata.StudentGroup;
 import timetablepuzzle.entities.other.TimePreferences;
 import timetablepuzzle.entities.other.TimePreferences.DayOfTheWeek;
+import timetablepuzzle.swing.windows.cards.common.CustomComboBoxModel;
+import timetablepuzzle.usecases.solution.SolutionAssignManager;
+import timetablepuzzle.usecases.solution.SolutionUnassignManager;
 import timetablepuzzle.usecases.solution.TimeslotPattern;
 
 public class TimetableCard extends JPanel {
@@ -52,6 +59,8 @@ public class TimetableCard extends JPanel {
 	 * Generated field
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static final SolutionDAO solutionDAO = new SolutionJPADAOService();
 
 	private Color backGroundColor;
 	private Faculty viewedFaculty;
@@ -68,11 +77,24 @@ public class TimetableCard extends JPanel {
 	private ButtonGroup departmentsButtonGroup;
 	private ButtonGroup yearsOfStudyButtonGroup;
 	private ButtonGroup daysOfTheWeekButtonGroup;
+	// Controls
+	private SolutionAssignManager assignManager;
+	private SolutionUnassignManager unassignManager;
+	private DefaultListModel<Class> assignedClassesListModel;
+	private JList<Class> assigneClassesList;
+	private DefaultListModel<Class> unassignedClassesListModel;
+	private JList<Class> unassigneClassesList;
+	private CustomComboBoxModel<DayOfTheWeek> comboBoxDayOfTheWeekModel;
+	private JComboBox<DayOfTheWeek> comboboxDayOfTheWeek;
+	private CustomComboBoxModel<String> comboBoxTimeOfDayModel;
+	private JComboBox<String> comboboxTimeOfDay;
+	private JLabel notificationLabel;
 
 	public TimetableCard(Color backGroundColor, Faculty viewedFaculty, AcademicYear viewedAcademicYear,
 			AcademicSession viewedAcademicSession) {
 		this.backGroundColor = backGroundColor;
 		this.setBackground(this.backGroundColor);
+
 		setData(viewedFaculty, viewedAcademicYear, viewedAcademicSession);
 	}
 
@@ -84,6 +106,11 @@ public class TimetableCard extends JPanel {
 		setViewedAcademicYear(viewedAcademicYear);
 		setViewedAcademicSession(viewedAcademicSession);
 		CreateTimetableCardPanel();
+
+		// Managers
+		this.assignManager = new SolutionAssignManager(this.acceptedSolution);
+		this.unassignManager = new SolutionUnassignManager(this.acceptedSolution);
+
 		this.repaint();
 	}
 
@@ -116,6 +143,13 @@ public class TimetableCard extends JPanel {
 			this.acceptedSolution = this.viewedAcademicSession.getAcceptedSolution();
 		}
 	}
+	
+	private void RefreshSolution(){
+		Solution solution = solutionDAO.findById(this.acceptedSolution.getId());
+		if(solution != null){
+			this.acceptedSolution = solution;
+		}
+	}
 
 	/********************
 	 * Methods that model the class behavior
@@ -123,6 +157,35 @@ public class TimetableCard extends JPanel {
 	public JPanel CreateTimetableCardPanel() {
 		this.setBackground(backGroundColor);
 		this.setLayout(new BorderLayout());
+
+		// List of assigned classes
+		this.unassignedClassesListModel = new DefaultListModel<Class>();
+		RefreshUnassignedClassesList();
+		this.unassigneClassesList = new JList<Class>(this.unassignedClassesListModel);
+		this.unassigneClassesList.setVisibleRowCount(15);
+		this.unassigneClassesList.setFixedCellWidth(15);
+
+		// Day of the week combo box
+		this.comboBoxDayOfTheWeekModel = new CustomComboBoxModel<DayOfTheWeek>();
+		RefreshComboBoxDayOfTheWeek();
+		this.comboboxDayOfTheWeek = new JComboBox<DayOfTheWeek>(this.comboBoxDayOfTheWeekModel);
+
+		// Time of day combo box
+		this.comboBoxTimeOfDayModel = new CustomComboBoxModel<String>();
+		RefreshComboBoxTimeOfDay();
+		this.comboboxTimeOfDay = new JComboBox<String>(this.comboBoxTimeOfDayModel);
+
+		// List of assigned classes
+		this.assignedClassesListModel = new DefaultListModel<Class>();
+		RefreshAssignedClassesList();
+		this.assigneClassesList = new JList<Class>(this.assignedClassesListModel);
+		this.assigneClassesList.setVisibleRowCount(15);
+		this.assigneClassesList.setFixedCellWidth(15);
+
+		// Notification label
+		this.notificationLabel = new JLabel("  ");
+		this.notificationLabel.setForeground(Color.RED);
+		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
 
 		// Create the west panel.It will contain a radio button for each
 		// department in the faculty
@@ -147,6 +210,60 @@ public class TimetableCard extends JPanel {
 		this.add(centerPanel, BorderLayout.CENTER);
 
 		return this;
+	}
+
+	private void RefreshUnassignedClassesList() {
+		// Create a list with unassigned classes
+		List<Class> unassignedClasses;
+		if (this.acceptedSolution != null) {
+			unassignedClasses = this.acceptedSolution.GetUnassignedClasses();
+		} else {
+			unassignedClasses = new ArrayList<Class>();
+		}
+		this.unassignedClassesListModel.clear();
+		for (Class oneClass : unassignedClasses) {
+			if (oneClass != null) {
+				this.unassignedClassesListModel.addElement(oneClass);
+			}
+		}
+		this.repaint();
+	}
+
+	private void RefreshComboBoxDayOfTheWeek() {
+		List<DayOfTheWeek> daysOfTheWeek = new ArrayList<DayOfTheWeek>();
+		daysOfTheWeek.add(DayOfTheWeek.MONDAY);
+		daysOfTheWeek.add(DayOfTheWeek.TUESDAY);
+		daysOfTheWeek.add(DayOfTheWeek.WEDNESDAY);
+		daysOfTheWeek.add(DayOfTheWeek.THURSDAY);
+		daysOfTheWeek.add(DayOfTheWeek.FRIDAY);
+		this.comboBoxDayOfTheWeekModel.setData(daysOfTheWeek);
+		this.repaint();
+	}
+
+	private void RefreshComboBoxTimeOfDay() {
+		List<String> timesOfDay = new ArrayList<String>();
+		for (int i = 0; i < TimeslotPattern.NrOfTimeSlotsPerDay; i++) {
+			timesOfDay.add(Integer.toString(i + 8));
+		}
+		this.comboBoxTimeOfDayModel.setData(timesOfDay);
+		this.repaint();
+	}
+
+	private void RefreshAssignedClassesList() {
+		// Create a list with unassigned classes
+		List<Class> aClasses;
+		if (this.acceptedSolution != null) {
+			aClasses = this.acceptedSolution.GetAssignedClasses();
+		} else {
+			aClasses = new ArrayList<Class>();
+		}
+		this.assignedClassesListModel.clear();
+		for (Class oneClass : aClasses) {
+			if (oneClass != null) {
+				this.assignedClassesListModel.addElement(oneClass);
+			}
+		}
+		this.repaint();
 	}
 
 	private JPanel CreateWestPanel() {
@@ -260,71 +377,30 @@ public class TimetableCard extends JPanel {
 		eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
 		eastPanel.setBackground(this.backGroundColor);
 
-		// Create a list with unassigned classes
-		List<Class> uClasses;
-		if (this.acceptedSolution != null) {
-			uClasses = this.acceptedSolution.GetUnassignedClasses();
-		} else {
-			uClasses = new ArrayList<Class>();
-		}
-		JComponent uScrollPane = CreateScrollableListOfClasses(uClasses, backGroundColor,
-				" Unassigned classes: " + uClasses.size() + " ");
+		JPanel uScrollPane = CreateScrollableListOfClassesPanel(this.unassigneClassesList, backGroundColor,
+				" Unassigned classes: " + this.unassignedClassesListModel.size() + " ");
+		uScrollPane.add(this.notificationLabel);
+		uScrollPane.add(CreateAssignClassInSolutionPanel());
 
-		// Create a list with assigned classes
-		List<Class> aClasses;
-		if (this.acceptedSolution != null) {
-			aClasses = this.acceptedSolution.GetAssignedClasses();
-		} else {
-			aClasses = new ArrayList<Class>();
-		}
-		JComponent aScrollPane = CreateScrollableListOfClasses(aClasses, backGroundColor,
-				" Assigned classes: " + aClasses.size() + " ");
-
-		// Create a panel for the solver controls
-		JPanel solverControls = new JPanel();
-		solverControls.setLayout(new BoxLayout(solverControls, BoxLayout.X_AXIS));
-		solverControls.setBackground(backGroundColor);
-		solverControls.setBorder(CreateEmptyTitleBorder("Solver controls"));
-		solverControls.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
-
-		// Text field for the number of steps
-		JTextField jtfNrOfSteps = new JTextField();
-		jtfNrOfSteps.setText("Steps");
-		jtfNrOfSteps.setForeground(Color.GRAY);
-
-		// Solver buttons
-		JButton jbDoSteps = new JButton("Step");
-		JButton jbRun = new JButton("Run");
-
-		// Add controls to panel
-		solverControls.add(jtfNrOfSteps);
-		solverControls.add(jbDoSteps);
-		solverControls.add(jbRun);
+		JPanel aScrollPane = CreateScrollableListOfClassesPanel(this.assigneClassesList, backGroundColor,
+				" Assigned classes: " + this.assignedClassesListModel.size() + " ");
+		aScrollPane.add(CreateUnAssignClassInSolutionPanel());
 
 		// Add components to the east panel
-		eastPanel.add(solverControls);
+		eastPanel.add(CreateSolverControlsPanel());
 		eastPanel.add(uScrollPane);
+		eastPanel.add(Box.createRigidArea(new Dimension(10, 5)));
 		eastPanel.add(aScrollPane);
 
 		return eastPanel;
 	}
 
-	private JComponent CreateScrollableListOfClasses(Collection<Class> classes, Color bgColor, String borderText) {
-		DefaultListModel<String> classListModel = new DefaultListModel<String>();
-		for (Class oneClass : classes) {
-			if (oneClass != null) {
-				String className = oneClass.getOffering().getName();
-				int nrOfRemovals = acceptedSolution.GetNrOfRemovals(oneClass.getId());
-				classListModel.addElement(className + "(" + nrOfRemovals + ")");
-			}
-		}
-		JList<String> jListClasses = new JList<String>(classListModel);
-		jListClasses.setVisibleRowCount(10);
-		jListClasses.setFixedCellWidth(15);
-		JScrollPane scrollPane = new JScrollPane(jListClasses);
+	private JPanel CreateScrollableListOfClassesPanel(JList<Class> listOfClasses, Color bgColor, String borderText) {
+		JScrollPane scrollPane = new JScrollPane(listOfClasses);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-		JPanel wrapperPanel = new JPanel(new BorderLayout());
+		JPanel wrapperPanel = new JPanel();
+		wrapperPanel.setLayout(new BoxLayout(wrapperPanel, BoxLayout.Y_AXIS));
 		wrapperPanel.add(scrollPane);
 		wrapperPanel.setBackground(bgColor);
 		wrapperPanel.setBorder(CreateEmptyTitleBorder(borderText));
@@ -338,6 +414,111 @@ public class TimetableCard extends JPanel {
 		emptyTitleBorder.setTitlePosition(TitledBorder.TOP);
 
 		return emptyTitleBorder;
+	}
+
+	private JPanel CreateSolverControlsPanel() {
+		JPanel solverControlsPanel = new JPanel();
+		solverControlsPanel.setLayout(new BoxLayout(solverControlsPanel, BoxLayout.X_AXIS));
+		solverControlsPanel.setBackground(backGroundColor);
+		solverControlsPanel.setBorder(CreateEmptyTitleBorder("Solver controls"));
+		solverControlsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+
+		// Text field for the number of steps
+		JTextField jtfNrOfSteps = new JTextField();
+		jtfNrOfSteps.setText("Steps");
+		jtfNrOfSteps.setForeground(Color.GRAY);
+
+		// Solver buttons
+		JButton jbDoSteps = new JButton("Step");
+		JButton jbRun = new JButton("Run");
+
+		// Add controls to panel
+		solverControlsPanel.add(jtfNrOfSteps);
+		solverControlsPanel.add(jbDoSteps);
+		solverControlsPanel.add(jbRun);
+
+		return solverControlsPanel;
+	}
+
+	private JPanel CreateAssignClassInSolutionPanel() {
+		JButton assignButton = new JButton("Assign");
+		assignButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AssignClassInSolution();
+			}
+		});
+
+		JPanel assignClassInSolutionPanel = new JPanel();
+		assignClassInSolutionPanel.setLayout(new BoxLayout(assignClassInSolutionPanel, BoxLayout.X_AXIS));
+		assignClassInSolutionPanel.add(this.comboboxDayOfTheWeek);
+		assignClassInSolutionPanel.add(this.comboboxTimeOfDay);
+		assignClassInSolutionPanel.add(assignButton);
+
+		return assignClassInSolutionPanel;
+	}
+
+	private void AssignClassInSolution() {
+		DayOfTheWeek dayOfTheWeek = (DayOfTheWeek) this.comboboxDayOfTheWeek.getSelectedItem();
+		String timeOfDay = (String) this.comboboxTimeOfDay.getSelectedItem();
+		Class uClass = (Class) this.unassigneClassesList.getSelectedValue();
+		if (dayOfTheWeek != null && timeOfDay != null && uClass != null) {
+			int dayAndTimeSlot = (dayOfTheWeek.ordinal() * TimeslotPattern.NrOfTimeSlotsPerDay)
+					+ (Integer.parseInt(timeOfDay) - 8);
+			String status = this.assignManager.Assign(uClass, dayAndTimeSlot).toString();
+			this.notificationLabel.setText(status);
+			RefreshSolution();
+			RefreshAssignedClassesList();
+			RefreshUnassignedClassesList();
+		}else{
+			this.notificationLabel.setText("Select a class,a day and a time");
+		}
+	}
+
+	private JPanel CreateUnAssignClassInSolutionPanel() {
+		JPanel unassignClassInSolutionPanel = new JPanel();
+		unassignClassInSolutionPanel.setLayout(new BoxLayout(unassignClassInSolutionPanel, BoxLayout.X_AXIS));
+
+		JButton unassignClassButton = new JButton("Unassign Class");
+		unassignClassButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				UnassignClassInSolution();
+			}
+		});
+
+		JButton setClassFixedButton = new JButton("Fix class");
+		setClassFixedButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SetClassFixed();
+			}
+		});
+		
+		unassignClassInSolutionPanel.add(unassignClassButton);
+		unassignClassInSolutionPanel.add(setClassFixedButton);
+
+		return unassignClassInSolutionPanel;
+	}
+
+	private void UnassignClassInSolution() {
+		Class aClass = (Class) this.assigneClassesList.getSelectedValue();
+		if (aClass != null) {
+			this.unassignManager.Unassign(aClass);
+			RefreshSolution();
+			RefreshAssignedClassesList();
+			RefreshUnassignedClassesList();
+		}
+	}
+
+	private void SetClassFixed() {
+		Class aClass = (Class) this.assigneClassesList.getSelectedValue();
+		if (aClass != null) {
+			acceptedSolution.SetClassFixed(aClass.getId(), true);
+		}
 	}
 
 	private JPanel CreateCenterPanel() {

@@ -174,7 +174,7 @@ public class Solution {
 	 ********************/
 	/************* Room assignment methods **************/
 	public boolean IsRoomFree(int roomId, int dayAndTimeSlot) {
-		return GetRoomAssignment(roomId, dayAndTimeSlot) == TimeslotPattern.FreeTimeSlot;
+		return GetRoomAssignment(roomId, dayAndTimeSlot) == TimeslotPattern.UnassignedTimeSlot;
 	}
 
 	public int GetRoomAssignment(int roomId, int dayAndTimeSlot) {
@@ -218,7 +218,7 @@ public class Solution {
 
 	/************* Instructor assignment methods **************/
 	public boolean IsInstructorFree(int instructorId, int dayAndTimeSlot) {
-		return GetInstructorAssignment(instructorId, dayAndTimeSlot) == TimeslotPattern.FreeTimeSlot;
+		return GetInstructorAssignment(instructorId, dayAndTimeSlot) == TimeslotPattern.UnassignedTimeSlot;
 	}
 
 	public int GetInstructorAssignment(int instructorId, int dayAndTimeSlot) {
@@ -262,7 +262,7 @@ public class Solution {
 
 	/************* StudentGroup assignment methods **************/
 	public boolean IsStudentGroupFree(int studentGroupId, int dayAndTimeSlot) {
-		return GetStudentGroupAssignment(studentGroupId, dayAndTimeSlot) == TimeslotPattern.FreeTimeSlot;
+		return GetStudentGroupAssignment(studentGroupId, dayAndTimeSlot) == TimeslotPattern.UnassignedTimeSlot;
 	}
 
 	public int GetStudentGroupAssignment(int studentGroupId, int dayAndTimeSlot) {

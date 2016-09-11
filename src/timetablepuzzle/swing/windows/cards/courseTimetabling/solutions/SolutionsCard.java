@@ -72,7 +72,7 @@ public class SolutionsCard extends JPanel {
 		this.notificationLabel.setForeground(Color.RED);
 		this.notificationLabel.setAlignmentX(CENTER_ALIGNMENT);
 
-		// Instructor Meetings list
+		// List of classes
 		this.listOfClassesModel = new DefaultListModel<Class>();
 		RefreshListOfClasses();
 		this.listOfClasses = new JList<Class>(this.listOfClassesModel);

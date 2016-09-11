@@ -24,11 +24,11 @@ public class SolutionUnassignManager {
 			int dayAndTime = solution.GetAssignedDayAndTimeSlot(classId);
 			// Unassigns the class from all the tables
 			for (int i = 0; i < aClass.GetClassDuration(); i++) {
-				solution.AssignClassToRoom(roomId, TimeslotPattern.FreeTimeSlot, dayAndTime);
-				solution.AssignClassToInstructor(instructorId, TimeslotPattern.FreeTimeSlot, dayAndTime);
+				solution.AssignClassToRoom(roomId, TimeslotPattern.UnassignedTimeSlot, dayAndTime);
+				solution.AssignClassToInstructor(instructorId, TimeslotPattern.UnassignedTimeSlot, dayAndTime);
 				for (Integer stGroupId : stGroupsIds) {
 				
-					solution.AssignClassToStudentGroup(stGroupId, TimeslotPattern.FreeTimeSlot, dayAndTime);
+					solution.AssignClassToStudentGroup(stGroupId, TimeslotPattern.UnassignedTimeSlot, dayAndTime);
 				}
 			}
 			solution.SetAssignedDayAndTimeSlot(classId, TimeslotPattern.UnassignedTimeSlot);
